@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/default_padding"
+    android:theme="@style/Theme.MaterialComponents.NoActionBar"
     tools:context=".ui.home.HomeFragment">
 
     <TextView
-        android:id="@+id/text_home"
+        android:id="@+id/empty_transactions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,11 +27,16 @@
         android:id="@+id/addTransaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Add transactions"
+        android:layout_margin="@dimen/default_margin"
+        android:fontFamily="sans-serif"
+        android:text="@string/add_transaction"
+        android:textAllCaps="false"
         android:textColor="@color/white"
+        android:textSize="16sp"
         app:icon="@android:drawable/ic_input_add"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@style/Widget.Material3.FloatingActionButton.Primary"
+        app:showMotionSpec="@anim/nav_default_enter_anim" />
 </androidx.constraintlayout.widget.ConstraintLayout>
