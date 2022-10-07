@@ -1,60 +1,96 @@
 package com.example.expensemanager.ui.transaction
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.expensemanager.R
+import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.viewModelScope
+import com.example.expensemanager.databinding.FragmentTransactionBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.coroutineContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class TransactionFragment : BottomSheetDialogFragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TransactionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class TransactionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentTransactionBinding? = null
+    private lateinit var transactionViewModel: TransactionViewModel
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction, container, false)
+    ): View {
+        _binding = FragmentTransactionBinding.inflate(inflater, container, false)
+        transactionViewModel = TransactionViewModel()
+        transactionViewModel.category.forEach {
+            val chip = com.google.android.material.chip.Chip(context)
+            chip.text = it.key
+            chip.id = it.value
+            chip.setOnClickListener {
+                chip.isSelected = true
+            }
+            binding.categoryGroup.addView(chip)
+        }
+        val transactionKeyboard = TransactionKeyboard(
+            requireContext(),
+            binding.amountText.editableText,
+            binding.keyboard
+        )
+        binding.amountText.showSoftInputOnFocus = false
+        binding.amountText.requestFocus()
+        transactionKeyboard.initialiseListeners()
+        transactionViewModel.viewModelScope.launch {
+            binding.amountText.selectionPosition.collect {
+                transactionKeyboard.selectionPosition = it
+            }
+        }
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TransactionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             TransactionFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+}
+
+class CustomEditText(context: Context, attrs: AttributeSet) :
+    TextInputEditText(context, attrs) {
+    private var _selectionPosition: MutableStateFlow<Int>? = null
+    val selectionPosition: StateFlow<Int>
+
+    init {
+        _selectionPosition = MutableStateFlow(0)
+        selectionPosition = _selectionPosition as MutableStateFlow<Int>
+    }
+
+    override fun onSelectionChanged(selStart: Int, selEnd: Int) {
+        super.onSelectionChanged(selStart, selEnd)
+        runBlocking {
+            launch {
+                if (_selectionPosition!=null) {
+                    _selectionPosition?.value = selStart
+                }
+            }
+        }
     }
 }
