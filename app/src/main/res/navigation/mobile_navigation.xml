@@ -10,9 +10,6 @@
         android:name="com.example.expensemanager.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_navigation_home_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
     </fragment>
 
     <fragment
@@ -26,9 +23,9 @@
         android:name="com.example.expensemanager.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications"/>
-    <fragment
+    <activity
         android:id="@+id/transactionFragment"
-        tools:layout="@layout/fragment_transaction"
-        android:name="com.example.expensemanager.ui.transaction.TransactionFragment"
+        tools:layout="@layout/activity_transaction"
+        android:name="com.example.expensemanager.ui.transaction.TransactionActivity"
         android:label="TransactionFragment" />
 </navigation>

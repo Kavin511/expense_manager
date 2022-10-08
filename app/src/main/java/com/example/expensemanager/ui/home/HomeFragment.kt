@@ -8,7 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
+import androidx.navigation.navigation
 import com.example.expensemanager.R
 import com.example.expensemanager.databinding.FragmentHomeBinding
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -44,7 +48,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val addTransactions: ExtendedFloatingActionButton = binding.addTransaction
         addTransactions.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_transactionFragment)
+            onPrimaryNavigationFragmentChanged(true)
+            findNavController().navigate(R.id.transactionFragment)
         }
     }
 

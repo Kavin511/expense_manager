@@ -5,7 +5,6 @@ import android.text.Editable
 import android.widget.Toast
 import com.example.expensemanager.databinding.KeyboardBinding
 import com.example.expensemanager.utils.AppConstants
-import kotlin.math.round
 
 class TransactionKeyboard(
     val context: Context,
@@ -55,12 +54,17 @@ class TransactionKeyboard(
                 editable.insert(selectionPosition, operator)
             }
             editable.toString().contains(AppConstants.DIVISION) -> {
-                editable.clear()
-                editable.insert(
-                    selectionPosition,
-                    "%.2f".format(values[0].toDouble().div(values[1].toDouble()))
-                )
-                editable.insert(selectionPosition, operator)
+                if (values[1].toLong() == 0L) {
+                    Toast.makeText(context, "Dividing with 0 is not allowed!", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    editable.clear()
+                    editable.insert(
+                        selectionPosition,
+                        "%.2f".format(values[0].toDouble().div(values[1].toDouble()))
+                    )
+                    editable.insert(selectionPosition, operator)
+                }
             }
             editable.toString().contains("x") -> {
                 editable.clear()
@@ -122,6 +126,8 @@ class TransactionKeyboard(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+        keyboardBinding.saveTransaction.setOnClickListener {
         }
     }
 

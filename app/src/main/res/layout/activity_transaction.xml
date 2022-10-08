@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.transaction.TransactionFragment">
+    tools:context=".ui.transaction.TransactionActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topAppBar_wrapper"
@@ -16,10 +16,10 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/add_transactions_menu"
+            app:layout_scrollFlags="snapMargins"
             app:navigationIcon="@drawable/ic_close"
             app:navigationIconTint="?attr/colorOnSurface"
-            app:title="Add transaction" />
+            app:title="@string/add_transaction" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -29,11 +29,46 @@
         android:layout_margin="@dimen/default_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/transaction_mode"
+            style="?attr/materialButtonToggleGroupStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter amount"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/default_margin"
+            android:padding="@dimen/default_padding"
+            app:checkedButton="@+id/expense_mode"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/expense_mode"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/primary_button_padding"
+                android:text="@string/expense"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/income_mode"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/primary_button_padding"
+                android:text="@string/income"
+                android:textSize="18sp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/amount_text_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/transaction_mode"
+            android:hint="Enter amount"
             android:labelFor="@id/amount_text">
 
             <com.example.expensemanager.ui.transaction.CustomEditText
@@ -43,10 +78,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_margin="@dimen/default_margin"
                 android:imeOptions="actionDone"
                 android:isScrollContainer="true"
                 android:lines="1"
@@ -54,7 +86,7 @@
                 android:saveEnabled="true"
                 android:scrollbars="horizontal"
                 android:singleLine="true"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.chip.ChipGroup
@@ -63,8 +95,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/keyboard"
             android:layout_below="@+id/amount_text_wrapper"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             app:selectionRequired="true"
             app:singleSelection="true" />
 
@@ -77,4 +109,4 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true" />
     </RelativeLayout>
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

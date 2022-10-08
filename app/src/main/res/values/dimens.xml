@@ -6,4 +6,5 @@
     <dimen name="keyboard_key_padding">10dp</dimen>
     <dimen name="default_margin">4dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
+    <dimen name="primary_button_padding">10dp</dimen>
 </resources>
