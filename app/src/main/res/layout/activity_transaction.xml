@@ -89,10 +89,13 @@
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.chip.ChipGroup
+        <com.devstudioworks.customChipGroup.CustomChipGroup
             android:id="@+id/category_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:maxRow="2"
+            app:itemSpacing="@dimen/default_margin"
+            app:chipSpacing="@dimen/default_margin"
             android:layout_above="@id/keyboard"
             android:layout_below="@+id/amount_text_wrapper"
             android:layout_alignParentStart="true"

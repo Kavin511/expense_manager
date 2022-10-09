@@ -3,9 +3,11 @@ package com.example.expensemanager.ui.transaction
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.devstudioworks.customChipGroup.AdditionalChipListener
 import com.example.expensemanager.R
 import com.example.expensemanager.databinding.ActivityTransactionBinding
 import com.example.expensemanager.ui.transaction.models.TransactionMode
@@ -58,6 +60,10 @@ class TransactionActivity : AppCompatActivity() {
     private suspend fun initialiseTransactionCategory() {
         transactionViewModel.transactionMode.collectLatest {
             binding.categoryGroup.removeAllViews()
+            binding.categoryGroup.setAdditionalChipClickListener(object : AdditionalChipListener {
+                override fun onAdditionalChipClick(view: View, context: Context) {
+                }
+            })
             transactionViewModel.transactionMode.value
             it.categoryList.forEachIndexed { index, value ->
                 val chip = Chip(this)
