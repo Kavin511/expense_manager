@@ -127,8 +127,6 @@ class TransactionKeyboard(
                 ).show()
             }
         }
-        keyboardBinding.saveTransaction.setOnClickListener {
-        }
     }
 
     fun initialiseListeners() {

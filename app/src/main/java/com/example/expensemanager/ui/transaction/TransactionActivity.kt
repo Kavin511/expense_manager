@@ -3,14 +3,18 @@ package com.example.expensemanager.ui.transaction
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
-import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.devstudioworks.customChipGroup.AdditionalChipListener
+import com.example.expensemanager.ExpenseManagerApplication
 import com.example.expensemanager.R
 import com.example.expensemanager.databinding.ActivityTransactionBinding
+import com.example.expensemanager.db.models.Transactions
 import com.example.expensemanager.ui.transaction.models.TransactionMode
+import com.example.expensemanager.ui.transaction.viewmodels.TransactionViewModel
+import com.example.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,22 +22,45 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 class TransactionActivity : AppCompatActivity() {
 
     private var _binding: ActivityTransactionBinding? = null
-    private lateinit var transactionViewModel: TransactionViewModel
-    private val binding
+    private val transactionViewModel by viewModels<TransactionViewModel> {
+        TransactionViewModelFactory(
+            (application as ExpenseManagerApplication).repository
+        )
+    }
+    val binding
         get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        transactionViewModel = TransactionViewModel()
         initialiseTransactionType()
         initialiseTransactionKeyboard()
         initialiseNavigation()
+
+        binding.keyboard.saveTransaction.setOnClickListener {
+            lifecycleScope.launch {
+                val transaction = Transactions(
+                    id = Calendar.getInstance().time.time,
+                    amount = binding.amountText.text.toString().toDouble(),
+                    note = binding.noteText.text.toString(),
+                    transactionMode = transactionViewModel.transactionMode.value.toString(),
+                    transactionDate = Calendar.getInstance().time.toString(),
+                )
+                transactionViewModel.insertTransaction(transaction)
+            }
+            finish()
+        }
+        binding.amountText.setOnFocusChangeListener { view, b ->
+            val imm: InputMethodManager =
+                getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
         binding.amountText.showSoftInputOnFocus = false
     }
 
@@ -60,10 +87,6 @@ class TransactionActivity : AppCompatActivity() {
     private suspend fun initialiseTransactionCategory() {
         transactionViewModel.transactionMode.collectLatest {
             binding.categoryGroup.removeAllViews()
-            binding.categoryGroup.setAdditionalChipClickListener(object : AdditionalChipListener {
-                override fun onAdditionalChipClick(view: View, context: Context) {
-                }
-            })
             transactionViewModel.transactionMode.value
             it.categoryList.forEachIndexed { index, value ->
                 val chip = Chip(this)

@@ -8,7 +8,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 class CustomChipGroup : ChipGroup {
-    var additionalChipPosition: Int = Int.MAX_VALUE;
+    var additionalChipPosition: Int = Int.MAX_VALUE
     private val DEF_STYLE_RES =
         com.google.android.material.R.style.Widget_MaterialComponents_ChipGroup
     private var maxRow = Int.MAX_VALUE
