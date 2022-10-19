@@ -8,7 +8,7 @@ import com.example.expensemanager.db.models.Transactions
 class TransactionsRepository(private val transactionDao: TransactionDao) {
    val allTransactions = transactionDao.getAllTransaction()
 
-    suspend fun allExpenseTransactions(): List<Transactions> {
+    suspend fun allExpenseTransactions(): LiveData<List<Transactions>> {
         return transactionDao.getTransactionByMode()
     }
 //

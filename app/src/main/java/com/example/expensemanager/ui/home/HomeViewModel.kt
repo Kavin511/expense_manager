@@ -2,6 +2,7 @@ package com.example.expensemanager.ui.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.expensemanager.ExpenseManagerApplication
@@ -18,7 +19,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         repository = (application as ExpenseManagerApplication).repository
     }
 
-    suspend fun transactions(): List<Transactions> {
+    suspend fun transactions(): LiveData<List<Transactions>> {
        return repository.allExpenseTransactions()
     }
     private val _text = MutableStateFlow("Click + to add transactions")

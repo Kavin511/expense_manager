@@ -32,6 +32,7 @@ class TransactionActivity : AppCompatActivity() {
             (application as ExpenseManagerApplication).repository
         )
     }
+    var selectedCategoryIndex = 0
     val binding
         get() = _binding!!
 
@@ -50,7 +51,8 @@ class TransactionActivity : AppCompatActivity() {
                     amount = binding.amountText.text.toString().toDouble(),
                     note = binding.noteText.text.toString(),
                     transactionMode = transactionViewModel.transactionMode.value.toString(),
-                    transactionDate = Calendar.getInstance().time.toString(),
+                    transactionDate = Calendar.getInstance().time.time.toString(),
+                    category = transactionViewModel.transactionMode.value.categoryList[selectedCategoryIndex]
                 )
                 transactionViewModel.insertTransaction(transaction)
             }
@@ -95,6 +97,10 @@ class TransactionActivity : AppCompatActivity() {
                 chip.isCheckable = true
                 if (index == 0) {
                     chip.isChecked = true
+                    selectedCategoryIndex = 0
+                }
+                chip.setOnClickListener {
+                    selectedCategoryIndex = index
                 }
                 binding.categoryGroup.addView(chip)
             }

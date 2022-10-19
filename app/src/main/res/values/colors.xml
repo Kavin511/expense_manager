@@ -59,4 +59,6 @@
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_surfaceTint">#79DA9F</color>
     <color name="md_theme_dark_surfaceTintColor">#79DA9F</color>
+    <color name="pink">#FCEEED</color>
+    <color name="green">#E7FBE8</color>
 </resources>

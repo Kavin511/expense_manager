@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transaction_wrapper"
     android:layout_width="match_parent"
+    style="?attr/materialCardViewFilledStyle"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin"
+    android:background="@drawable/transaction_item_background"
+    android:elevation="0dp"
     android:padding="10dp"
-    android:layout_height="wrap_content">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp">
 
-    <TextView
-        android:id="@+id/transaction_amount"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:textColor="@color/design_default_color_surface"
-        android:text="@string/add_transaction"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/amount"
+            android:layout_alignParentStart="true"
+            android:padding="@dimen/default_padding"
+            android:text="Category"
+            android:textColor="#000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/category"
+            android:layout_alignStart="@id/amount"
+            android:layout_alignParentStart="true"
+            android:padding="@dimen/default_padding"
+            android:text="Date"
+            android:textColor="#000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/default_padding"
+            android:text="Amount"
+            android:textColor="#000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

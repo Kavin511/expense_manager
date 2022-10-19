@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="default_radius">4dp</dimen>
+    <dimen name="default_radius">8dp</dimen>
     <dimen name="default_elevation">4dp</dimen>
     <dimen name="default_padding">4dp</dimen>
     <dimen name="keyboard_key_padding">8dp</dimen>

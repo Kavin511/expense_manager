@@ -18,5 +18,5 @@ interface TransactionDao {
 
     @WorkerThread
     @Query("SELECT * FROM transactions_table")
-    fun getTransactionByMode(): List<Transactions>
+    fun getTransactionByMode(): LiveData<List<Transactions>>
 }
