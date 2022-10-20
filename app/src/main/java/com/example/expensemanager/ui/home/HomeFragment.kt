@@ -1,11 +1,11 @@
 package com.example.expensemanager.ui.home
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -18,8 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.expensemanager.R
 import com.example.expensemanager.databinding.FragmentHomeBinding
 import com.example.expensemanager.db.models.Transactions
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.example.expensemanager.ui.transaction.TransactionActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.lang.String
@@ -48,11 +47,15 @@ class HomeFragment : Fragment() {
         }
         lifecycleScope.launch {
             val expenseSet = homeViewModel.transactions()
-            expenseSet.observeForever {
+            expenseSet.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty()) {
                     emptyTransactionsIntroductionText.visibility = View.GONE
                 }
-                val transactionListAdapter = TransactionListAdapter(requireContext(), it)
+                val transactionListAdapter =
+                    TransactionListAdapter(requireContext(), it) { transaction ->
+                        val intent = Intent(requireContext(), TransactionActivity::class.java).apply { putExtra("id", transaction.id) }
+                        startActivity(intent)
+                    }
                 binding.transactionsList.adapter = transactionListAdapter
                 binding.transactionsList.layoutManager = GridLayoutManager(context, 1)
             }
@@ -65,7 +68,7 @@ class HomeFragment : Fragment() {
         val addTransactions: FloatingActionButton = binding.addTransaction
         addTransactions.setOnClickListener {
             onPrimaryNavigationFragmentChanged(true)
-            findNavController().navigate(R.id.transactionFragment)
+            findNavController().navigate(R.id.transactionActivity)
         }
     }
 
@@ -74,7 +77,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    internal class TransactionListAdapter(val context: Context, var expenseSet: List<Transactions>,) :
+    internal class TransactionListAdapter(val context: Context, var expenseSet: List<Transactions>, private val task: (Transactions) -> Unit) :
         RecyclerView.Adapter<TransactionListAdapter.ExpenseViewHolder>() {
         class ExpenseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val amount: TextView
@@ -118,6 +121,9 @@ class HomeFragment : Fragment() {
             }
             holder.date.text = convertLongToDate(transactions.transactionDate.toLong())
             holder.category.text = transactions.category
+            holder.transactionWrapper.setOnClickListener {
+                task(expenseSet[position])
+            }
         }
 
         private fun convertLongToDate(time: Long): kotlin.String? {

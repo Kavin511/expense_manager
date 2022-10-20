@@ -78,7 +78,7 @@
             android:hint="Enter amount"
             android:labelFor="@id/amount_text">
 
-            <com.example.expensemanager.ui.transaction.CustomEditText
+            <com.devstudioworks.customChipGroup.CustomEditText
                 android:id="@+id/amount_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
             android:hint="Enter notes"
             android:labelFor="@id/amount_text">
 
-            <com.example.expensemanager.ui.transaction.CustomEditText
+            <EditText
                 android:id="@+id/note_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +129,6 @@
             app:maxRow="2"
             app:itemSpacing="@dimen/default_margin"
             app:chipSpacing="@dimen/default_margin"
-            android:layout_above="@id/keyboard"
             android:layout_below="@+id/note_text_wrapper"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"

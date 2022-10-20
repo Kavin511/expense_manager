@@ -24,8 +24,8 @@
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications"/>
     <activity
-        android:id="@+id/transactionFragment"
+        android:id="@+id/transactionActivity"
         tools:layout="@layout/activity_transaction"
         android:name="com.example.expensemanager.ui.transaction.TransactionActivity"
-        android:label="TransactionFragment" />
+        android:label="transactionActivity" />
 </navigation>

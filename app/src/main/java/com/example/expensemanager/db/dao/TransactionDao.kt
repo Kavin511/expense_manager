@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.Query
+import androidx.room.Update
 import com.example.expensemanager.db.models.Transactions
 
 @Dao
@@ -19,4 +20,10 @@ interface TransactionDao {
     @WorkerThread
     @Query("SELECT * FROM transactions_table")
     fun getTransactionByMode(): LiveData<List<Transactions>>
+
+    @Query("SELECT * FROM transactions_table WHERE id==:id")
+    suspend fun getTransactionById(id: Long): Transactions?
+
+    @Update
+    suspend fun updateTransaction(transactions: Transactions)
 }

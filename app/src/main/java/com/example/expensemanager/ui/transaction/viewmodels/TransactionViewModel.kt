@@ -1,5 +1,6 @@
 package com.example.expensemanager.ui.transaction.viewmodels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.expensemanager.db.models.Transactions
@@ -9,9 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class TransactionViewModel(private val repository: TransactionsRepository) : ViewModel() {
+    val transaction = MutableStateFlow<Transactions?>(null)
     private val _cursorPosition = MutableStateFlow(0)
     val cursorPosition = _cursorPosition
-    var transactionMode = MutableStateFlow(TransactionMode.EXPENSE)
+    var transactionType = MutableStateFlow(TransactionMode.EXPENSE)
+    var isEditingOldTransaction = MutableLiveData<Boolean>()
     private val _text = MutableStateFlow("Click + to add transactions")
 
     val text: StateFlow<String> = _text
@@ -20,6 +23,14 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 
     suspend fun insertTransaction(transaction: Transactions) {
         repository.insert(transaction)
+    }
+
+    suspend fun getTransactionById(id: Long) {
+        transaction.value = repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
+    }
+
+    suspend fun updateTransaction(oldTransactionObject: Transactions) {
+        repository.updateTransaction(oldTransactionObject)
     }
 }
 

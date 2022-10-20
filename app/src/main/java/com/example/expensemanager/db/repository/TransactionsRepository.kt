@@ -6,10 +6,14 @@ import com.example.expensemanager.db.dao.TransactionDao
 import com.example.expensemanager.db.models.Transactions
 
 class TransactionsRepository(private val transactionDao: TransactionDao) {
-   val allTransactions = transactionDao.getAllTransaction()
+    val allTransactions = transactionDao.getAllTransaction()
 
     suspend fun allExpenseTransactions(): LiveData<List<Transactions>> {
         return transactionDao.getTransactionByMode()
+    }
+
+    suspend fun findTransactionById(id: Long): Transactions? {
+        return transactionDao.getTransactionById(id)
     }
 //
 //    suspend fun allIncomeTransactions(): Flow<List<Transactions>> {
@@ -19,5 +23,9 @@ class TransactionsRepository(private val transactionDao: TransactionDao) {
     @WorkerThread
     suspend fun insert(transactions: Transactions) {
         transactionDao.insertTransaction(transactions)
+    }
+
+    suspend fun updateTransaction(oldTransactionObject: Transactions) {
+       transactionDao.updateTransaction(oldTransactionObject)
     }
 }

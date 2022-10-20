@@ -1,8 +1,6 @@
 package com.example.expensemanager.ui.transaction
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,12 +14,8 @@ import com.example.expensemanager.ui.transaction.models.TransactionMode
 import com.example.expensemanager.ui.transaction.viewmodels.TransactionViewModel
 import com.example.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
 import com.google.android.material.chip.Chip
-import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.*
 
 class TransactionActivity : AppCompatActivity() {
@@ -42,19 +36,59 @@ class TransactionActivity : AppCompatActivity() {
         setContentView(binding.root)
         initialiseTransactionType()
         initialiseTransactionKeyboard()
+        lifecycleScope.launchWhenCreated {
+            val id = intent.getLongExtra("id", 0)
+            transactionViewModel.getTransactionById(id)
+        }
+        transactionViewModel.isEditingOldTransaction.observe(this) {
+            binding.keyboard.saveTransaction.setText(getString(R.string.update_transaction))
+        }
         initialiseNavigation()
-
+        lifecycleScope.launch {
+            transactionViewModel.transaction.collectLatest {
+                if (it != null) {
+                    binding.amountText.setText(it.amount.toString())
+                    binding.noteText.setText(it.note)
+                    if (it.transactionMode == "EXPENSE") {
+                        transactionViewModel.transactionType.value = TransactionMode.EXPENSE
+                        binding.transactionMode.check(R.id.expense_mode)
+                        selectedCategoryIndex =
+                            TransactionMode.EXPENSE.categoryList.indexOf(it.category)
+                        binding.categoryGroup.check(selectedCategoryIndex)
+                    } else {
+                        transactionViewModel.transactionType.value = TransactionMode.INCOME
+                        binding.transactionMode.check(R.id.income_mode)
+                        selectedCategoryIndex =
+                            TransactionMode.INCOME.categoryList.indexOf(it.category)
+                        binding.categoryGroup.check(selectedCategoryIndex)
+                    }
+                }
+            }
+        }
         binding.keyboard.saveTransaction.setOnClickListener {
             lifecycleScope.launch {
-                val transaction = Transactions(
-                    id = Calendar.getInstance().time.time,
-                    amount = binding.amountText.text.toString().toDouble(),
-                    note = binding.noteText.text.toString(),
-                    transactionMode = transactionViewModel.transactionMode.value.toString(),
-                    transactionDate = Calendar.getInstance().time.time.toString(),
-                    category = transactionViewModel.transactionMode.value.categoryList[selectedCategoryIndex]
-                )
-                transactionViewModel.insertTransaction(transaction)
+                val oldTransaction = transactionViewModel.transaction.value
+                if (transactionViewModel.isEditingOldTransaction.value == true && oldTransaction !=null) {
+                    oldTransaction.apply {
+                        amount = binding.amountText.text.toString().toDouble()
+                        note = binding.noteText.text.toString()
+                        transactionMode = transactionViewModel.transactionType.value.toString()
+                        transactionDate = Calendar.getInstance().time.time.toString()
+                        category =
+                            transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+                    }
+                    transactionViewModel.updateTransaction(oldTransaction)
+                } else {
+                    val transaction = Transactions(
+                        id = Calendar.getInstance().time.time,
+                        amount = binding.amountText.text.toString().toDouble(),
+                        note = binding.noteText.text.toString(),
+                        transactionMode = transactionViewModel.transactionType.value.toString(),
+                        transactionDate = Calendar.getInstance().time.time.toString(),
+                        category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+                    )
+                    transactionViewModel.insertTransaction(transaction)
+                }
             }
             finish()
         }
@@ -71,12 +105,14 @@ class TransactionActivity : AppCompatActivity() {
             when (checkedId) {
                 R.id.expense_mode -> {
                     if (isChecked) {
-                        transactionViewModel.transactionMode.value = TransactionMode.EXPENSE
+                        selectedCategoryIndex = 0
+                        transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     }
                 }
                 R.id.income_mode -> {
                     if (isChecked) {
-                        transactionViewModel.transactionMode.value = TransactionMode.INCOME
+                        selectedCategoryIndex = 0
+                        transactionViewModel.transactionType.value = TransactionMode.INCOME
                     }
                 }
             }
@@ -87,17 +123,16 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private suspend fun initialiseTransactionCategory() {
-        transactionViewModel.transactionMode.collectLatest {
+        transactionViewModel.transactionType.collectLatest {
             binding.categoryGroup.removeAllViews()
-            transactionViewModel.transactionMode.value
+            transactionViewModel.transactionType.value
             it.categoryList.forEachIndexed { index, value ->
                 val chip = Chip(this)
                 chip.text = value
                 chip.id = index
                 chip.isCheckable = true
-                if (index == 0) {
+                if (selectedCategoryIndex == index) {
                     chip.isChecked = true
-                    selectedCategoryIndex = 0
                 }
                 chip.setOnClickListener {
                     selectedCategoryIndex = index
@@ -128,27 +163,5 @@ class TransactionActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-}
-
-class CustomEditText(context: Context, attrs: AttributeSet) :
-    TextInputEditText(context, attrs) {
-    private var _selectionPosition: MutableStateFlow<Int>? = null
-    val selectionPosition: StateFlow<Int>
-
-    init {
-        _selectionPosition = MutableStateFlow(0)
-        selectionPosition = _selectionPosition as MutableStateFlow<Int>
-    }
-
-    override fun onSelectionChanged(selStart: Int, selEnd: Int) {
-        super.onSelectionChanged(selStart, selEnd)
-        runBlocking {
-            launch {
-                if (_selectionPosition != null) {
-                    _selectionPosition?.value = selStart
-                }
-            }
-        }
     }
 }
