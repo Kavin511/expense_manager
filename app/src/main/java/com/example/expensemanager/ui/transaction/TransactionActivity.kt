@@ -47,7 +47,7 @@ class TransactionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             transactionViewModel.transaction.collectLatest {
                 if (it != null) {
-                    binding.amountText.setText(it.amount.toString())
+                    binding.amountText.editableText.insert(0,it.amount.toString())
                     binding.noteText.setText(it.note)
                     if (it.transactionMode == "EXPENSE") {
                         transactionViewModel.transactionType.value = TransactionMode.EXPENSE
