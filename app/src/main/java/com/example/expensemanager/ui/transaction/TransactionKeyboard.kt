@@ -2,9 +2,11 @@ package com.example.expensemanager.ui.transaction
 
 import android.content.Context
 import android.text.Editable
+import android.view.KeyEvent
+import android.view.View
 import android.widget.Toast
 import com.example.expensemanager.databinding.KeyboardBinding
-import com.example.expensemanager.utils.AppConstants
+import com.example.expensemanager.utils.TransactionInputFormula
 
 class TransactionKeyboard(
     val context: Context,
@@ -14,111 +16,87 @@ class TransactionKeyboard(
     var selectionPosition = 0
 
     private fun operatorClickListeners() {
-        keyboardBinding.additionOperator.setOnClickListener {
-            calculateAndAppendOperator(AppConstants.ADDITION)
-        }
+        keyboardBinding.additionOperator.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                validateAndAppendOperator(KeyEvent.KEYCODE_NUMPAD_ADD)
+            }
+        })
         keyboardBinding.multiplicationOperator.setOnClickListener {
-            calculateAndAppendOperator(AppConstants.MULTIPLICATION)
+            validateAndAppendOperator(KeyEvent.KEYCODE_X)
         }
         keyboardBinding.divisionOperator.setOnClickListener {
-            calculateAndAppendOperator(AppConstants.DIVISION)
+            validateAndAppendOperator(KeyEvent.KEYCODE_NUMPAD_DIVIDE)
         }
         keyboardBinding.subtractionOperator.setOnClickListener {
-            calculateAndAppendOperator(AppConstants.SUBTRACTION)
+            validateAndAppendOperator(KeyEvent.KEYCODE_NUMPAD_SUBTRACT)
         }
         keyboardBinding.equalToOperator.setOnClickListener {
-            calculateExistingValues(
-                editable.toString().split(Regex("[^0-9\\\\.]+")).filter { it.isNotEmpty() }, ""
-            )
-        }
-    }
-
-    private fun calculateAndAppendOperator(operator: String) {
-        val values = editable.toString().split(Regex("[^0-9\\\\.]+")).filter { it.isNotEmpty() }
-        if (values.size > 1) {
-            calculateExistingValues(values, operator)
-        } else if (values.size == 1) {
+            val value = editable.toString()
             editable.clear()
-            editable.insert(selectionPosition, values[0] + operator)
+            editable.insert(0, TransactionInputFormula().calculate(value))
         }
     }
 
-    private fun calculateExistingValues(values: List<String>, operator: String) {
-        when (values.isNotEmpty()) {
-            editable.toString().contains(AppConstants.ADDITION) -> {
-                editable.clear()
-                editable.insert(
-                    selectionPosition,
-                    "%.2f".format(values[0].toDouble().plus(values[1].toDouble()))
-                )
-                editable.insert(selectionPosition, operator)
-            }
-            editable.toString().contains(AppConstants.DIVISION) -> {
-                if (values[1].toLong() == 0L) {
-                    Toast.makeText(context, "Dividing with 0 is not allowed!", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    editable.clear()
-                    editable.insert(
-                        selectionPosition,
-                        "%.2f".format(values[0].toDouble().div(values[1].toDouble()))
+    private fun validateAndAppendOperator(event: Int) {
+        if (keyboardBinding.amountText.editableText.isNotEmpty()) {
+            if (keyboardBinding.amountText.editableText.toString().last().isOperator()) {
+                keyboardBinding.amountText.dispatchKeyEvent(
+                    KeyEvent(
+                        KeyEvent.ACTION_DOWN,
+                        KeyEvent.KEYCODE_DEL
                     )
-                    editable.insert(selectionPosition, operator)
-                }
-            }
-            editable.toString().contains("x") -> {
-                editable.clear()
-                editable.insert(
-                    selectionPosition,
-                    "%.2f".format(values[0].toDouble().times(values[1].toDouble()))
                 )
-                editable.insert(selectionPosition, operator)
             }
-            editable.toString().contains("-") -> {
-                editable.clear()
-                editable.insert(
-                    0,
-                    "%.2f".format(values[0].toDouble().minus(values[1].toDouble()))
+            keyboardBinding.amountText.dispatchKeyEvent(
+                KeyEvent(
+                    KeyEvent.ACTION_DOWN,
+                    event
                 )
-                editable.insert(selectionPosition, operator)
-            }
+            )
+        } else {
+            editable.append("0")
         }
     }
 
     private fun numbersClickListeners() {
         keyboardBinding.oneValue.setOnClickListener {
-            editable.insert(selectionPosition, "1")
+            appendNumber(KeyEvent.KEYCODE_1)
         }
         keyboardBinding.twoValue.setOnClickListener {
-            editable.insert(selectionPosition, "2")
+            appendNumber(KeyEvent.KEYCODE_2)
         }
         keyboardBinding.threeValue.setOnClickListener {
-            editable.insert(selectionPosition, "3")
+            appendNumber(KeyEvent.KEYCODE_3)
         }
         keyboardBinding.fourValue.setOnClickListener {
-            editable.insert(selectionPosition, "4")
+            appendNumber(KeyEvent.KEYCODE_4)
         }
         keyboardBinding.fiveValue.setOnClickListener {
-            editable.insert(selectionPosition, "5")
+            appendNumber(KeyEvent.KEYCODE_5)
         }
         keyboardBinding.sevenValue.setOnClickListener {
-            editable.insert(selectionPosition, "7")
+            appendNumber(KeyEvent.KEYCODE_7)
         }
         keyboardBinding.sixValue.setOnClickListener {
-            editable.insert(selectionPosition, "6")
+            appendNumber(KeyEvent.KEYCODE_6)
         }
         keyboardBinding.eightValue.setOnClickListener {
-            editable.insert(selectionPosition, "8")
+            appendNumber(KeyEvent.KEYCODE_8)
         }
         keyboardBinding.nineValue.setOnClickListener {
-            editable.insert(selectionPosition, "9")
+            appendNumber(KeyEvent.KEYCODE_9)
         }
         keyboardBinding.zeroValue.setOnClickListener {
-            editable.insert(selectionPosition, "0")
+            appendNumber(KeyEvent.KEYCODE_0)
         }
         keyboardBinding.decimalValue.setOnClickListener {
             if (!editable.toString().split(Regex("[^0-9\\\\.]+")).last().contains(".")) {
-                editable.insert(selectionPosition, ".")
+                keyboardBinding.amountText.dispatchKeyEvent(
+                    KeyEvent(
+                        KeyEvent.ACTION_DOWN,
+                        KeyEvent.KEYCODE_PERIOD
+                    )
+                )
             } else {
                 Toast.makeText(
                     context,
@@ -129,8 +107,24 @@ class TransactionKeyboard(
         }
     }
 
+    private fun appendNumber(input: Int) {
+        if (editable.toString() == "0") {
+            editable.clear()
+        }
+        keyboardBinding.amountText.dispatchKeyEvent(
+            KeyEvent(
+                KeyEvent.ACTION_DOWN,
+                input
+            )
+        )
+    }
+
     fun initialiseListeners() {
         numbersClickListeners()
         operatorClickListeners()
     }
+}
+
+private fun Char.isOperator(): Boolean {
+    return this == '+' || this == '-' || this == 'x' || this == '/'
 }

@@ -53,7 +53,10 @@ class HomeFragment : Fragment() {
                 }
                 val transactionListAdapter =
                     TransactionListAdapter(requireContext(), it) { transaction ->
-                        val intent = Intent(requireContext(), TransactionActivity::class.java).apply { putExtra("id", transaction.id) }
+                        val intent = Intent(
+                            requireContext(),
+                            TransactionActivity::class.java
+                        ).apply { putExtra("id", transaction.id) }
                         startActivity(intent)
                     }
                 binding.transactionsList.adapter = transactionListAdapter

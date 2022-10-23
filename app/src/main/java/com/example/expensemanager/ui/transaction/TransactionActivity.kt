@@ -1,6 +1,7 @@
 package com.example.expensemanager.ui.transaction
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.example.expensemanager.db.models.Transactions
 import com.example.expensemanager.ui.transaction.models.TransactionMode
 import com.example.expensemanager.ui.transaction.viewmodels.TransactionViewModel
 import com.example.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
+import com.example.expensemanager.utils.TransactionInputFormula
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -47,7 +49,7 @@ class TransactionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             transactionViewModel.transaction.collectLatest {
                 if (it != null) {
-                    binding.amountText.editableText.insert(0,it.amount.toString())
+                    binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                     binding.noteText.setText(it.note)
                     if (it.transactionMode == "EXPENSE") {
                         transactionViewModel.transactionType.value = TransactionMode.EXPENSE
@@ -70,7 +72,8 @@ class TransactionActivity : AppCompatActivity() {
                 val oldTransaction = transactionViewModel.transaction.value
                 if (transactionViewModel.isEditingOldTransaction.value == true && oldTransaction !=null) {
                     oldTransaction.apply {
-                        amount = binding.amountText.text.toString().toDouble()
+                        amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
+                                .toDouble()
                         note = binding.noteText.text.toString()
                         transactionMode = transactionViewModel.transactionType.value.toString()
                         transactionDate = Calendar.getInstance().time.time.toString()
@@ -81,7 +84,7 @@ class TransactionActivity : AppCompatActivity() {
                 } else {
                     val transaction = Transactions(
                         id = Calendar.getInstance().time.time,
-                        amount = binding.amountText.text.toString().toDouble(),
+                        amount = binding.keyboard.amountText.text.toString().toDouble(),
                         note = binding.noteText.text.toString(),
                         transactionMode = transactionViewModel.transactionType.value.toString(),
                         transactionDate = Calendar.getInstance().time.time.toString(),
@@ -92,12 +95,33 @@ class TransactionActivity : AppCompatActivity() {
             }
             finish()
         }
-        binding.amountText.setOnFocusChangeListener { view, b ->
+        binding.keyboard.amountText.setOnFocusChangeListener { view, b ->
             val imm: InputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
-        binding.amountText.showSoftInputOnFocus = false
+        binding.keyboard.amountTextWrapper.setEndIconOnClickListener {
+            binding.keyboard.amountText.dispatchKeyEvent(
+                KeyEvent(
+                    KeyEvent.ACTION_DOWN,
+                    KeyEvent.KEYCODE_DEL
+                )
+            )
+            binding.keyboard.amountText.editableText.apply {
+                if (this.isEmpty()) {
+                    this.append("0")
+                }
+            }
+        }
+        binding.keyboard.amountTextWrapper.setEndIconOnLongClickListener {
+            binding.keyboard.amountText.dispatchKeyEvent(
+                KeyEvent(
+                    KeyEvent.ACTION_DOWN,
+                    KeyEvent.KEYCODE_CLEAR
+                )
+            )
+        }
+        binding.keyboard.amountText.showSoftInputOnFocus = false
     }
 
     private fun initialiseTransactionType() {
@@ -150,14 +174,18 @@ class TransactionActivity : AppCompatActivity() {
 
     private fun initialiseTransactionKeyboard() {
         val transactionKeyboard =
-            TransactionKeyboard(baseContext, binding.amountText.editableText, binding.keyboard)
+            TransactionKeyboard(
+                baseContext,
+                binding.keyboard.amountText.editableText,
+                binding.keyboard
+            )
         transactionKeyboard.initialiseListeners()
         transactionViewModel.viewModelScope.launch {
-            binding.amountText.selectionPosition.collect {
+            binding.keyboard.amountText.selectionPosition.collect {
                 transactionKeyboard.selectionPosition = it
             }
         }
-        binding.amountText.requestFocus()
+        binding.keyboard.amountText.requestFocus()
     }
 
     override fun onDestroy() {

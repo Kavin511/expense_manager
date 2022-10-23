@@ -8,8 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class CustomEditText(context: Context, attrs: AttributeSet) :
-    TextInputEditText(context, attrs) {
+class CustomEditText(context: Context, attrs: AttributeSet) : TextInputEditText(context, attrs) {
     private var _selectionPosition: MutableStateFlow<Int>? = null
     val selectionPosition: StateFlow<Int>
 
