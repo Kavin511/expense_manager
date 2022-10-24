@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomChipGroup">
+        <attr name="maxRow" format="reference|integer" />
+        <attr name="additionalChipMore" format="reference|string" />
+        <attr name="additionalChipHide" format="boolean|string" />
+        <attr name="additionalChipColor" format="reference|color" />
+        <attr name="additionalChipColorPressed" format="reference|color" />
+        <attr name="additionalTextColor" format="reference|color" />
+        <attr name="additionalChipFixed" format="reference|boolean" />
+    </declare-styleable>
+</resources>

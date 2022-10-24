@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/amount_text_wrapper"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/amount_text"
+        app:boxCornerRadiusBottomEnd="@dimen/default_radius"
+        app:boxCornerRadiusBottomStart="@dimen/default_radius"
+        app:boxCornerRadiusTopEnd="@dimen/default_radius"
+        app:boxCornerRadiusTopStart="@dimen/default_radius"
+        app:endIconDrawable="@drawable/ic_backspace"
+        app:endIconMode="custom">
+
+        <com.devstudioworks.customChipGroup.CustomEditText
+            android:id="@+id/amount_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/default_margin"
+            android:drawablePadding="@dimen/default_padding"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:isScrollContainer="true"
+            android:lines="1"
+            android:maxLines="1"
+            android:saveEnabled="true"
+            android:scrollbars="horizontal"
+            android:singleLine="true"
+            android:text="0"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/one_value"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:text="1"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/two_value"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="2"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/three_value"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="3"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/addition_operator"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="+"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/four_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="4"
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/five_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="5"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/six_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="6"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/subtraction_operator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="-"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/seven_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="7"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/eight_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="8"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/nine_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="9"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/multiplication_operator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="X"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/decimal_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="."
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/zero_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="0"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/equal_to_operator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="="
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+        </com.google.android.material.button.MaterialButton>
+
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:id="@+id/division_operator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="/"
+
+            android:padding="@dimen/keyboard_key_padding"
+            app:cardCornerRadius="@dimen/default_radius"
+            app:cardElevation="@dimen/default_elevation">
+
+        </com.google.android.material.button.MaterialButton>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:padding="@dimen/primary_button_padding"
+        android:text="@string/save_transaction"
+        android:textColor="?attr/colorSurface" />
+</LinearLayout>

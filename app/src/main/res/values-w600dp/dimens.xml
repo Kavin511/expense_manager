@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="fab_margin">48dp</dimen>
+    <dimen name="keyboard_key_padding">15dp</dimen>
+</resources>
