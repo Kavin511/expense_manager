@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ExpenseManager</string>
+    <string name="app_name">Express Wallet</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

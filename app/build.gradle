@@ -8,7 +8,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.expensemanager"
+        applicationId "com.devstudio.expensemanager"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -36,7 +36,7 @@ android {
     lint {
         abortOnError false
     }
-    namespace 'com.example.expensemanager'
+    namespace 'com.devstudio.expensemanager'
 }
 
 dependencies {
