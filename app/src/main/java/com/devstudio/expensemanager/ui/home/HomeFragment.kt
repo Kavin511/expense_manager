@@ -28,42 +28,49 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var homeViewModel:HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val emptyTransactionsIntroductionText: TextView = binding.emptyTransactionsIntroductionText
+        initialiseEmptyTransactionsMessage()
+        initialiseTransactionList()
+        return root
+    }
+
+    fun initialiseEmptyTransactionsMessage() {
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.text.collect {
-                emptyTransactionsIntroductionText.text = it
+                binding.emptyTransactionsIntroductionText.text = it
             }
         }
+    }
+
+    fun initialiseTransactionList() {
         lifecycleScope.launch {
             val expenseSet = homeViewModel.transactions()
             expenseSet.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty()) {
-                    emptyTransactionsIntroductionText.visibility = View.GONE
+                    binding.emptyTransactionsIntroductionText.visibility = View.GONE
                 }
                 val transactionListAdapter =
                     TransactionListAdapter(requireContext(), it) { transaction ->
-                        val intent = Intent(
-                            requireContext(),
-                            TransactionActivity::class.java
-                        ).apply { putExtra("id", transaction.id) }
+                        val intent =
+                            Intent(requireContext(), TransactionActivity::class.java).apply {
+                                putExtra("id", transaction.id)
+                            }
                         startActivity(intent)
                     }
                 binding.transactionsList.adapter = transactionListAdapter
                 binding.transactionsList.layoutManager = GridLayoutManager(context, 1)
             }
         }
-        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,7 +87,11 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    internal class TransactionListAdapter(val context: Context, var expenseSet: List<Transactions>, private val task: (Transactions) -> Unit) :
+    internal class TransactionListAdapter(
+        val context: Context,
+        var expenseSet: List<Transactions>,
+        private val onClick: (Transactions) -> Unit
+    ) :
         RecyclerView.Adapter<TransactionListAdapter.ExpenseViewHolder>() {
         class ExpenseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val amount: TextView
@@ -125,7 +136,7 @@ class HomeFragment : Fragment() {
             holder.date.text = convertLongToDate(transactions.transactionDate.toLong())
             holder.category.text = transactions.category
             holder.transactionWrapper.setOnClickListener {
-                task(expenseSet[position])
+                onClick(expenseSet[position])
             }
         }
 

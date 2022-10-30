@@ -46,8 +46,10 @@
         android:text="@string/add_transaction"
         android:textAllCaps="false"
         android:textSize="16sp"
-        android:src="@android:drawable/ic_input_add"
+        android:tint="@color/md_text_color"
+        android:src="@drawable/ic_add"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        app:showMotionSpec="@anim/nav_default_enter_anim" />
+        app:showMotionSpec="@anim/nav_default_enter_anim"
+        android:contentDescription="@string/add_transaction" />
 </RelativeLayout>

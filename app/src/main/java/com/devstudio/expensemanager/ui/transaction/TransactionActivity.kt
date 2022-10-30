@@ -29,7 +29,7 @@ class TransactionActivity : AppCompatActivity() {
         )
     }
     var selectedCategoryIndex = 0
-    val binding
+    private val binding
         get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,14 +38,75 @@ class TransactionActivity : AppCompatActivity() {
         setContentView(binding.root)
         initialiseTransactionType()
         initialiseTransactionKeyboard()
-        lifecycleScope.launchWhenCreated {
-            val id = intent.getLongExtra("id", 0)
-            transactionViewModel.getTransactionById(id)
-        }
-        transactionViewModel.isEditingOldTransaction.observe(this) {
-            binding.keyboard.saveTransaction.setText(getString(R.string.update_transaction))
-        }
+        fetchAndUpdateTransactionToBeEdited()
         initialiseNavigation()
+        updateCategoryBasedOnTransactionTypeSelection()
+        initialiseSaveTransactionFlow()
+        hideKeyboardOnFocusChange()
+        initialiseAmountTextBackSpaceEvent()
+        binding.keyboard.amountText.showSoftInputOnFocus = false
+    }
+
+    private fun initialiseSaveTransactionFlow() {
+        binding.keyboard.saveTransaction.setOnClickListener {
+            lifecycleScope.launch {
+                val oldTransaction = transactionViewModel.transaction.value
+                if (transactionViewModel.isEditingOldTransaction.value == true && oldTransaction != null) {
+                    updateOldTransaction(oldTransaction)
+                } else {
+                    createNewTransaction()
+                }
+            }
+            finish()
+        }
+    }
+
+    private suspend fun createNewTransaction() {
+        val transaction = Transactions(
+            id = Calendar.getInstance().time.time,
+            amount = binding.keyboard.amountText.text.toString().toDouble(),
+            note = binding.noteText.text.toString(),
+            transactionMode = transactionViewModel.transactionType.value.toString(),
+            transactionDate = Calendar.getInstance().time.time.toString(),
+            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+        )
+        transactionViewModel.insertTransaction(transaction)
+    }
+
+    private suspend fun updateOldTransaction(oldTransaction: Transactions) {
+        oldTransaction.apply {
+            amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString()).toDouble()
+            note = binding.noteText.text.toString()
+            transactionMode = transactionViewModel.transactionType.value.toString()
+            transactionDate = Calendar.getInstance().time.time.toString()
+            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+        }
+        transactionViewModel.updateTransaction(oldTransaction)
+    }
+
+    private fun initialiseAmountTextBackSpaceEvent() {
+        binding.keyboard.amountTextWrapper.setEndIconOnClickListener {
+            binding.keyboard.amountText.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
+            binding.keyboard.amountText.editableText.apply {
+                if (this.isEmpty()) {
+                    this.append("0")
+                }
+            }
+        }
+        binding.keyboard.amountTextWrapper.setEndIconOnLongClickListener {
+            binding.keyboard.amountText.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CLEAR))
+        }
+    }
+
+    private fun hideKeyboardOnFocusChange() {
+        binding.keyboard.amountText.setOnFocusChangeListener { view, b ->
+            val imm: InputMethodManager =
+                getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    private fun updateCategoryBasedOnTransactionTypeSelection() {
         lifecycleScope.launch {
             transactionViewModel.transaction.collectLatest {
                 if (it != null) {
@@ -67,61 +128,16 @@ class TransactionActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.keyboard.saveTransaction.setOnClickListener {
-            lifecycleScope.launch {
-                val oldTransaction = transactionViewModel.transaction.value
-                if (transactionViewModel.isEditingOldTransaction.value == true && oldTransaction !=null) {
-                    oldTransaction.apply {
-                        amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
-                                .toDouble()
-                        note = binding.noteText.text.toString()
-                        transactionMode = transactionViewModel.transactionType.value.toString()
-                        transactionDate = Calendar.getInstance().time.time.toString()
-                        category =
-                            transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
-                    }
-                    transactionViewModel.updateTransaction(oldTransaction)
-                } else {
-                    val transaction = Transactions(
-                        id = Calendar.getInstance().time.time,
-                        amount = binding.keyboard.amountText.text.toString().toDouble(),
-                        note = binding.noteText.text.toString(),
-                        transactionMode = transactionViewModel.transactionType.value.toString(),
-                        transactionDate = Calendar.getInstance().time.time.toString(),
-                        category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
-                    )
-                    transactionViewModel.insertTransaction(transaction)
-                }
-            }
-            finish()
+    }
+
+    private fun fetchAndUpdateTransactionToBeEdited() {
+        lifecycleScope.launchWhenCreated {
+            val id = intent.getLongExtra("id", 0)
+            transactionViewModel.getTransactionById(id)
         }
-        binding.keyboard.amountText.setOnFocusChangeListener { view, b ->
-            val imm: InputMethodManager =
-                getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        transactionViewModel.isEditingOldTransaction.observe(this) {
+            binding.keyboard.saveTransaction.text = getString(R.string.update_transaction)
         }
-        binding.keyboard.amountTextWrapper.setEndIconOnClickListener {
-            binding.keyboard.amountText.dispatchKeyEvent(
-                KeyEvent(
-                    KeyEvent.ACTION_DOWN,
-                    KeyEvent.KEYCODE_DEL
-                )
-            )
-            binding.keyboard.amountText.editableText.apply {
-                if (this.isEmpty()) {
-                    this.append("0")
-                }
-            }
-        }
-        binding.keyboard.amountTextWrapper.setEndIconOnLongClickListener {
-            binding.keyboard.amountText.dispatchKeyEvent(
-                KeyEvent(
-                    KeyEvent.ACTION_DOWN,
-                    KeyEvent.KEYCODE_CLEAR
-                )
-            )
-        }
-        binding.keyboard.amountText.showSoftInputOnFocus = false
     }
 
     private fun initialiseTransactionType() {
