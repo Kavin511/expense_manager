@@ -7,10 +7,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/amount_text_wrapper"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@id/amount_text"
+        app:boxStrokeWidth="0dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         app:boxCornerRadiusBottomEnd="@dimen/default_radius"
         app:boxCornerRadiusBottomStart="@dimen/default_radius"
         app:boxCornerRadiusTopEnd="@dimen/default_radius"
@@ -21,6 +24,8 @@
         <com.devstudioworks.customChipGroup.CustomEditText
             android:id="@+id/amount_text"
             android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -280,7 +285,6 @@
             android:layout_margin="@dimen/default_margin"
             android:layout_weight="1"
             android:text="0"
-
             android:padding="@dimen/keyboard_key_padding"
             app:cardCornerRadius="@dimen/default_radius"
             app:cardElevation="@dimen/default_elevation">
