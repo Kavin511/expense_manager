@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "98988400529",
+    "project_id": "express-wallet-manager",
+    "storage_bucket": "express-wallet-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98988400529:android:69f159b902f9d86ae34430",
+        "android_client_info": {
+          "package_name": "com.devstudio.expensemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "98988400529-754gstj4b9a8l3hljfaqf9gc3isnisbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw7ja4OmyBkmYUW-TnXS4yk2c9zbW20pQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "98988400529-754gstj4b9a8l3hljfaqf9gc3isnisbs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
