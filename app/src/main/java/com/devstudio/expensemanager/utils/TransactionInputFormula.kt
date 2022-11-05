@@ -1,7 +1,7 @@
 package com.devstudio.expensemanager.utils
 
 class TransactionInputFormula {
-    fun calculate(value: String): String {
+    fun calculate(value: String): Double {
         val numbersList = value.split(Regex("[^0-9\\\\.]+")).filter { it.isNotEmpty() }
         val operationsLst = value.filter { !it.isDigit() && it != '.' }
         var res = 0.0
@@ -20,9 +20,11 @@ class TransactionInputFormula {
                     value1.toDouble()
                 }
             }
-            return if (res == 0.0) "0" else CurrencyFormatter().format(res)
+            return if (res == 0.0) 0.0 else kotlin.math.abs(
+                CurrencyFormatter().format(res).toDouble()
+            )
         } catch (e: Exception) {
-            return "0"
+            return 0.0
         }
     }
 

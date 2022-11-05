@@ -33,7 +33,7 @@ class TransactionKeyboard(
         keyboardBinding.equalToOperator.setOnClickListener {
             val value = editable.toString()
             editable.clear()
-            editable.insert(0, TransactionInputFormula().calculate(value))
+            editable.insert(0, TransactionInputFormula().calculate(value).toString())
         }
     }
 
@@ -53,8 +53,6 @@ class TransactionKeyboard(
                     event
                 )
             )
-        } else {
-            editable.append("0")
         }
     }
 
@@ -122,6 +120,22 @@ class TransactionKeyboard(
     fun initialiseListeners() {
         numbersClickListeners()
         operatorClickListeners()
+        initialiseAmountTextBackSpaceEvent()
+    }
+
+    private fun initialiseAmountTextBackSpaceEvent() {
+        keyboardBinding.amountTextWrapper.setEndIconOnClickListener {
+            keyboardBinding.amountText.dispatchKeyEvent(
+                KeyEvent(
+                    KeyEvent.ACTION_DOWN,
+                    KeyEvent.KEYCODE_DEL
+                )
+            )
+        }
+        keyboardBinding.amountTextWrapper.setEndIconOnLongClickListener {
+            editable.clear()
+            true
+        }
     }
 }
 

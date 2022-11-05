@@ -1,13 +1,13 @@
 package com.devstudio.expensemanager.ui.transaction
 
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.devstudio.expensemanager.ExpenseManagerApplication
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.databinding.ActivityTransactionBinding
 import com.devstudio.expensemanager.db.models.Transactions
@@ -43,7 +43,6 @@ class TransactionActivity : AppCompatActivity() {
         updateCategoryBasedOnTransactionTypeSelection()
         initialiseSaveTransactionFlow()
         hideKeyboardOnFocusChange()
-        initialiseAmountTextBackSpaceEvent()
         binding.keyboard.amountText.showSoftInputOnFocus = false
     }
 
@@ -64,7 +63,7 @@ class TransactionActivity : AppCompatActivity() {
     private suspend fun createNewTransaction() {
         val transaction = Transactions(
             id = Calendar.getInstance().time.time,
-            amount = binding.keyboard.amountText.text.toString().toDouble(),
+            amount = getTransactionAmount(),
             note = binding.noteText.text.toString(),
             transactionMode = transactionViewModel.transactionType.value.toString(),
             transactionDate = Calendar.getInstance().time.time.toString(),
@@ -73,29 +72,21 @@ class TransactionActivity : AppCompatActivity() {
         transactionViewModel.insertTransaction(transaction)
     }
 
+    private fun getTransactionAmount(): Double {
+        return TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
+    }
+
     private suspend fun updateOldTransaction(oldTransaction: Transactions) {
         oldTransaction.apply {
-            amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString()).toDouble()
+            amount =
+                TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = Calendar.getInstance().time.time.toString()
-            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+            category =
+                transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
         }
         transactionViewModel.updateTransaction(oldTransaction)
-    }
-
-    private fun initialiseAmountTextBackSpaceEvent() {
-        binding.keyboard.amountTextWrapper.setEndIconOnClickListener {
-            binding.keyboard.amountText.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
-            binding.keyboard.amountText.editableText.apply {
-                if (this.isEmpty()) {
-                    this.append("0")
-                }
-            }
-        }
-        binding.keyboard.amountTextWrapper.setEndIconOnLongClickListener {
-            binding.keyboard.amountText.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CLEAR))
-        }
     }
 
     private fun hideKeyboardOnFocusChange() {
@@ -189,12 +180,11 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun initialiseTransactionKeyboard() {
-        val transactionKeyboard =
-            TransactionKeyboard(
-                baseContext,
-                binding.keyboard.amountText.editableText,
-                binding.keyboard
-            )
+        val transactionKeyboard = TransactionKeyboard(
+            baseContext,
+            binding.keyboard.amountText.editableText,
+            binding.keyboard
+        )
         transactionKeyboard.initialiseListeners()
         transactionViewModel.viewModelScope.launch {
             binding.keyboard.amountText.selectionPosition.collect {

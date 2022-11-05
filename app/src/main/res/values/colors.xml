@@ -62,4 +62,8 @@
     <color name="pink">#FCEEED</color>
     <color name="green">#E7FBE8</color>
     <color name="md_text_color">#222222</color>
+    <color name="md_stroke_color">@color/md_theme_dark_surfaceVariant</color>
+    <color name="material_outlined_button_color">@color/md_theme_light_primaryContainer</color>
+    <color name="material_button_color">@color/md_theme_light_primary</color>
+    <color name="text_input_background_color" >@color/md_theme_light_surfaceTint</color>
 </resources>

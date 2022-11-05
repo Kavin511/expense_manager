@@ -26,19 +26,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_above="@+id/keyboard"
+            android:layout_above="@+id/keyboard_wrapper"
             android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/default_margin"
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/transaction_mode"
-            style="?attr/materialButtonToggleGroupStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -51,7 +50,7 @@
 
             <Button
                 android:id="@+id/expense_mode"
-                style="?attr/materialButtonOutlinedStyle"
+                style="@style/toggleButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -61,7 +60,7 @@
 
             <Button
                 android:id="@+id/income_mode"
-                style="?attr/materialButtonOutlinedStyle"
+                style="@style/toggleButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -112,12 +111,22 @@
                     app:singleSelection="true" />
             </RelativeLayout>
         </ScrollView>
-        <include
-            android:id="@+id/keyboard"
-            layout="@layout/keyboard"
+
+        <FrameLayout
+            android:id="@+id/keyboard_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/keyboard_background"
+            android:elevation="@dimen/default_elevation">
+
+            <include
+                android:id="@+id/keyboard"
+                layout="@layout/keyboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
