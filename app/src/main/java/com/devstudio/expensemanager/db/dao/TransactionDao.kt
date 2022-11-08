@@ -3,6 +3,7 @@ package com.devstudio.expensemanager.db.dao
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.Query
@@ -26,4 +27,7 @@ interface TransactionDao {
 
     @Update
     suspend fun updateTransaction(transactions: Transactions)
+
+    @Delete
+    suspend fun deleteTransaction(transaction: Transactions)
 }

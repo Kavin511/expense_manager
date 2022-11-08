@@ -25,7 +25,7 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
         repository.insert(transaction)
     }
 
-    suspend fun getTransactionById(id: Long) {
+    suspend fun getAndUpdateTransactionById(id: Long) {
         transaction.value = repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
     }
 
