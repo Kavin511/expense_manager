@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:gravity="bottom">
+        <shape>
+            <size android:height="1dp" />
+            <padding android:top="@dimen/default_padding"/>
+            <solid android:color="@color/md_icon_color" />
+        </shape>
+    </item>
+</layer-list>

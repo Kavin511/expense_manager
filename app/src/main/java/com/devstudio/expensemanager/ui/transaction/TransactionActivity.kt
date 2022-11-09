@@ -1,7 +1,6 @@
 package com.devstudio.expensemanager.ui.transaction
 
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -43,6 +42,7 @@ class TransactionActivity : AppCompatActivity() {
         initialiseNavigation()
         initialiseSaveTransactionFlow()
         hideKeyboardOnFocusChange()
+        initialiseTransactionDateClickListener()
         binding.keyboard.amountText.showSoftInputOnFocus = false
     }
 
@@ -203,15 +203,17 @@ class TransactionActivity : AppCompatActivity() {
         _binding = null
     }
 
-    fun selectDate(view: View) {
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-        datePicker.setTitleText("Select transaction date")
-        val build = datePicker.build()
-        build
-            .addOnPositiveButtonClickListener {
-                binding.transactionDate.text = TransactionUtils().convertLongToDate(it)
-                selectedDate = it.toString()
-            }
-        build.show(supportFragmentManager, "")
+    private fun initialiseTransactionDateClickListener() {
+        binding.transactionDate.setOnClickListener {
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+            datePicker.setTitleText("Select transaction date")
+            val build = datePicker.build()
+            build
+                .addOnPositiveButtonClickListener {
+                    binding.transactionDate.text = TransactionUtils().convertLongToDate(it)
+                    selectedDate = it.toString()
+                }
+            build.show(supportFragmentManager, "")
+        }
     }
 }

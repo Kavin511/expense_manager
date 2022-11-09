@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/keyboard_wrapper"
             android:layout_alignParentTop="true"
+            android:padding="@dimen/default_padding"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
@@ -40,6 +41,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:padding="@dimen/default_padding"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
@@ -105,22 +107,22 @@
                         android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/transaction_date"
+                    style="@style/Widget.Material3.CompoundButton.RadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/note_text_wrapper"
                     android:layout_marginStart="@dimen/default_margin"
                     android:layout_marginTop="@dimen/default_margin"
                     android:layout_marginEnd="@dimen/default_margin"
+                    android:background="@drawable/border_bottom_line"
                     android:layout_marginBottom="@dimen/default_margin"
-                    android:drawablePadding="@dimen/default_padding"
                     android:gravity="center_vertical"
-                    android:onClick="selectDate"
                     android:includeFontPadding="true"
                     android:padding="@dimen/default_padding"
                     android:text="@string/select_transaction_date"
-                    app:drawableStartCompat="@drawable/date_icon" />
+                    app:drawableEndCompat="@drawable/date_icon" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/category_group"

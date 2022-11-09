@@ -12,7 +12,7 @@ import com.devstudio.expensemanager.db.models.Transactions
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM  transactions_table order by transactionDate ASC")
+    @Query("SELECT * FROM  transactions_table order by transactionDate DESC")
     fun getAllTransaction(): LiveData<List<Transactions>>
 
     @Insert(onConflict = IGNORE)
