@@ -17,6 +17,7 @@
         <activity
             android:name=".ui.transaction.TransactionActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name="com.devstudio.expensemanager.MainActivity"

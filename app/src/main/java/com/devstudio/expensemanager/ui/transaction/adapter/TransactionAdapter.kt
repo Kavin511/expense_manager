@@ -45,7 +45,7 @@ class TransactionListAdapter(
         val amount = holder.amount
         val transactions = expenseSet[position]
         if (transactions.transactionMode == "EXPENSE") {
-            amount.text = "- ₹".plus(transactions.amount.toString())
+            amount.text = "₹".plus(transactions.amount.toString())
             holder.transactionWrapper.setCardBackgroundColor(
                 ContextCompat.getColor(
                     context,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="NumberPadKeyStyle" parent="Widget.Material3.Button.ElevatedButton">
+    <style name="NumberPadKeyStyle" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
     </style>

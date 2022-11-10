@@ -18,6 +18,7 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="snapMargins"
             app:navigationIcon="@drawable/ic_close"
+            app:menu="@menu/transaction_menu"
             app:navigationIconTint="?attr/colorOnSurface"
             app:title="@string/add_transaction" />
 

@@ -1,6 +1,8 @@
 package com.devstudio.expensemanager.ui.transaction
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,7 @@ import com.devstudio.expensemanager.utils.TransactionInputFormula
 import com.devstudio.utils.TransactionUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
@@ -36,6 +39,8 @@ class TransactionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.topAppBar)
+        setTheme(R.style.AppTheme)
         initialiseTransactionType()
         initialiseTransactionKeyboard()
         fetchAndUpdateTransactionToBeEdited()
@@ -206,14 +211,44 @@ class TransactionActivity : AppCompatActivity() {
     private fun initialiseTransactionDateClickListener() {
         binding.transactionDate.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker()
-            datePicker.setTitleText("Select transaction date")
             val build = datePicker.build()
-            build
-                .addOnPositiveButtonClickListener {
-                    binding.transactionDate.text = TransactionUtils().convertLongToDate(it)
-                    selectedDate = it.toString()
-                }
+            build.addOnPositiveButtonClickListener {
+                binding.transactionDate.text = TransactionUtils().convertLongToDate(it)
+                selectedDate = it.toString()
+            }
             build.show(supportFragmentManager, "")
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.transaction_menu, menu)
+        lifecycleScope.launch {
+            transactionViewModel.transaction.collectLatest {
+                menu?.findItem(R.id.transaction_delete)?.isVisible = it != null
+            }
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.transaction_delete -> {
+                deleteTransactionAlert()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteTransactionAlert() {
+        val materialAlertDialogBuilder = MaterialAlertDialogBuilder(this@TransactionActivity)
+        materialAlertDialogBuilder.setTitle("Are you sure to delete this transaction")
+            .setPositiveButton("Delete") { dialog, _ ->
+                transactionViewModel.deleteTransaction()
+                dialog.dismiss()
+                this.finish()
+            }.setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+        materialAlertDialogBuilder.show()
     }
 }
