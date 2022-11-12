@@ -3,6 +3,7 @@ package com.devstudio.expensemanager.db.dao
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.Query
@@ -11,7 +12,7 @@ import com.devstudio.expensemanager.db.models.Transactions
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM  transactions_table order by transactionDate ASC")
+    @Query("SELECT * FROM  transactions_table order by transactionDate DESC")
     fun getAllTransaction(): LiveData<List<Transactions>>
 
     @Insert(onConflict = IGNORE)
@@ -26,4 +27,7 @@ interface TransactionDao {
 
     @Update
     suspend fun updateTransaction(transactions: Transactions)
+
+    @Delete
+    suspend fun deleteTransaction(transaction: Transactions)
 }

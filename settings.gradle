@@ -17,3 +17,4 @@ rootProject.name = "ExpenseManager"
 include ':app'
 include ':uiComponents'
 include ':domainmodels'
+include ':utils'

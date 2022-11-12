@@ -50,17 +50,17 @@ class CustomChipGroup : ChipGroup {
 
     private var row = 0
 
-    override fun onLayout(sizeChanged: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (childCount == 0) {
-            return
-        }
-        row = 1
-        val paddingStart = paddingRight
-        val paddingEnd = paddingLeft
-        val childTop = paddingTop
-        val maxChildEnd = right - left - paddingEnd
-        inflateChipItemsToLayout(paddingStart, maxChildEnd, paddingStart, childTop, childTop)
-    }
+//    override fun onLayout(sizeChanged: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+//        if (childCount == 0) {
+//            return
+//        }
+//        row = 1
+//        val paddingStart = paddingRight
+//        val paddingEnd = paddingLeft
+//        val childTop = paddingTop
+//        val maxChildEnd = right - left - paddingEnd
+//        inflateChipItemsToLayout(paddingStart, maxChildEnd, paddingStart, childTop, childTop)
+//    }
 
     private fun inflateChipItemsToLayout(
         childStart: Int,

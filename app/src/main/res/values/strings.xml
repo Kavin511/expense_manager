@@ -12,4 +12,6 @@
     <string name="income">Income</string>
     <string name="save_transaction">Save Transaction</string>
     <string name="update_transaction">Update Transaction</string>
+    <string name="select_transaction_date">Select transaction date</string>
+    <string name="enter_notes">Enter notes</string>
 </resources>

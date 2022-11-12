@@ -38,6 +38,7 @@ class TransactionKeyboard(
     }
 
     private fun validateAndAppendOperator(event: Int) {
+        keyboardBinding.amountText.requestFocus()
         if (keyboardBinding.amountText.editableText.isNotEmpty()) {
             if (keyboardBinding.amountText.editableText.toString().last().isOperator()) {
                 keyboardBinding.amountText.dispatchKeyEvent(
@@ -109,6 +110,7 @@ class TransactionKeyboard(
         if (editable.toString() == "0") {
             editable.clear()
         }
+        keyboardBinding.amountText.requestFocus()
         keyboardBinding.amountText.dispatchKeyEvent(
             KeyEvent(
                 KeyEvent.ACTION_DOWN,

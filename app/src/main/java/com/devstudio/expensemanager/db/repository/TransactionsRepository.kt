@@ -15,10 +15,10 @@ class TransactionsRepository(private val transactionDao: TransactionDao) {
     suspend fun findTransactionById(id: Long): Transactions? {
         return transactionDao.getTransactionById(id)
     }
-//
-//    suspend fun allIncomeTransactions(): Flow<List<Transactions>> {
-//        return transactionDao.getTransactionByMode("income")
-//    }
+
+    suspend fun deleteTransactions(transactions: Transactions){
+        return transactionDao.deleteTransaction(transactions)
+    }
 
     @WorkerThread
     suspend fun insert(transactions: Transactions) {

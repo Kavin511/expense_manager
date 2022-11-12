@@ -3,11 +3,13 @@ package com.devstudio.expensemanager.ui.transaction.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.db.repository.TransactionsRepository
 import com.devstudio.expensemanager.ui.transaction.models.TransactionMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class TransactionViewModel(private val repository: TransactionsRepository) : ViewModel() {
     val transaction = MutableStateFlow<Transactions?>(null)
@@ -25,12 +27,20 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
         repository.insert(transaction)
     }
 
-    suspend fun getTransactionById(id: Long) {
+    suspend fun getAndUpdateTransactionById(id: Long) {
         transaction.value = repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
     }
 
     suspend fun updateTransaction(oldTransactionObject: Transactions) {
         repository.updateTransaction(oldTransactionObject)
+    }
+
+    fun deleteTransaction() {
+        viewModelScope.launch {
+            if (transaction.value != null) {
+                repository.deleteTransactions(transaction.value!!)
+            }
+        }
     }
 }
 

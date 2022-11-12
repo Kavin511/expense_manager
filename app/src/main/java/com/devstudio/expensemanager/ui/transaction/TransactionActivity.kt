@@ -1,11 +1,11 @@
 package com.devstudio.expensemanager.ui.transaction
 
-import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.devstudio.expensemanager.R
@@ -15,7 +15,10 @@ import com.devstudio.expensemanager.ui.transaction.models.TransactionMode
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModel
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
 import com.devstudio.expensemanager.utils.TransactionInputFormula
+import com.devstudio.utils.TransactionUtils
 import com.google.android.material.chip.Chip
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
@@ -36,13 +39,15 @@ class TransactionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.topAppBar)
+        setTheme(R.style.AppTheme)
         initialiseTransactionType()
         initialiseTransactionKeyboard()
         fetchAndUpdateTransactionToBeEdited()
         initialiseNavigation()
-        updateCategoryBasedOnTransactionTypeSelection()
         initialiseSaveTransactionFlow()
         hideKeyboardOnFocusChange()
+        initialiseTransactionDateClickListener()
         binding.keyboard.amountText.showSoftInputOnFocus = false
     }
 
@@ -60,13 +65,17 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        var selectedDate = Calendar.getInstance().time.time.toString()
+    }
+
     private suspend fun createNewTransaction() {
         val transaction = Transactions(
             id = Calendar.getInstance().time.time,
             amount = getTransactionAmount(),
             note = binding.noteText.text.toString(),
             transactionMode = transactionViewModel.transactionType.value.toString(),
-            transactionDate = Calendar.getInstance().time.time.toString(),
+            transactionDate = selectedDate,
             category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
         )
         transactionViewModel.insertTransaction(transaction)
@@ -82,7 +91,7 @@ class TransactionActivity : AppCompatActivity() {
                 TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
-            transactionDate = Calendar.getInstance().time.time.toString()
+            transactionDate = selectedDate
             category =
                 transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
         }
@@ -97,37 +106,37 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateCategoryBasedOnTransactionTypeSelection() {
-        lifecycleScope.launch {
-            transactionViewModel.transaction.collectLatest {
-                if (it != null) {
-                    binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
-                    binding.noteText.setText(it.note)
-                    if (it.transactionMode == "EXPENSE") {
-                        transactionViewModel.transactionType.value = TransactionMode.EXPENSE
-                        binding.transactionMode.check(R.id.expense_mode)
-                        selectedCategoryIndex =
-                            TransactionMode.EXPENSE.categoryList.indexOf(it.category)
-                        binding.categoryGroup.check(selectedCategoryIndex)
-                    } else {
-                        transactionViewModel.transactionType.value = TransactionMode.INCOME
-                        binding.transactionMode.check(R.id.income_mode)
-                        selectedCategoryIndex =
-                            TransactionMode.INCOME.categoryList.indexOf(it.category)
-                        binding.categoryGroup.check(selectedCategoryIndex)
-                    }
-                }
-            }
-        }
-    }
-
     private fun fetchAndUpdateTransactionToBeEdited() {
         lifecycleScope.launchWhenCreated {
             val id = intent.getLongExtra("id", 0)
-            transactionViewModel.getTransactionById(id)
+            transactionViewModel.getAndUpdateTransactionById(id)
+            updateCategoryBasedOnTransactionTypeSelection()
         }
         transactionViewModel.isEditingOldTransaction.observe(this) {
             binding.keyboard.saveTransaction.text = getString(R.string.update_transaction)
+        }
+    }
+
+    private suspend fun updateCategoryBasedOnTransactionTypeSelection() {
+        transactionViewModel.transaction.collectLatest {
+            if (it != null) {
+                binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
+                binding.noteText.setText(it.note)
+                binding.transactionDate.text =
+                    TransactionUtils().convertLongToDate(it.transactionDate.toLong())
+                if (it.transactionMode == "EXPENSE") {
+                    transactionViewModel.transactionType.value = TransactionMode.EXPENSE
+                    binding.transactionMode.check(R.id.expense_mode)
+                    selectedCategoryIndex =
+                        TransactionMode.EXPENSE.categoryList.indexOf(it.category)
+                    binding.categoryGroup.check(selectedCategoryIndex)
+                } else {
+                    transactionViewModel.transactionType.value = TransactionMode.INCOME
+                    binding.transactionMode.check(R.id.income_mode)
+                    selectedCategoryIndex = TransactionMode.INCOME.categoryList.indexOf(it.category)
+                    binding.categoryGroup.check(selectedCategoryIndex)
+                }
+            }
         }
     }
 
@@ -197,5 +206,49 @@ class TransactionActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun initialiseTransactionDateClickListener() {
+        binding.transactionDate.setOnClickListener {
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+            val build = datePicker.build()
+            build.addOnPositiveButtonClickListener {
+                binding.transactionDate.text = TransactionUtils().convertLongToDate(it)
+                selectedDate = it.toString()
+            }
+            build.show(supportFragmentManager, "")
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.transaction_menu, menu)
+        lifecycleScope.launch {
+            transactionViewModel.transaction.collectLatest {
+                menu?.findItem(R.id.transaction_delete)?.isVisible = it != null
+            }
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.transaction_delete -> {
+                deleteTransactionAlert()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteTransactionAlert() {
+        val materialAlertDialogBuilder = MaterialAlertDialogBuilder(this@TransactionActivity)
+        materialAlertDialogBuilder.setTitle("Are you sure to delete this transaction")
+            .setPositiveButton("Delete") { dialog, _ ->
+                transactionViewModel.deleteTransaction()
+                dialog.dismiss()
+                this.finish()
+            }.setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+        materialAlertDialogBuilder.show()
     }
 }
