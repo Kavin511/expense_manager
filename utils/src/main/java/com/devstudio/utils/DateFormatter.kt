@@ -2,7 +2,7 @@ package com.devstudio.utils
 
 import java.util.*
 
-class TransactionUtils {
+class DateFormatter {
     fun convertLongToDate(time: Long): String {
         val cal = Calendar.getInstance()
         val monthNames =

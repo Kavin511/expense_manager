@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.db.models.Transactions
-import com.devstudio.utils.TransactionUtils
+import com.devstudio.utils.DateFormatter
 import java.lang.String
 import java.util.*
 
@@ -61,7 +61,7 @@ class TransactionListAdapter(
                 )
             )
         }
-        holder.date.text = TransactionUtils().convertLongToDate(transactions.transactionDate.toLong())
+        holder.date.text = DateFormatter().convertLongToDate(transactions.transactionDate.toLong())
         holder.category.text = transactions.category
         holder.transactionWrapper.setOnClickListener {
             onClick(expenseSet[position])

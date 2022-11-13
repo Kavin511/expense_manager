@@ -14,8 +14,8 @@ import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.ui.transaction.models.TransactionMode
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModel
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
-import com.devstudio.expensemanager.utils.TransactionInputFormula
-import com.devstudio.utils.TransactionUtils
+import com.devstudio.utils.formulas.TransactionInputFormula
+import com.devstudio.utils.DateFormatter
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -123,7 +123,7 @@ class TransactionActivity : AppCompatActivity() {
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
                 binding.transactionDate.text =
-                    TransactionUtils().convertLongToDate(it.transactionDate.toLong())
+                    DateFormatter().convertLongToDate(it.transactionDate.toLong())
                 if (it.transactionMode == "EXPENSE") {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     binding.transactionMode.check(R.id.expense_mode)
@@ -213,7 +213,7 @@ class TransactionActivity : AppCompatActivity() {
             val datePicker = MaterialDatePicker.Builder.datePicker()
             val build = datePicker.build()
             build.addOnPositiveButtonClickListener {
-                binding.transactionDate.text = TransactionUtils().convertLongToDate(it)
+                binding.transactionDate.text = DateFormatter().convertLongToDate(it)
                 selectedDate = it.toString()
             }
             build.show(supportFragmentManager, "")

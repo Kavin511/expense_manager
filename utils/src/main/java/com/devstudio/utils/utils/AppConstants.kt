@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.utils
+package com.devstudio.utils.utils
 
 class AppConstants {
     companion object {

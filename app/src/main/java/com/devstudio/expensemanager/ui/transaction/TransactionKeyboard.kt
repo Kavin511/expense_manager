@@ -6,7 +6,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import com.devstudio.expensemanager.databinding.KeyboardBinding
-import com.devstudio.expensemanager.utils.TransactionInputFormula
+import com.devstudio.utils.formulas.TransactionInputFormula
 
 class TransactionKeyboard(
     val context: Context,

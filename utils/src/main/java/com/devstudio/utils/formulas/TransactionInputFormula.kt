@@ -1,30 +1,24 @@
-package com.devstudio.expensemanager.utils
+package com.devstudio.utils.formulas
+
+import com.devstudio.utils.utils.CurrencyFormatter
 
 class TransactionInputFormula {
     fun calculate(value: String): Double {
         val numbersList = value.split(Regex("[^0-9\\\\.]+")).filter { it.isNotEmpty() }
         val operationsLst = value.filter { !it.isDigit() && it != '.' }
-        var res = 0.0
-        var operatorPosition = 0
-        try {
-            for (i in numbersList.indices step 2) {
-                val value1 = numbersList[i]
-                res += if (i + 1 < numbersList.size) {
-                    val value2 = numbersList[i + 1]
-                    applyOperator(
-                        value1.toDouble(),
-                        operationsLst[operatorPosition++].toString(),
-                        value2.toDouble()
-                    ).toDouble()
-                } else {
-                    value1.toDouble()
-                }
+        return try {
+            var res = numbersList[0]
+            var operatorPosition = 0
+            if(value[0]=='-'){
+                res=value[0]+res
+                operatorPosition++
             }
-            return if (res == 0.0) 0.0 else kotlin.math.abs(
-                CurrencyFormatter().format(res).toDouble()
-            )
+            for (i in 1 until numbersList.size) {
+                res = applyOperator(res.toDouble(), operationsLst[operatorPosition++].toString(), numbersList[i].toDouble())
+            }
+            if (res == "0.0") 0.0 else CurrencyFormatter().format(res.toDouble()).toDouble()
         } catch (e: Exception) {
-            return 0.0
+            0.0
         }
     }
 
@@ -49,6 +43,6 @@ class TransactionInputFormula {
                 result = value1 * value2
             }
         }
-        return CurrencyFormatter().format(result)
+        return result.toString()
     }
 }

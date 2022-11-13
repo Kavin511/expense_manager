@@ -11,18 +11,6 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.devstudio.expensemanager.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.devstudio.expensemanager.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications"/>
     <activity
         android:id="@+id/transactionActivity"
         tools:layout="@layout/activity_transaction"
