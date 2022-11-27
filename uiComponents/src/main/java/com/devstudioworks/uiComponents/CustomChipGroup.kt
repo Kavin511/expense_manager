@@ -1,9 +1,10 @@
-package com.devstudioworks.customChipGroup
+package com.devstudioworks.uiComponents
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.MarginLayoutParamsCompat
+import com.devstudioworks.customChipGroup.R
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 

@@ -1,4 +1,4 @@
-package com.devstudioworks.customChipGroup
+package com.devstudioworks.uiComponents
 
 import android.content.Context
 import android.util.AttributeSet

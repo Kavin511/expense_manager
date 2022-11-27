@@ -1,0 +1,8 @@
+dependencyResolutionManagement {
+    versionCatalogs{
+        libs{
+            version('material_version','1.0.1')
+            alias('compose.material3').to('androidx.compose.material3','material3').versionRef('material_version')
+        }
+    }
+}

@@ -14,8 +14,8 @@ import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.ui.transaction.models.TransactionMode
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModel
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
-import com.devstudio.utils.formulas.TransactionInputFormula
 import com.devstudio.utils.DateFormatter
+import com.devstudio.utils.formulas.TransactionInputFormula
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -99,7 +99,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboardOnFocusChange() {
-        binding.keyboard.amountText.setOnFocusChangeListener { view, b ->
+        binding.keyboard.amountText.setOnFocusChangeListener { view, _ ->
             val imm: InputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -113,7 +113,9 @@ class TransactionActivity : AppCompatActivity() {
             updateCategoryBasedOnTransactionTypeSelection()
         }
         transactionViewModel.isEditingOldTransaction.observe(this) {
-            binding.keyboard.saveTransaction.text = getString(R.string.update_transaction)
+            if (it) {
+                binding.keyboard.saveTransaction.text = getString(R.string.update_transaction)
+            }
         }
     }
 
@@ -141,7 +143,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun initialiseTransactionType() {
-        binding.transactionMode.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        binding.transactionMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
                 R.id.expense_mode -> {
                     if (isChecked) {
@@ -149,7 +151,7 @@ class TransactionActivity : AppCompatActivity() {
                         transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     }
                 }
-                R.id.income_mode -> {
+                R.id.income_mode  -> {
                     if (isChecked) {
                         selectedCategoryIndex = 0
                         transactionViewModel.transactionType.value = TransactionMode.INCOME

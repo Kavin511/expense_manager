@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.utils.DateFormatter
-import java.lang.String
 import java.util.*
 
 class TransactionListAdapter(
@@ -72,7 +71,7 @@ class TransactionListAdapter(
         }
     }
 
-    private fun convertLongToDate(time: Long): kotlin.String? {
+    private fun convertLongToDate(time: Long): kotlin.String {
         val cal = Calendar.getInstance()
         val monthNames =
             listOf("Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
