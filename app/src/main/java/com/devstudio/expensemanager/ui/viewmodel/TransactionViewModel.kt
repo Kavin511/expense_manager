@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.db.repository.TransactionsRepository
-import com.devstudio.expensemanager.ui.transaction.models.TransactionMode
+import com.devstudio.expensemanager.model.TransactionMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -20,8 +20,6 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     private val _text = MutableStateFlow("Click + to add transactions")
 
     val text: StateFlow<String> = _text
-    val allTransactions: MutableStateFlow<List<Transactions>> =
-        MutableStateFlow(repository.allTransactions.value ?: listOf())
 
     suspend fun insertTransaction(transaction: Transactions) {
         repository.insert(transaction)

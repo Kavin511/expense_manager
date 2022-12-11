@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.ui.transaction
+package com.devstudio.expensemanager.ui.transaction.uicomponents
 
 import android.content.Context
 import android.text.Editable

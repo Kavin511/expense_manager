@@ -2,9 +2,12 @@ package com.devstudioworks.uiComponents.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 
 
 private val LightColors = lightColorScheme(
@@ -78,16 +81,39 @@ fun MaterialTheme(
     content: @Composable() () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
-        LightColors
+        lightPalette
     } else {
-        DarkColors
+        darkPalette
     }
 
-    MaterialTheme(
-        colorScheme = colors,
-        content = content
+    CompositionLocalProvider(LocalColors provides colors) {
+        MaterialTheme(
+            colorScheme = colors.material,
+            content = content
+        )
+    }
+}
+
+val lightPalette =
+    AppColor(
+        material = LightColors,
+        transactionIncomeColor = md_theme_light_income_tint,
+        transactionExpenseColor = md_theme_light_expense_tint,
+        incomeIconTint = md_theme_light_income_icon_tint,
+        expenseIconTint = md_theme_light_expense_icon_tint,
     )
-}
-class Colors {
-    
-}
+
+val darkPalette =
+    AppColor(
+        material = DarkColors,
+        transactionIncomeColor = md_theme_dark_income_tint,
+        transactionExpenseColor = md_theme_dark_expense_tint,
+        incomeIconTint = md_theme_dark_income_icon_tint,
+        expenseIconTint = md_theme_dark_expense_icon_tint,
+    )
+
+private val LocalColors = staticCompositionLocalOf { lightPalette }
+val myColors: AppColor
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalColors.current

@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.ui.transaction
+package com.devstudio.expensemanager.ui.transaction.acivity
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,12 +6,14 @@ import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.databinding.ActivityTransactionBinding
 import com.devstudio.expensemanager.db.models.Transactions
-import com.devstudio.expensemanager.ui.transaction.models.TransactionMode
+import com.devstudio.expensemanager.model.TransactionMode
+import com.devstudio.expensemanager.ui.transaction.uicomponents.TransactionKeyboard
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModel
 import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
 import com.devstudio.utils.DateFormatter
@@ -126,6 +128,7 @@ class TransactionActivity : AppCompatActivity() {
                 binding.noteText.setText(it.note)
                 binding.transactionDate.text =
                     DateFormatter().convertLongToDate(it.transactionDate.toLong())
+                selectedDate = it.transactionDate
                 if (it.transactionMode == "EXPENSE") {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     binding.transactionMode.check(R.id.expense_mode)
@@ -198,7 +201,7 @@ class TransactionActivity : AppCompatActivity() {
         )
         transactionKeyboard.initialiseListeners()
         transactionViewModel.viewModelScope.launch {
-            binding.keyboard.amountText.selectionPosition.collect {
+            binding.keyboard.amountText.selectionPosition.flowWithLifecycle(lifecycle).collect {
                 transactionKeyboard.selectionPosition = it
             }
         }

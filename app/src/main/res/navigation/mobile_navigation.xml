@@ -14,6 +14,6 @@
     <activity
         android:id="@+id/transactionActivity"
         tools:layout="@layout/activity_transaction"
-        android:name="com.devstudio.expensemanager.ui.transaction.TransactionActivity"
+        android:name="com.devstudio.expensemanager.ui.transaction.acivity.TransactionActivity"
         android:label="transactionActivity" />
 </navigation>
