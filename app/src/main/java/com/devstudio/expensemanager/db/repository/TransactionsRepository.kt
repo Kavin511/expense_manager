@@ -4,12 +4,14 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.devstudio.expensemanager.db.dao.TransactionDao
 import com.devstudio.expensemanager.db.models.Transactions
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 class TransactionsRepository(private val transactionDao: TransactionDao) {
-    val allTransactions = transactionDao.getAllTransaction()
+    val transactions = transactionDao.getTransactions()
 
-    suspend fun allExpenseTransactions(): LiveData<List<Transactions>> {
-        return transactionDao.getTransactionByMode()
+    fun allTransactionsStream(): LiveData<List<Transactions>> {
+        return transactionDao.getAllTransactionsStream()
     }
 
     suspend fun findTransactionById(id: Long): Transactions? {
@@ -18,6 +20,14 @@ class TransactionsRepository(private val transactionDao: TransactionDao) {
 
     suspend fun deleteTransactions(transactions: Transactions){
         return transactionDao.deleteTransaction(transactions)
+    }
+
+    suspend fun getExpenseTransaction():Flow<List<Transactions>>{
+        return transactionDao.getExpenseTransactionStream()
+    }
+
+    suspend fun getIncomeTransaction():Flow<List<Transactions>>{
+        return transactionDao.getIncomeTransactionStream()
     }
 
     @WorkerThread

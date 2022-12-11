@@ -2,18 +2,19 @@ package com.devstudio.expensemanager.db.dao
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.IGNORE
-import androidx.room.Query
-import androidx.room.Update
 import com.devstudio.expensemanager.db.models.Transactions
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM  transactions_table order by transactionDate DESC")
-    fun getAllTransaction(): LiveData<List<Transactions>>
+    @Query("SELECT * FROM  transactions_table order by id DESC")
+    fun getAllTransactionsStream(): LiveData<List<Transactions>>
+
+    @Query("SELECT * FROM transactions_table order by id DESC")
+    fun getTransactions(): List<Transactions>
 
     @Insert(onConflict = IGNORE)
     suspend fun insertTransaction(transactionMode: Transactions)
@@ -30,4 +31,10 @@ interface TransactionDao {
 
     @Delete
     suspend fun deleteTransaction(transaction: Transactions)
+
+    @Query("SELECT * FROM TRANSACTIONS_TABLE WHERE isEditingOldTransaction like :mode")
+    fun getExpenseTransactionStream(mode: String = "EXPENSE"): Flow<List<Transactions>>
+
+    @Query("SELECT * FROM TRANSACTIONS_TABLE WHERE isEditingOldTransaction like :mode")
+    fun getIncomeTransactionStream(mode: String = "INCOME"): Flow<List<Transactions>>
 }
