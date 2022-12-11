@@ -214,14 +214,19 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun initialiseTransactionDateClickListener() {
+        binding.transactionDate.text = DateFormatter().convertLongToDate(selectedDate.toLong())
         binding.transactionDate.setOnClickListener {
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-            val build = datePicker.build()
-            build.addOnPositiveButtonClickListener {
+            val calendarConstraintsBuilder = CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointBackward.now())
+            val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
+            datePickerBuilder.setCalendarConstraints(calendarConstraintsBuilder.build())
+            datePickerBuilder.setSelection(Calendar.getInstance().timeInMillis)
+            val datePicker = datePickerBuilder.build()
+            datePicker.addOnPositiveButtonClickListener {
                 binding.transactionDate.text = DateFormatter().convertLongToDate(it)
                 selectedDate = it.toString()
             }
-            build.show(supportFragmentManager, "")
+            datePicker.show(supportFragmentManager, "")
         }
     }
 
