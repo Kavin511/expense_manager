@@ -92,7 +92,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 "Transaction Mode"
             )
         )
-        for (i in repository.transactions) {
+        for (i in repository.transactions()) {
             csvWriter.writeNext(
                 i.id.toString(),
                 arrayOf(

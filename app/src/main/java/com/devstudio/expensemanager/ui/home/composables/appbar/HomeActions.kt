@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.audiofx.BassBoost
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -18,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
 
@@ -47,24 +45,20 @@ fun HomeActions() {
                 }
                 if (readPermissionGranted && writePermissionGranted) {
                     backupTransactions(homeViewModel, context)
-                }else{
-                    Toast.makeText(
-                        context,
-                        "Permissions required to start backup",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            } else {
-                Toast.makeText(
-                    context,
-                    "Permissions required to start backup",
-                    Toast.LENGTH_SHORT
-                ).show()
-                val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri: Uri = Uri.fromParts("package",context.getPackageName(), null)
-                intent.data = uri
-                context.startActivity(intent)
             }
+        }
+        if (permissions.entries.any { !it.value }) {
+            Toast.makeText(
+                context,
+                "Permissions required to start backup",
+                Toast.LENGTH_SHORT
+            ).show()
+            val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri: Uri = Uri.fromParts("package", context.getPackageName(), null)
+            intent.data = uri
+            context.startActivity(intent)
+
         }
     }
 

@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import com.devstudio.expensemanager.db.dao.TransactionDao
 import com.devstudio.expensemanager.db.models.Transactions
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 class TransactionsRepository(private val transactionDao: TransactionDao) {
-    val transactions = transactionDao.getTransactions()
+    fun  transactions(): List<Transactions> {
+        return transactionDao.getTransactions()
+    }
 
     fun allTransactionsStream(): LiveData<List<Transactions>> {
         return transactionDao.getAllTransactionsStream()
