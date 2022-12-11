@@ -3,7 +3,7 @@ package com.devstudio.expensemanager.model
 enum class TransactionMode(val categoryList: List<String>) {
     EXPENSE(
         listOf(
-            "Dining",
+            "Food",
             "Rent",
             "Transportation",
             "Groceries",
@@ -13,7 +13,8 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Education",
             "Health and personal care",
             "Entertainment",
-            "Sports"
+            "Sports",
+            "Other"
         )
     ),
     INCOME(
@@ -24,7 +25,8 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Dividend Income",
             "Rental Income",
             "Capital Gains Income",
-            "Royalty Income"
+            "Royalty Income",
+            "Other"
         )
     )
 }
