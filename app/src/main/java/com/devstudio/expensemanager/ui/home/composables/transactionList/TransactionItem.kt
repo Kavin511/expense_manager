@@ -19,6 +19,7 @@ import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
 import com.devstudio.utils.DateFormatter
+import com.devstudioworks.uiComponents.theme.appColors
 import editTransaction
 import showTransactionLongPressOptions
 
@@ -27,16 +28,11 @@ import showTransactionLongPressOptions
 @Composable
 fun TransactionItem(transaction: Transactions) {
     val blockColor = if (transaction.transactionMode != "EXPENSE") {
-        Color(0XFFE7FBE8)
+        appColors.transactionIncomeColor
     } else {
-        Color(0XFFFCEEED)
+        appColors.transactionExpenseColor
     }
-    Card(
-        modifier = Modifier
-            .padding(4.dp)
-            .background(blockColor),
-        shape = AbsoluteCutCornerShape(4.dp),
-    ) {
+    Card(modifier = Modifier.padding(4.dp)) {
         val context = LocalContext.current
         val homeViewModel: HomeViewModel = viewModel()
         Row(

@@ -97,8 +97,8 @@ fun MaterialTheme(
 val lightPalette =
     AppColor(
         material = LightColors,
-        transactionIncomeColor = md_theme_light_income_tint,
-        transactionExpenseColor = md_theme_light_expense_tint,
+        transactionIncomeColor = md_theme_light_transaction_income_container,
+        transactionExpenseColor = md_theme_light_transaction_expense_container,
         incomeIconTint = md_theme_light_income_icon_tint,
         expenseIconTint = md_theme_light_expense_icon_tint,
     )
@@ -106,14 +106,14 @@ val lightPalette =
 val darkPalette =
     AppColor(
         material = DarkColors,
-        transactionIncomeColor = md_theme_dark_income_tint,
-        transactionExpenseColor = md_theme_dark_expense_tint,
+        transactionIncomeColor = md_theme_dark_transaction_income_container,
+        transactionExpenseColor = md_theme_dark_transaction_expense_container,
         incomeIconTint = md_theme_dark_income_icon_tint,
         expenseIconTint = md_theme_dark_expense_icon_tint,
     )
 
 private val LocalColors = staticCompositionLocalOf { lightPalette }
-val myColors: AppColor
+val appColors: AppColor
     @Composable
     @ReadOnlyComposable
     get() = LocalColors.current
