@@ -4,21 +4,20 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.AbsoluteCutCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
-import com.devstudio.utils.DateFormatter
+import com.devstudio.utils.formatters.DateFormatter
 import com.devstudioworks.uiComponents.theme.appColors
 import editTransaction
 import showTransactionLongPressOptions
@@ -49,13 +48,21 @@ fun TransactionItem(transaction: Transactions) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column() {
-                Text(text = transaction.amount.toString())
-                Text(text = transaction.category)
+            Column(modifier = Modifier.fillMaxWidth(.5f), horizontalAlignment = Alignment.Start) {
+                Text(text = transaction.amount.toString(), color = appColors.material.onBackground)
+                Text(text = transaction.category, color = appColors.material.onBackground)
             }
-            Column {
-                Text(text = DateFormatter().convertLongToDate(transaction.transactionDate.toLong()))
-                Text(text = transaction.note)
+            Column(modifier = Modifier.fillMaxWidth(1f), horizontalAlignment = Alignment.End) {
+                Text(
+                    text = DateFormatter().convertLongToDate(transaction.transactionDate.toLong()),
+                    color = appColors.material.onBackground
+                )
+                Text(
+                    text = transaction.note,
+                    color = appColors.material.onBackground,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
             }
         }
     }

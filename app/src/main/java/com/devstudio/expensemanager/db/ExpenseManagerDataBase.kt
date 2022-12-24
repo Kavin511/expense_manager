@@ -11,18 +11,4 @@ import com.devstudio.expensemanager.db.models.Transactions
 abstract class ExpenseManagerDataBase : RoomDatabase() {
     abstract fun transactionsDao(): TransactionDao
 
-    companion object {
-        private var INSTANCE: ExpenseManagerDataBase? = null
-        fun getDatabase(context: Context): ExpenseManagerDataBase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    ExpenseManagerDataBase::class.java,
-                    "expense_manager_database"
-                ).allowMainThreadQueries().build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }

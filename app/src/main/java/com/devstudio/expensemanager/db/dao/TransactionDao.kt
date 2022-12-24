@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy.IGNORE
 import com.devstudio.expensemanager.db.models.Transactions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Singleton
 
 @Dao
 interface TransactionDao {

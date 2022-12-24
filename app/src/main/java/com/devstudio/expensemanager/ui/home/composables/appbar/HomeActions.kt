@@ -1,9 +1,10 @@
-package com.devstudio.expensemanager.ui.home.composables
-
 import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -25,8 +26,8 @@ import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
 fun HomeActions() {
     val homeViewModel: HomeViewModel = viewModel()
     val context = LocalContext.current
-    var readPermissionGranted: Boolean = false
-    var writePermissionGranted: Boolean = false
+    var readPermissionGranted = false
+    var writePermissionGranted = false
     val permissionList = mutableListOf<String>()
 
     val activityResultLauncher = rememberLauncherForActivityResult(
@@ -37,10 +38,10 @@ fun HomeActions() {
             val permissionName = it.key
             val isGranted = it.value
             if (isGranted) {
-                if (permissionName == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+                if (permissionName == WRITE_EXTERNAL_STORAGE) {
                     writePermissionGranted = true
                 }
-                if (permissionName == Manifest.permission.READ_EXTERNAL_STORAGE) {
+                if (permissionName == READ_EXTERNAL_STORAGE) {
                     readPermissionGranted = true
                 }
                 if (readPermissionGranted && writePermissionGranted) {
@@ -55,31 +56,29 @@ fun HomeActions() {
                 Toast.LENGTH_SHORT
             ).show()
             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri: Uri = Uri.fromParts("package", context.getPackageName(), null)
+            val uri: Uri = Uri.fromParts("package", context.packageName, null)
             intent.data = uri
             context.startActivity(intent)
 
         }
     }
 
-    fun checkPermissionToStartBackup(context: Context): Boolean {
+    fun isSdk29Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-        val isReadPermissionGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-        val isWritePermissionGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-        writePermissionGranted =
-            isWritePermissionGranted || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        readPermissionGranted = isReadPermissionGranted
+    fun isSdk33Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
+    fun isReadPermissionRequired(context: Context) = ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED || isSdk33Up()
+
+    fun isWritePermissionRequired(context: Context) = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED || isSdk29Up()
+
+    fun checkPermissionToStartBackup(context: Context): Boolean {
+        readPermissionGranted = isReadPermissionRequired(context)
+        writePermissionGranted = isWritePermissionRequired(context)
         if (!writePermissionGranted) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            permissionList.add(WRITE_EXTERNAL_STORAGE)
         }
         if (!readPermissionGranted) {
-            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            permissionList.add(READ_EXTERNAL_STORAGE)
         }
         return if (permissionList.isNotEmpty()) {
             activityResultLauncher.launch(permissionList.toTypedArray())

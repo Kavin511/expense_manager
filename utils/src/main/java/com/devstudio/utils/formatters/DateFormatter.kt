@@ -1,4 +1,4 @@
-package com.devstudio.utils
+package com.devstudio.utils.formatters
 
 import java.util.*
 

@@ -2,9 +2,8 @@ package com.devstudio.expensemanager
 
 import android.app.Application
 import com.devstudio.expensemanager.db.ExpenseManagerDataBase
-import com.devstudio.expensemanager.db.repository.TransactionsRepository
+import com.devstudio.expensemanager.db.repository.TransactionsRepositoryImpl
+import dagger.hilt.android.HiltAndroidApp
 
-class ExpenseManagerApplication : Application() {
-    private val database by lazy { ExpenseManagerDataBase.getDatabase(this) }
-    val repository by lazy { TransactionsRepository(database.transactionsDao()) }
-}
+@HiltAndroidApp
+class ExpenseManagerApplication : Application()
