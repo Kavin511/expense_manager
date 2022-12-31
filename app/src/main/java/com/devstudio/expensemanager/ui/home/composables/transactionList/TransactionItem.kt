@@ -49,17 +49,17 @@ fun TransactionItem(transaction: Transactions) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(modifier = Modifier.fillMaxWidth(.5f), horizontalAlignment = Alignment.Start) {
-                Text(text = transaction.amount.toString(), color = appColors.material.onBackground)
-                Text(text = transaction.category, color = appColors.material.onBackground)
+                Text(text = transaction.amount.toString(), color = appColors.material.onPrimaryContainer)
+                Text(text = transaction.category, color = appColors.material.onPrimaryContainer)
             }
             Column(modifier = Modifier.fillMaxWidth(1f), horizontalAlignment = Alignment.End) {
                 Text(
                     text = DateFormatter().convertLongToDate(transaction.transactionDate.toLong()),
-                    color = appColors.material.onBackground
+                    color = appColors.material.onPrimaryContainer
                 )
                 Text(
                     text = transaction.note,
-                    color = appColors.material.onBackground,
+                    color = appColors.material.onPrimaryContainer,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )

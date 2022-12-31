@@ -1,6 +1,7 @@
 package com.devstudio.expensemanager.ui.transaction.acivity
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -88,13 +89,11 @@ class TransactionActivity : AppCompatActivity() {
 
     private suspend fun updateOldTransaction(oldTransaction: Transactions) {
         oldTransaction.apply {
-            amount =
-                TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
+            amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
-            category =
-                transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
         }
         transactionViewModel.updateTransaction(oldTransaction)
     }
@@ -131,8 +130,7 @@ class TransactionActivity : AppCompatActivity() {
                 if (it.transactionMode == "EXPENSE") {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     binding.transactionMode.check(R.id.expense_mode)
-                    selectedCategoryIndex =
-                        TransactionMode.EXPENSE.categoryList.indexOf(it.category)
+                    selectedCategoryIndex = TransactionMode.EXPENSE.categoryList.indexOf(it.category)
                     binding.categoryGroup.check(selectedCategoryIndex)
                 } else {
                     transactionViewModel.transactionType.value = TransactionMode.INCOME

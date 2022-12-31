@@ -31,7 +31,7 @@ fun Home() {
     ) {
         Column {
             TransactionSummary(it)
-            TransactionsList(it)
+            TransactionsList()
         }
     }
 }

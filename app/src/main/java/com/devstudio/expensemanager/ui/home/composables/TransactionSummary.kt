@@ -26,15 +26,16 @@ fun TransactionSummary(paddingValues: PaddingValues) {
     val homeViewModel: HomeViewModel = viewModel()
     val expense = homeViewModel.totalExpenseAmount.collectAsState()
     val income = homeViewModel.totalIncomeAmount.collectAsState()
+    val textColor = appColors.material.onTertiaryContainer
     Card(
         modifier = Modifier
             .padding(top = paddingValues.calculateTopPadding())
             .padding(8.dp)
-            .shadow(elevation = 8.dp)
+            .shadow(elevation = 6.dp)
     ) {
         Column(
             Modifier
-                .background(color = Color.White)
+                .background(color = appColors.material.tertiaryContainer)
                 .fillMaxWidth(1f)
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -43,6 +44,7 @@ fun TransactionSummary(paddingValues: PaddingValues) {
                 text = "${
                     DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH) - 1]
                 } month summary",
+                color = textColor,
                 style = androidx.compose.material3.Typography().bodyMedium
             )
             Row(
@@ -54,21 +56,22 @@ fun TransactionSummary(paddingValues: PaddingValues) {
                     Icon(
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Expenses",
-                        tint = appColors.expenseIconTint,
+                        tint = appColors.transactionExpenseColor,
                         modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
                     )
-                    Text(text = "Total expense ${roundOffDecimal(expense.value)}")
+                    Text(text = "Total expense ${roundOffDecimal(expense.value)}", color = textColor)
                 }
                 Column(horizontalAlignment = (Alignment.CenterHorizontally)) {
                     Icon(
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Income",
-                        tint = appColors.incomeIconTint,
+                        tint = appColors.transactionIncomeColor,
                         modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
                     )
                     Text(
                         text = "Total income : ${roundOffDecimal(income.value)}",
-                        style = androidx.compose.material3.Typography().bodyMedium
+                        style = androidx.compose.material3.Typography().bodyMedium,
+                        color = textColor
                     )
                 }
             }

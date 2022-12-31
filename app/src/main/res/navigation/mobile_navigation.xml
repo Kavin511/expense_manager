@@ -5,12 +5,6 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.devstudio.expensemanager.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home">
-    </fragment>
     <activity
         android:id="@+id/transactionActivity"
         tools:layout="@layout/activity_transaction"
