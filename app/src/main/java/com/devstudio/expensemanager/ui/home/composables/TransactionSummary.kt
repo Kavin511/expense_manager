@@ -43,7 +43,7 @@ fun TransactionSummary(paddingValues: PaddingValues) {
                 .padding(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "${DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH)-1]} month summary")
+            Text(text = "${DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH)]} month summary")
             Row(
                 Modifier
                     .fillMaxWidth(1f),
