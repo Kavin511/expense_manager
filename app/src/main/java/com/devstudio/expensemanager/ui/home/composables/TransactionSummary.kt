@@ -42,7 +42,7 @@ fun TransactionSummary(paddingValues: PaddingValues) {
         ) {
             Text(
                 text = "${
-                    DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH) - 1]
+                    DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH)]
                 } month summary",
                 color = textColor,
                 style = androidx.compose.material3.Typography().bodyMedium
