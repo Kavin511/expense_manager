@@ -1,5 +1,6 @@
 package com.devstudio.expensemanager.ui.home.composables
 
+import HomeAppBar
 import TransactionSummary
 import TransactionsList
 import android.content.Context
@@ -30,7 +31,7 @@ fun Home() {
     ) {
         Column {
             TransactionSummary(it)
-            TransactionsList(it)
+            TransactionsList()
         }
     }
 }

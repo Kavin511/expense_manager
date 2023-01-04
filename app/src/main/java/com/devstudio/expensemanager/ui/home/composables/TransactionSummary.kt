@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ImportExport
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,38 +11,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
-import com.devstudio.utils.DateFormatter
+import com.devstudio.utils.formatters.DateFormatter
+import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
 import com.devstudioworks.uiComponents.theme.appColors
-import java.util.Calendar
+import java.util.*
 
 @Composable
 fun TransactionSummary(paddingValues: PaddingValues) {
     val homeViewModel: HomeViewModel = viewModel()
     val expense = homeViewModel.totalExpenseAmount.collectAsState()
     val income = homeViewModel.totalIncomeAmount.collectAsState()
+    val textColor = appColors.material.onTertiaryContainer
     Card(
         modifier = Modifier
-            .padding(
-                top = paddingValues.calculateTopPadding(),
-                bottom = dimensionResource(id = R.dimen.default_padding),
-                start = dimensionResource(id = R.dimen.default_padding),
-                end = dimensionResource(id = R.dimen.default_padding)
-            ),
+            .padding(top = paddingValues.calculateTopPadding())
+            .padding(8.dp)
+            .shadow(elevation = 6.dp)
     ) {
         Column(
             Modifier
+                .background(color = appColors.material.tertiaryContainer)
                 .fillMaxWidth(1f)
-                .background(color = appColors.material.surfaceVariant)
-                .padding(vertical = 8.dp),
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "${DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH)]} month summary")
+            Text(
+                text = "${
+                    DateFormatter().monthNames[Calendar.getInstance().get(Calendar.MONTH)]
+                } month summary",
+                color = textColor,
+                style = androidx.compose.material3.Typography().bodyMedium
+            )
             Row(
                 Modifier
                     .fillMaxWidth(1f),
@@ -53,19 +56,23 @@ fun TransactionSummary(paddingValues: PaddingValues) {
                     Icon(
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Expenses",
-                        tint = appColors.expenseIconTint,
+                        tint = appColors.transactionExpenseColor,
                         modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
                     )
-                    Text(text = "Total expense ${expense.value}")
+                    Text(text = "Total expense ${roundOffDecimal(expense.value)}", color = textColor)
                 }
                 Column(horizontalAlignment = (Alignment.CenterHorizontally)) {
                     Icon(
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Income",
-                        tint = appColors.incomeIconTint,
+                        tint = appColors.transactionIncomeColor,
                         modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
                     )
-                    Text(text = "Total income : ${income.value}")
+                    Text(
+                        text = "Total income : ${roundOffDecimal(income.value)}",
+                        style = androidx.compose.material3.Typography().bodyMedium,
+                        color = textColor
+                    )
                 }
             }
         }

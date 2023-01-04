@@ -1,16 +1,15 @@
 package com.devstudio.expensemanager.ui.viewmodel
 
-import android.app.Application
-import android.content.Context
 import android.os.Environment
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.db.repository.TransactionsRepository
 import com.devstudio.expensemanager.model.BackupStatus
-import com.devstudio.utils.DateFormatter
+import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.CSVWriter
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -18,26 +17,23 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
 import java.util.*
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    var repository: TransactionsRepository
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val repository: TransactionsRepository) : ViewModel() {
     var totalExpenseAmount = MutableStateFlow(0.0)
     var totalIncomeAmount = MutableStateFlow(0.0)
 
-    internal var context:Context
     init {
-        repository =
-            (application as com.devstudio.expensemanager.ExpenseManagerApplication).repository
-        context=application.applicationContext
         getExpenseTransaction()
         getIncomeTransaction()
     }
 
     suspend fun transactions(): LiveData<List<Transactions>> {
-            return repository.allTransactionsStream()
+        return repository.allTransactionsStream()
     }
 
-    fun deleteTransaction(transaction: Transactions){
+    fun deleteTransaction(transaction: Transactions) {
         viewModelScope.launch {
             repository.deleteTransactions(transaction)
         }
@@ -72,7 +68,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun exportTransactions(): BackupStatus {
-       return try{
+        return try {
             val csvWriter = createFileDirectoryToStoreTransaction()
             writeTransactionsAsCSV(csvWriter)
             BackupStatus.success("Transactions backed up successfully")
@@ -84,13 +80,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun writeTransactionsAsCSV(csvWriter: CSVWriter) {
         csvWriter.writeNext(
             "ID",
-            arrayOf(
-                "Amount",
-                "Category",
-                "Transaction Date",
-                "Note",
-                "Transaction Mode"
-            )
+            columnNames()
         )
         for (i in repository.transactions()) {
             csvWriter.writeNext(
@@ -107,6 +97,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         csvWriter.close()
     }
 
+    private fun columnNames(): Array<String?> = arrayOf(
+        "Amount",
+        "Category",
+        "Transaction Date",
+        "Note", "Transaction Mode"
+    )
+
     private fun createFileDirectoryToStoreTransaction(): CSVWriter {
         val folder =
             File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/expressWallet/")
@@ -115,7 +112,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
         val file = File(folder.absolutePath, "transactions.csv")
         file.createNewFile()
-        val csvWriter = CSVWriter(FileWriter(file,false))
+        val csvWriter = CSVWriter(FileWriter(file, false))
         return csvWriter
     }
 

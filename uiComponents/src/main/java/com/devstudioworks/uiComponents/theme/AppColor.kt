@@ -9,5 +9,5 @@ data class AppColor(
     val transactionIncomeColor: Color,
     val transactionExpenseColor: Color,
     val incomeIconTint: Color,
-    val expenseIconTint: Color
+    val expenseIconTint: Color,
 )

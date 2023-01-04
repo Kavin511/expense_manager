@@ -1,6 +1,7 @@
 package com.devstudio.expensemanager.ui.transaction.acivity
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -14,27 +15,24 @@ import com.devstudio.expensemanager.databinding.ActivityTransactionBinding
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.expensemanager.model.TransactionMode
 import com.devstudio.expensemanager.ui.transaction.uicomponents.TransactionKeyboard
-import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModel
-import com.devstudio.expensemanager.ui.transaction.viewmodels.TransactionViewModelFactory
-import com.devstudio.utils.DateFormatter
+import com.devstudio.expensemanager.ui.viewmodel.TransactionViewModel
+import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
 
+@AndroidEntryPoint
 class TransactionActivity : AppCompatActivity() {
 
     private var _binding: ActivityTransactionBinding? = null
-    private val transactionViewModel by viewModels<TransactionViewModel> {
-        TransactionViewModelFactory(
-            (application as com.devstudio.expensemanager.ExpenseManagerApplication).repository
-        )
-    }
+    private val transactionViewModel by viewModels<TransactionViewModel>()
     var selectedCategoryIndex = 0
     private val binding
         get() = _binding!!
@@ -91,13 +89,11 @@ class TransactionActivity : AppCompatActivity() {
 
     private suspend fun updateOldTransaction(oldTransaction: Transactions) {
         oldTransaction.apply {
-            amount =
-                TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
+            amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
-            category =
-                transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
         }
         transactionViewModel.updateTransaction(oldTransaction)
     }
@@ -134,8 +130,7 @@ class TransactionActivity : AppCompatActivity() {
                 if (it.transactionMode == "EXPENSE") {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     binding.transactionMode.check(R.id.expense_mode)
-                    selectedCategoryIndex =
-                        TransactionMode.EXPENSE.categoryList.indexOf(it.category)
+                    selectedCategoryIndex = TransactionMode.EXPENSE.categoryList.indexOf(it.category)
                     binding.categoryGroup.check(selectedCategoryIndex)
                 } else {
                     transactionViewModel.transactionType.value = TransactionMode.INCOME
