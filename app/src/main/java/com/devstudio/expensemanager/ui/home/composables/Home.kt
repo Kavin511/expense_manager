@@ -2,7 +2,6 @@ package com.devstudio.expensemanager.ui.home.composables
 
 import HomeAppBar
 import TransactionSummary
-import TransactionsList
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.*
@@ -14,12 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.R
-import com.devstudio.expensemanager.ui.transaction.acivity.TransactionActivity
+import com.devstudio.transactions.acivity.TransactionActivity
+import com.devstudio.transactions.composables.TransactionsList
+import com.devstudio.transactions.viewmodel.TransactionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home() {
+fun Home(transactionViewModel:TransactionViewModel = viewModel()) {
     Scaffold(
         floatingActionButton = {
             AddTransactions()
@@ -31,7 +33,7 @@ fun Home() {
     ) {
         Column {
             TransactionSummary(it)
-            TransactionsList()
+            TransactionsList(transactionViewModel)
         }
     }
 }
@@ -45,7 +47,7 @@ private fun AddTransactions() {
     ) {
         Icon(
             imageVector = Icons.Filled.Add,
-            contentDescription = stringResource(R.string.add_transaction)
+            contentDescription = stringResource(com.devstudioworks.core.ui.R.string.add_transaction)
         )
     }
 }

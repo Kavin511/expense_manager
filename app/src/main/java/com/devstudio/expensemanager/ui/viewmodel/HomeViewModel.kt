@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.expensemanager.db.models.Transactions
-import com.devstudio.expensemanager.db.repository.TransactionsRepository
-import com.devstudio.expensemanager.model.BackupStatus
+import com.devstudio.core_data.TransactionsRepository
+import com.devstudio.utils.model.BackupStatus
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.CSVWriter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +30,7 @@ class HomeViewModel @Inject constructor(private val repository: TransactionsRepo
         getIncomeTransaction()
     }
 
-    suspend fun transactions(): LiveData<List<Transactions>> {
+    suspend fun transactions(): Flow<List<Transactions>> {
         return repository.allTransactionsStream()
     }
 
@@ -63,7 +64,7 @@ class HomeViewModel @Inject constructor(private val repository: TransactionsRepo
         }
     }
 
-    fun getTransactions(): LiveData<List<Transactions>> {
+    fun getTransactions(): Flow<List<Transactions>> {
         return repository.allTransactionsStream()
     }
 

@@ -21,3 +21,4 @@ ext {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+//task reBuild(type: Build)

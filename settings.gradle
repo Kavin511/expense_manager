@@ -15,7 +15,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ExpenseManager"
 include ':app'
-include ':uiComponents'
-include ':domainmodels'
+include ':core-ui'
+include ':core-database'
 include ':utils'
-apply from: 'dependencies.gradle'
+include ':core-data'
+include ':transactions'

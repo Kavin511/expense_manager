@@ -10,15 +10,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
-import com.devstudioworks.uiComponents.theme.appColors
+import com.devstudioworks.ui.theme.appColors
 import java.util.*
 
 @Composable
@@ -31,7 +29,7 @@ fun TransactionSummary(paddingValues: PaddingValues) {
         modifier = Modifier
             .padding(top = paddingValues.calculateTopPadding())
             .padding(8.dp)
-            .shadow(elevation = 6.dp)
+            .shadow(elevation = 1.dp)
     ) {
         Column(
             Modifier
@@ -57,7 +55,7 @@ fun TransactionSummary(paddingValues: PaddingValues) {
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Expenses",
                         tint = appColors.transactionExpenseColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
+                        modifier = Modifier.padding(dimensionResource(id = com.devstudioworks.core.ui.R.dimen.default_padding))
                     )
                     Text(text = "Total expense ${roundOffDecimal(expense.value)}", color = textColor)
                 }
@@ -66,7 +64,7 @@ fun TransactionSummary(paddingValues: PaddingValues) {
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Income",
                         tint = appColors.transactionIncomeColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
+                        modifier = Modifier.padding(dimensionResource(id = com.devstudioworks.core.ui.R.dimen.default_padding))
                     )
                     Text(
                         text = "Total income : ${roundOffDecimal(income.value)}",
