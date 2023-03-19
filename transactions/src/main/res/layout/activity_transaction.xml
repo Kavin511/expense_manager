@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="com.devstudio.transactions.transaction.acivity.TransactionActivity">
+    tools:context="com.devstudio.transactions.acivity.TransactionActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topAppBar_wrapper"

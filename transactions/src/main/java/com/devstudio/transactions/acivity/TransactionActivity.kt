@@ -175,6 +175,7 @@ class TransactionActivity : AppCompatActivity() {
                 if (selectedCategoryIndex == index) {
                     chip.isChecked = true
                 }
+                chip.checkedIcon =null
                 chip.setOnClickListener {
                     selectedCategoryIndex = index
                 }
