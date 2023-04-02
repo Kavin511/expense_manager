@@ -14,14 +14,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devstudio.expensemanager.R
 import com.devstudio.transactions.acivity.TransactionActivity
-import com.devstudio.transactions.composables.TransactionsList
+import com.devstudio.transactions.composables.transactionList.TransactionsList
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(transactionViewModel:TransactionViewModel = viewModel()) {
+fun TransactionDashboard(transactionViewModel:TransactionViewModel = viewModel()) {
     Scaffold(
         floatingActionButton = {
             AddTransactions()
@@ -29,10 +28,9 @@ fun Home(transactionViewModel:TransactionViewModel = viewModel()) {
         topBar = {
             HomeAppBar()
         },
-        modifier = Modifier.padding()
     ) {
-        Column {
-            TransactionSummary(it)
+        Column(modifier = Modifier.padding(it)) {
+            TransactionSummary()
             TransactionsList(transactionViewModel)
         }
     }

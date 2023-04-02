@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -168,7 +170,7 @@ class TransactionActivity : AppCompatActivity() {
             binding.categoryGroup.removeAllViews()
             transactionViewModel.transactionType.value
             it.categoryList.forEachIndexed { index, value ->
-                val chip = Chip(this)
+                val chip = layoutInflater.inflate(R.layout.category_chip, null) as Chip
                 chip.text = value
                 chip.id = index
                 chip.isCheckable = true
