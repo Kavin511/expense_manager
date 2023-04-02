@@ -2,7 +2,7 @@ import com.devstudio.utils.formulas.TransactionInputFormula
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class TransactionInputFormulaTest {
+class TransactionInputFormula {
     @Test
     fun `anything divide by zero returns 0`() {
         val result = TransactionInputFormula().calculate("1/0")
