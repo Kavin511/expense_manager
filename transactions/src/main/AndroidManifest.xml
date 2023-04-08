@@ -6,6 +6,7 @@
             android:name="com.devstudio.transactions.acivity.TransactionActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustNothing" />
     </application>
 </manifest>
