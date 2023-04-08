@@ -1,5 +1,6 @@
 package com.devstudio.transactions.composables.transactionList
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -23,11 +24,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.db.models.Transactions
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
+import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
+import com.devstudioworks.ui.theme.DEFAULT_CARD_ELEVATION
 import com.devstudioworks.ui.theme.appColors
 
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
+    device = "id:Nexus One", showSystemUi = true, showBackground = true
+)
 @Composable
 fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "1000")) {
     val blockColor = if (transaction.transactionMode != "EXPENSE") {
@@ -39,9 +45,9 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
     val transactionViewModel: TransactionViewModel = viewModel()
     ElevatedCard(
         modifier = Modifier
-            .padding(2.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.elevatedCardElevation(2.dp),
+            .padding(DEFAULT_CARD_ELEVATION),
+        shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS),
+        elevation = CardDefaults.elevatedCardElevation(DEFAULT_CARD_ELEVATION),
     ) {
         Row(
             modifier = Modifier
@@ -51,7 +57,7 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
                 }, onLongClick = {
                     showTransactionLongPressOptions(context, transaction, transactionViewModel)
                 })
-                .background(color = Color.White)
+                .background(color = appColors.material.onTertiary)
                 .padding(horizontal = 4.dp)
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -109,7 +115,7 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = transaction.amount.toString(),
+                    text = formatAndGetTransactionAmount(transaction),
                     color = appColors.material.onPrimaryContainer,
                 )
             }
@@ -117,3 +123,6 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
     }
 
 }
+
+private fun formatAndGetTransactionAmount(transaction: Transactions): String =
+    (if (transaction.transactionMode != "EXPENSE") "" else "- ") + transaction.amount.toString()
