@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="toggleButtonStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="backgroundTint">
+            @color/toggle_button_color
+        </item>
+    </style>
+
+    <style name="NumberPadKeyStyle" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

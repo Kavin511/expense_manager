@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="md_text_color">#EAEAEA</color>
-    <color name="md_stroke_color">@color/md_theme_light_surfaceVariant</color>
-    <color name="material_outlined_button_color">@color/md_theme_dark_primaryContainer</color>
-    <color name="material_button_color">@color/md_theme_dark_primary</color>
-    <color name="text_input_background_color">@color/md_theme_dark_surfaceTint</color>
-</resources>

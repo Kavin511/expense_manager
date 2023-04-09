@@ -9,7 +9,7 @@ import com.devstudio.expensemanager.R
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 internal fun HomeAppBar() {
-    TopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, actions = {
+    TopAppBar(title = { Text(stringResource(id = com.devstudioworks.core.ui.R.string.app_name)) }, actions = {
         HomeActions()
     })
 }
