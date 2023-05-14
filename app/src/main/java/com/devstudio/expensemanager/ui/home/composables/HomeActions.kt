@@ -64,7 +64,7 @@ fun HomeActions() {
         }
     }
 
-    fun isSdk29Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    fun isSdk29Up() = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
 
     fun isSdk33Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
