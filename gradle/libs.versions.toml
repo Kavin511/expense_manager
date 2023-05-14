@@ -2,16 +2,17 @@
 androidGradlePlugin = "7.3.0"
 coreKtx = "1.7.0"
 hilt = "2.44.2"
-kotlin = "1.7.20"
+hiltNavigationCompose = '1.0.0'
+kotlin = "1.8.10"
 androidxRoom = "2.4.3"
-materialVersion = "1.0.1"
+materialVersion = "1.1.0-rc01"
 androidxCoreVersion = "1.9.0"
 androidxAppcompat = "1.5.1"
 material = "1.7.0"
 constraintlayout = "2.1.4"
 livedata = "2.5.1"
 viewmodel = "2.5.1"
-navigationFragment = "2.5.3"
+navigationCompose = "2.5.3"
 navigationUi = "2.5.3"
 firebaseCrashlytics = "18.3.2"
 firebaseAnalytics = "21.2.0"
@@ -56,14 +57,14 @@ viewmodel = { module = 'androidx.lifecycle:lifecycle-viewmodel-ktx', version.ref
 
 material = { module = 'com.google.android.material:material', version.ref = 'material' }
 constraintlayout = { module = 'androidx.constraintlayout:constraintlayout', version.ref = 'constraintlayout' }
-navigationFragment = { module = 'androidx.navigation:navigation-fragment-ktx', version.ref = 'navigationFragment' }
-navigationUi = { module = 'androidx.navigation:navigation-ui-ktx', version.ref = 'navigationUi' }
+navigation_compose = { module = 'androidx.navigation:navigation-compose', version.ref = 'navigationCompose' }
 firebaseCrashlytics = { module = 'com.google.firebase:firebase-crashlytics', version.ref = 'firebaseCrashlytics' }
 firebaseAnalytics = { module = 'com.google.firebase:firebase-analytics', version.ref = 'firebaseAnalytics' }
 
 #hilt
 hilt_android = { module = 'com.google.dagger:hilt-android', version.ref = "hilt" }
 hilt_android_compiler = { module = 'com.google.dagger:hilt-android-compiler', version.ref = "hilt" }
+hilt_navigation_compose = {module = 'androidx.hilt:hilt-navigation-compose' ,version.ref = "hiltNavigationCompose"}
 
 #test
 junit= { module='junit:junit', version.ref="junit" }
@@ -83,6 +84,6 @@ hilt-gradle = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 [bundles]
 compose=["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose","viewmodel_compose","compose_runtime_livedata"]
-hilt=["hilt_android","hilt_android_compiler"]
+hilt=["hilt_android","hilt_android_compiler","hilt_navigation_compose"]
 
 

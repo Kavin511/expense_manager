@@ -14,20 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devstudio.expensemanager.db.models.Transactions
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudioworks.ui.theme.DEFAULT_CARD_ELEVATION
 import com.devstudioworks.ui.theme.appColors
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(
@@ -35,23 +33,28 @@ import com.devstudioworks.ui.theme.appColors
     device = "id:Nexus One", showSystemUi = true, showBackground = true
 )
 @Composable
-fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "1000")) {
+fun TransactionItem(
+    transaction: Transaction = Transaction(
+        transactionDate = "1000",
+        note = "",
+        amount = 0.0
+    )
+) {
     val blockColor = if (transaction.transactionMode != "EXPENSE") {
         appColors.transactionIncomeColor
     } else {
         appColors.transactionExpenseColor
     }
     val context = LocalContext.current
-    val transactionViewModel: TransactionViewModel = viewModel()
+    val transactionViewModel: TransactionViewModel = hiltViewModel()
     ElevatedCard(
         modifier = Modifier
-            .padding(DEFAULT_CARD_ELEVATION),
+            .padding(vertical = DEFAULT_CARD_ELEVATION),
         shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS),
         elevation = CardDefaults.elevatedCardElevation(DEFAULT_CARD_ELEVATION),
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(1F)
                 .combinedClickable(onClick = {
                     editTransaction(context, transaction)
                 }, onLongClick = {
@@ -61,7 +64,7 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
                 .padding(horizontal = 4.dp)
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Column {
                 Box(
@@ -73,8 +76,8 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
                 )
             }
             Column(
+                modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
                     text = transaction.category,
@@ -83,7 +86,7 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = DateFormatter().convertLongToDate(transaction.transactionDate.toLong()),
+                        text = DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
                         color = appColors.material.onPrimaryContainer,
                         fontSize = 13.sp,
                         modifier = Modifier.padding(end = 5.dp)
@@ -112,7 +115,6 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
             Column(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = formatAndGetTransactionAmount(transaction),
@@ -124,5 +126,5 @@ fun TransactionItem(transaction: Transactions = Transactions(transactionDate = "
 
 }
 
-private fun formatAndGetTransactionAmount(transaction: Transactions): String =
+private fun formatAndGetTransactionAmount(transaction: Transaction): String =
     (if (transaction.transactionMode != "EXPENSE") "" else "- ") + transaction.amount.toString()

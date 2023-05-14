@@ -23,7 +23,7 @@ class TransactionInputFormula {
     }
 
     private fun applyOperator(value1: Double, operator: String?, value2: Double): String {
-        var result = 0.0
+        val result: Double
         when (operator) {
             "+"  -> {
                 result = value1 + value2

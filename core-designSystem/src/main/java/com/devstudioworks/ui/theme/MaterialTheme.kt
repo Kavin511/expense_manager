@@ -89,7 +89,8 @@ fun MaterialTheme(
     CompositionLocalProvider(LocalColors provides colors) {
         MaterialTheme(
             colorScheme = colors.material,
-            content = content
+            content = content,
+            typography = ExpressWalletTypography
         )
     }
 }
