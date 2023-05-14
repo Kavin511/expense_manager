@@ -18,13 +18,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devstudio.expensemanager.ui.viewmodel.HomeViewModel
+import com.devstudio.expensemanager.viewmodel.HomeViewModel
 
 
 @Composable
 fun HomeActions() {
-    val homeViewModel: HomeViewModel = viewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
     val context = LocalContext.current
     var readPermissionGranted = false
     var writePermissionGranted = false

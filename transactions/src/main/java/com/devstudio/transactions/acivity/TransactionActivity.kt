@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.devstudio.expensemanager.db.models.Transactions
+import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.transactions.R
 import com.devstudio.transactions.databinding.ActivityTransactionBinding
 import com.devstudio.transactions.uicomponents.TransactionKeyboard
@@ -70,7 +70,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private suspend fun createNewTransaction() {
-        val transaction = Transactions(
+        val transaction = Transaction(
             id = Calendar.getInstance().time.time,
             amount = getTransactionAmount(),
             note = binding.noteText.text.toString(),
@@ -85,7 +85,7 @@ class TransactionActivity : AppCompatActivity() {
         return TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
     }
 
-    private suspend fun updateOldTransaction(oldTransaction: Transactions) {
+    private suspend fun updateOldTransaction(oldTransaction: Transaction) {
         oldTransaction.apply {
             amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
@@ -105,7 +105,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun fetchAndUpdateTransactionToBeEdited() {
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launch {
             val id = intent.getLongExtra("id", 0)
             transactionViewModel.getAndUpdateTransactionById(id)
             updateCategoryBasedOnTransactionTypeSelection()
@@ -123,7 +123,7 @@ class TransactionActivity : AppCompatActivity() {
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
                 binding.transactionDate.text =
-                    DateFormatter().convertLongToDate(it.transactionDate.toLong())
+                    DateFormatter.convertLongToDate(it.transactionDate.toLong())
                 selectedDate = it.transactionDate
                 if (it.transactionMode == "EXPENSE") {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
@@ -210,16 +210,16 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun initialiseTransactionDateClickListener() {
-        binding.transactionDate.text = DateFormatter().convertLongToDate(selectedDate.toLong())
+        binding.transactionDate.text = DateFormatter.convertLongToDate(selectedDate.toLong())
         binding.transactionDate.setOnClickListener {
             val calendarConstraintsBuilder = CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now())
             val datePickerBuilder = MaterialDatePicker.Builder.datePicker()
             datePickerBuilder.setCalendarConstraints(calendarConstraintsBuilder.build())
-            datePickerBuilder.setSelection(Calendar.getInstance().timeInMillis)
+            datePickerBuilder.setSelection(selectedDate.toLong())
             val datePicker = datePickerBuilder.build()
             datePicker.addOnPositiveButtonClickListener {
-                binding.transactionDate.text = DateFormatter().convertLongToDate(it)
+                binding.transactionDate.text = DateFormatter.convertLongToDate(it)
                 selectedDate = it.toString()
             }
             datePicker.show(supportFragmentManager, "")

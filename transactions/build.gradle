@@ -30,11 +30,12 @@ dependencies {
 
 
     implementation project(path: ':utils')
-    implementation project(path: ':core-ui')
+    implementation project(path: ':core-designSystem')
     implementation project(path: ':core-database')
     implementation project(path: ':core-data')
     implementation libs.hilt.android
     kapt libs.hilt.android.compiler
+    implementation libs.hilt.navigation.compose
     implementation libs.bundles.compose
 
     implementation libs.core.ktx

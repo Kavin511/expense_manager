@@ -1,4 +1,4 @@
-package com.devstudio.utils.model
+package com.devstudio.expensemanager.models
 
 data class BackupStatus(val status: Status, val message: String) {
     companion object {

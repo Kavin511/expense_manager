@@ -10,12 +10,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven{ url 'https://jitpack.io'}
+        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "ExpenseManager"
 include ':app'
-include ':core-ui'
+include ':core-designSystem'
 include ':core-database'
 include ':utils'
 include ':core-data'

@@ -1,34 +1,61 @@
 package com.devstudio.utils.formatters
 
-import java.util.*
+import java.util.Calendar
 
-class DateFormatter {
-    val monthNames =
-        listOf("January", "February", "March", "April","May" ,"June", "July", "August", "September", "October", "November", "December")
-
-    fun convertLongToDate(time: Long,format:String = DATE_MONTH_YEAR): String {
+object DateFormatter {
+    fun convertLongToDate(time: Long, format: String = DATE_MONTH_YEAR): String {
         val cal = Calendar.getInstance()
         cal.timeInMillis = time
         return String.format(
             format,
-            monthNames[cal[Calendar.MONTH]],
-            cal[Calendar.DAY_OF_MONTH],
-            cal[Calendar.YEAR],
+            monthNames[getCurrentMonth(cal)],
+            getCurrentDay(cal),
+            getCurrentYear(cal),
         )
     }
+
+    fun getCurrentDay(cal: Calendar) = cal[Calendar.DAY_OF_MONTH]
 
     fun getMonthAndYearFromLong(time: Long): String {
         val cal = Calendar.getInstance()
         cal.timeInMillis = time
         return String.format(
             MM_YY,
-            monthNames[cal[Calendar.MONTH]],
-            cal[Calendar.YEAR],
+            monthNames[getCurrentMonth(cal)],
+            getCurrentYear(cal),
         )
     }
-    companion object {
-        const val MM_DD_YYYY = "MM/dd/yyyy"
-        const val DATE_MONTH_YEAR = "%s %s, %s"
-        const val MM_YY = "%s, %s"
-    }
+
+    fun getCurrentYear(cal: Calendar) = cal[Calendar.YEAR]
+
+    fun getCurrentMonth(cal: Calendar) = cal[Calendar.MONTH]
+    const val MM_DD_YYYY = "MM/dd/yyyy"
+    private const val DATE_MONTH_YEAR = "%s %s, %s"
+    private const val MM_YY = "%s, %s"
+    private const val JANUARY = "January"
+    private const val FEBRUARY = "February"
+    private const val MARCH = "March"
+    private const val APRIL = "April"
+    private const val MAY = "May"
+    private const val JUNE = "June"
+    private const val JULY = "July"
+    private const val AUGUST = "August"
+    private const val SEPTEMBER = "September"
+    private const val OCTOBER = "October"
+    private const val NOVEMBER = "November"
+    private const val DECEMBER = "December"
+    val monthNames = listOf(
+        JANUARY,
+        FEBRUARY,
+        MARCH,
+        APRIL,
+        MAY,
+        JUNE,
+        JULY,
+        AUGUST,
+        SEPTEMBER,
+        OCTOBER,
+        NOVEMBER,
+        DECEMBER
+    )
 }

@@ -30,5 +30,6 @@ dependencies {
     implementation libs.kotlinx.coroutines.android
 
     implementation libs.hilt.android
+    implementation project(path: ':utils')
     kapt libs.hilt.android.compiler
 }
