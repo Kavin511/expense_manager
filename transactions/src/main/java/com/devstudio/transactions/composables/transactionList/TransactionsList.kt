@@ -27,6 +27,16 @@ fun TransactionsList(filterBottomSheetScaffoldState: BottomSheetScaffoldState) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
     val transactions = transactionViewModel.transactions.collectAsState()
     when {
+        transactionViewModel.isCurrentMonthHavingTransactions().not() -> {
+            TransactionOptions(filterBottomSheetScaffoldState)
+            Box(modifier = Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
+                Text(
+                    text = "No transactions for current month, old transactions can be viewed through applying filter",
+                    modifier = Modifier.align(alignment = Alignment.Center),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
         transactionViewModel.isHavingTransactions() && transactions.value.isEmpty() -> {
             TransactionOptions(filterBottomSheetScaffoldState)
             Box(
