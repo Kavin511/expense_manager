@@ -20,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
@@ -58,8 +59,7 @@ fun TransactionDashBoard(
             modifier = Modifier.padding(PaddingValues(6.dp))
         ) {
             TransactionSummary()
-            TransactionOptions(filterBottomSheetScaffoldState)
-            TransactionsList()
+            TransactionsList(filterBottomSheetScaffoldState)
         }
     }
 }
@@ -115,7 +115,10 @@ fun TransactionOptions(
                     text = if (selectedTransactionFilter == null) "" else "Reset",
                     color = if (selectedTransactionFilter == null) {
                         Color.Unspecified
-                    } else appColors.material.tertiary
+                    } else {
+                        appColors.material.tertiary
+                    },
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
         }

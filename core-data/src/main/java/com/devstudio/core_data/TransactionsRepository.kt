@@ -20,6 +20,7 @@ interface TransactionsRepository {
     suspend fun updateTransaction(oldTransactionObject: Transaction)
     fun filterTransactionFromDateRange(dateRange: androidx.core.util.Pair<Long, Long>): Flow<List<Transaction>?>
     fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
+    fun getTotalTransactionCount(): Int
 }
 
 @Singleton
@@ -36,6 +37,10 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
                 Calendar.getInstance()
             ).toString()
         )
+    }
+
+    override fun getTotalTransactionCount(): Int {
+        return  transactionDao.getTotalTransactionCount()
     }
 
     private fun formatCurrentMonth() = ("0" + (DateFormatter.getCurrentMonth(

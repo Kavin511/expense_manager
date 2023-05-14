@@ -80,6 +80,10 @@ class TransactionViewModel @Inject constructor(private val repository: Transacti
         }
     }
 
+    fun isHavingTransactions(): Boolean {
+        return repository.getTotalTransactionCount() > 0
+    }
+
     fun updateSelectedTransactionFilter(transactionFilter: TransactionFilter?) {
         selectedTransactionFilter.value = transactionFilter
         viewModelScope.launch {

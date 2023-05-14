@@ -71,7 +71,7 @@ fun TransactionFilterItem(
     return Text(text = transactionFilter.name,
         style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
-            .padding(4.dp)
+            .padding(vertical = 9.dp, horizontal = 4.dp)
             .fillMaxWidth()
             .clickable {
                 coroutineScope.launch {

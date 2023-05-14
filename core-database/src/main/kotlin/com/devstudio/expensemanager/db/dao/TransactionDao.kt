@@ -41,4 +41,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM TRANSACTIONS_TABLE WHERE strftime('%m',transactionDate / 1000,'unixepoch')=:month and strftime('%Y',transactionDate / 1000,'unixepoch')=:year order by transactionDate desc")
     fun getCurrentMonthTransaction(month: String, year: String): Flow<List<Transaction>>
+
+    @Query("SELECT count(id) FROM TRANSACTIONS_TABLE")
+    fun getTotalTransactionCount(): Int
 }
