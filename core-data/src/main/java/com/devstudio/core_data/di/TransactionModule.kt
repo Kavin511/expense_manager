@@ -1,7 +1,7 @@
 package com.devstudio.core_data.di
 
-import com.devstudio.core_data.TransactionsRepository
-import com.devstudio.core_data.TransactionsRepositoryImpl
+import com.devstudio.core_data.repository.TransactionsRepository
+import com.devstudio.core_data.repository.TransactionsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

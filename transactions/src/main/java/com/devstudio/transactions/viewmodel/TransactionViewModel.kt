@@ -5,7 +5,7 @@ import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devstudio.core_data.TransactionsRepository
+import com.devstudio.core_data.repository.TransactionsRepository
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.transactions.models.TransactionFilter
 import com.devstudio.utils.model.TransactionMode

@@ -50,6 +50,7 @@ dependencies {
     implementation project(path: ':core-designSystem')
     implementation project(path: ':core-database')
     implementation project(path: ':core-data')
+    implementation project(path: ':core-model')
     implementation project(path: ':transactions')
 
     implementation libs.androidx.core
@@ -79,6 +80,7 @@ dependencies {
     implementation libs.hilt.android
     implementation libs.hilt.navigation.compose
     kapt libs.hilt.android.compiler
-
+    implementation libs.androidx.work
+    kapt  libs.androidx.hilt.compiler
 
 }

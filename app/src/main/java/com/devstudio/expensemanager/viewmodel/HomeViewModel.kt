@@ -1,59 +1,31 @@
 package com.devstudio.expensemanager.viewmodel
 
-import android.os.Environment
+import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.devstudio.core_data.TransactionsRepository
-import com.devstudio.expensemanager.models.BackupStatus
-import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.CSVWriter
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.devstudio.core_data.repository.TransactionDataBackupWorker
+import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_WORK_NAME
+import com.devstudio.utils.utils.AppConstants.StringConstants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
-import java.io.FileWriter
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TransactionsRepository) :
+class HomeViewModel @Inject constructor(private val application: Application) :
     ViewModel() {
-    fun exportTransactions(): BackupStatus {
-        return try {
-            val csvWriter = createFileDirectoryToStoreTransaction()
-            writeTransactionsAsCSV(csvWriter)
-            BackupStatus.success("Transactions backed up successfully")
-        } catch (e: Exception) {
-            BackupStatus.failure(e.message.toString())
-        }
-    }
+    val workManager: WorkManager = WorkManager.getInstance(application)
+    val outputWorkInformation: LiveData<List<WorkInfo>> =
+        workManager.getWorkInfosByTagLiveData(TAG)
 
-    private fun writeTransactionsAsCSV(csvWriter: CSVWriter) {
-        csvWriter.writeNext(
-            "ID", columnNames()
-        )
-        for (i in repository.transactions()) {
-            csvWriter.writeNext(
-                i.id.toString(), arrayOf(
-                    i.amount.toString(),
-                    i.category,
-                    DateFormatter.convertLongToDate(i.transactionDate.toLong()),
-                    i.note,
-                    i.transactionMode
-                )
-            )
-        }
-        csvWriter.close()
-    }
-
-    private fun columnNames(): Array<String?> = arrayOf(
-        "Amount", "Category", "Transaction Date", "Note", "Transaction Mode"
-    )
-
-    private fun createFileDirectoryToStoreTransaction(): CSVWriter {
-        val folder =
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/expressWallet/")
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
-        val file = File(folder.absolutePath, "transactions.csv")
-        file.createNewFile()
-        return CSVWriter(FileWriter(file, false))
+    fun exportTransactions() {
+        workManager
+            .beginUniqueWork(
+                BACK_UP_WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequest.from(TransactionDataBackupWorker::class.java)
+            ).enqueue()
     }
 }

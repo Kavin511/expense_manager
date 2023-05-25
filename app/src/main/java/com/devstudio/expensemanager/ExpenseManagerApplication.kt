@@ -1,8 +1,6 @@
 package com.devstudio.expensemanager
 
 import android.app.Application
-import com.devstudio.expensemanager.db.ExpenseManagerDataBase
-import com.devstudio.core_data.TransactionsRepositoryImpl
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

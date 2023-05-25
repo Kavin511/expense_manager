@@ -1,9 +1,7 @@
-import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build
@@ -16,20 +14,20 @@ import androidx.compose.material.icons.rounded.Backup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.viewmodel.HomeViewModel
 
 
 @Composable
 fun HomeActions() {
-    val homeViewModel: HomeViewModel = hiltViewModel()
     val context = LocalContext.current
     var readPermissionGranted = false
     var writePermissionGranted = false
     val permissionList = mutableListOf<String>()
+    val homeViewModel = hiltViewModel<HomeViewModel>()
 
     val activityResultLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -46,7 +44,7 @@ fun HomeActions() {
                     readPermissionGranted = true
                 }
                 if (readPermissionGranted && writePermissionGranted) {
-                    backupTransactions(homeViewModel, context)
+                    homeViewModel.exportTransactions()
                 }
             }
         }
@@ -89,19 +87,24 @@ fun HomeActions() {
         }
     }
 
+    val outputWorkInfo = homeViewModel.outputWorkInformation.observeAsState()
+    (outputWorkInfo.value).let {
+        if (it?.isNotEmpty() == true) {
+            if (it[0].state.isFinished) {
+                Toast.makeText(
+                    LocalContext.current,
+                    it[0].outputData.getString("is_success"),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
     IconButton(onClick = {
         if (checkPermissionToStartBackup(context)) {
-            backupTransactions(homeViewModel, context)
+            homeViewModel.exportTransactions()
         }
     }) {
         Icon(Icons.Rounded.Backup, "Backup")
     }
-}
-
-private fun backupTransactions(
-    homeViewModel: HomeViewModel,
-    context: Context
-) {
-    val backupStatus = homeViewModel.exportTransactions()
-    Toast.makeText(context, backupStatus.message, Toast.LENGTH_SHORT).show()
 }
