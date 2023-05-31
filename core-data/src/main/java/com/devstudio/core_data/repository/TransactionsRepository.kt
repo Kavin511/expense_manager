@@ -1,4 +1,4 @@
-package com.devstudio.core_data
+package com.devstudio.core_data.repository
 
 import androidx.annotation.WorkerThread
 import com.devstudio.expensemanager.db.dao.TransactionDao

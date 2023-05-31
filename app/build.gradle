@@ -51,6 +51,7 @@ dependencies {
     implementation project(path: ':core-database')
     implementation project(path: ':core-data')
     implementation project(path: ':transactions')
+    implementation project(path: ':category')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat

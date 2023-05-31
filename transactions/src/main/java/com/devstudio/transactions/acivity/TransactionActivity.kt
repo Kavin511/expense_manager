@@ -17,6 +17,7 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
 import com.devstudio.utils.model.TransactionMode
+import com.devstudioworks.ui.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -246,15 +247,17 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun deleteTransactionAlert() {
-        val materialAlertDialogBuilder = MaterialAlertDialogBuilder(this@TransactionActivity)
-        materialAlertDialogBuilder.setTitle("Are you sure to delete this transaction")
-            .setPositiveButton("Delete") { dialog, _ ->
+        MaterialAlert(
+            context = this@TransactionActivity,
+            title = "Are you sure to delete this transaction",
+            negativeText = "No",
+            positiveText = "Delete", positiveCallback = {
                 transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
-                dialog.dismiss()
+                it.dismiss()
                 this.finish()
-            }.setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
+            }, negativeCallback = {
+                it.dismiss()
             }
-        materialAlertDialogBuilder.show()
+        )
     }
 }

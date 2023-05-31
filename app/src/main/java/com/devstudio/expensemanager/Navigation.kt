@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devstudio.category.composables.CategoryMainScreen
 import com.devstudio.expensemanager.models.ExpressWalletAppState
 import com.devstudio.expensemanager.ui.home.composables.HomeScreen
 
@@ -18,7 +19,10 @@ fun Navigation(
         startDestination = ExpressWalletAppState.HomeScreen.route
     ) {
         composable(route = ExpressWalletAppState.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(navController)
+        }
+        composable(route = "/category") {
+            CategoryMainScreen()
         }
     }
 }

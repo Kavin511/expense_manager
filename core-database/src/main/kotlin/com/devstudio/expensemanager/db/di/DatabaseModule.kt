@@ -3,6 +3,7 @@ package com.devstudio.expensemanager.db.di
 import android.content.Context
 import androidx.room.Room
 import com.devstudio.expensemanager.db.ExpenseManagerDataBase
+import com.devstudio.expensemanager.db.dao.CategoryDao
 import com.devstudio.expensemanager.db.dao.TransactionDao
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,11 @@ class DatabaseModule {
     @Provides
     fun providesTransactionDao(expenseManagerDataBase: ExpenseManagerDataBase): TransactionDao {
         return expenseManagerDataBase.transactionsDao()
+    }
+
+    @Provides
+    fun providesCategoryDao(expenseManagerDataBase: ExpenseManagerDataBase): CategoryDao {
+        return expenseManagerDataBase.categoryDao()
     }
 
     @Provides

@@ -2,7 +2,7 @@ package com.devstudio.expensemanager.viewmodel
 
 import android.os.Environment
 import androidx.lifecycle.ViewModel
-import com.devstudio.core_data.TransactionsRepository
+import com.devstudio.core_data.repository.TransactionsRepository
 import com.devstudio.expensemanager.models.BackupStatus
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.CSVWriter
