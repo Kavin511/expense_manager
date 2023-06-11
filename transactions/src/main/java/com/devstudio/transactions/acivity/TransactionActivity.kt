@@ -1,6 +1,5 @@
 package com.devstudio.transactions.acivity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,18 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ComponentActivity
-import androidx.core.net.toUri
-import androidx.fragment.app.FragmentContainerView
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import androidx.navigation.NavDeepLinkBuilder
-import androidx.navigation.NavDeepLinkRequest
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -253,11 +241,12 @@ class TransactionActivity : AppCompatActivity() {
             selectedCategoryIndexList[1]
         }
     }
+
     private fun setSelectedCategoryIndex(index: Int) {
         val selectedIndex = if (categoryList.isEmpty()) {
             categoryAdditionSnackBar()
             0
-        } else if (index >= 0) index  else {
+        } else if (index >= 0) index else {
             Toast.makeText(
                 applicationContext,
                 "First category is selected as old category is not available for this transaction type",

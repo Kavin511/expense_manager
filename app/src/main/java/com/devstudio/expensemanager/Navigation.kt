@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.devstudio.category.composables.CategoryMainScreen
-import com.devstudio.category.composables.CreateCategoryDialog
 import com.devstudio.expensemanager.models.ExpressWalletAppState
 import com.devstudio.expensemanager.ui.home.composables.HomeScreen
 

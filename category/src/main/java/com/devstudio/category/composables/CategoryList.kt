@@ -72,7 +72,7 @@ fun CategoryList(categoryStateList: List<Category>) {
             items(categoryStateList) {
 
                 Card(modifier = Modifier
-                    .padding(4.dp)
+                    .padding(vertical = 4.dp, horizontal = 16.dp)
                     .combinedClickable(onLongClick = {
                         MaterialAlert(
                             context = context,
