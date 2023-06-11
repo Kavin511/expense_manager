@@ -5,6 +5,7 @@ import androidx.room.*
 import androidx.room.OnConflictStrategy.IGNORE
 import com.devstudio.expensemanager.db.models.Transaction
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 @Dao
 interface TransactionDao {
@@ -49,5 +50,5 @@ interface TransactionDao {
     fun getCurrentMonthTransactionCount(month: String, year: String):Int
 
     @Query("SELECT name FROM category_table WHERE id=:categoryId")
-    fun getTransactionCategoryName(categoryId: Long): String?
+    fun getTransactionCategoryName(categoryId: UUID): String?
 }

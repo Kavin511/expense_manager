@@ -84,11 +84,11 @@ fun CategoryMainScreen() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            categoryViewModel.loadCategoriesForSelectedType(selectedFilterType.value)
                             CircularProgressIndicator(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 color = appColors.material.onSurface
                             )
+                            categoryViewModel.loadCategoriesForSelectedType(selectedFilterType.value)
                         }
                     }
 

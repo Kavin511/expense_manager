@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -110,7 +111,7 @@ class TransactionViewModel @Inject constructor(private val repository: Transacti
         }
     }
 
-    fun getTransactionCategoryName(categoryId: Long): String {
+    fun getTransactionCategoryName(categoryId: UUID): String {
         return repository.getTransactionCategoryName(categoryId) ?: "Category Deleted"
     }
 

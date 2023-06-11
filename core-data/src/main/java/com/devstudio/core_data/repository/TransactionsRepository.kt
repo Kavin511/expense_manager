@@ -6,6 +6,7 @@ import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.utils.formatters.DateFormatter
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +23,7 @@ interface TransactionsRepository {
     fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
     fun getTotalTransactionCount(): Int
     fun getCurrentMonthTransactionCount(): Int
-    fun getTransactionCategoryName(categoryId: Long): String?
+    fun getTransactionCategoryName(categoryId: UUID): String?
 }
 
 @Singleton
@@ -52,7 +53,7 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
             ).toString())
     }
 
-    override fun getTransactionCategoryName(categoryId: Long): String? {
+    override fun getTransactionCategoryName(categoryId: UUID): String? {
         return transactionDao.getTransactionCategoryName(categoryId)
     }
 

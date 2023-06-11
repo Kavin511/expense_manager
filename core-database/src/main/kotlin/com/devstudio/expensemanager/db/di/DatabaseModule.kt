@@ -89,6 +89,5 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
         database.execSQL("DROP TABLE TRANSACTIONS_TABLE")
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE_Backup RENAME to TRANSACTIONS_TABLE")
-        database.execSQL("ALTER TABLE CATEGORY_TABLE ADD COLUMN categoryType TEXT not null default 'EXPENSE'")
     }
 }

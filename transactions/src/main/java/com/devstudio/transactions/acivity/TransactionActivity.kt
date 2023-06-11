@@ -39,6 +39,7 @@ class TransactionActivity : AppCompatActivity() {
     private val binding
         get() = _binding!!
     private var categoryList = listOf<Category>()
+    private var currentTransaction: Transaction? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,7 +132,7 @@ class TransactionActivity : AppCompatActivity() {
     private suspend fun updateSelectedCategory() {
         transactionViewModel.transaction.first().let {
             if (it != null) {
-                transactionMenu?.findItem(R.id.transaction_delete)?.isVisible = true
+                currentTransaction = it
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
                 binding.transactionDate.text =
@@ -271,11 +272,10 @@ class TransactionActivity : AppCompatActivity() {
         ).show()
     }
 
-    var transactionMenu: Menu? = null
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        transactionMenu = menu
         menuInflater.inflate(R.menu.transaction_menu, menu)
-        return true
+        menu?.findItem(R.id.transaction_delete)?.isVisible = currentTransaction!= null
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
