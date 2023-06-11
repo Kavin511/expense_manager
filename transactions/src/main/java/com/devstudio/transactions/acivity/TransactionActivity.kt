@@ -96,7 +96,8 @@ class TransactionActivity : AppCompatActivity() {
     private suspend fun updateOldTransaction(oldTransaction: Transaction) {
         val selectedCategoryId = categoryList[getSelectedCategoryIndex()].id
         oldTransaction.apply {
-            amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
+            amount =
+                TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
@@ -133,7 +134,8 @@ class TransactionActivity : AppCompatActivity() {
                 transactionMenu?.findItem(R.id.transaction_delete)?.isVisible = true
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
-                binding.transactionDate.text = DateFormatter.convertLongToDate(it.transactionDate.toLong())
+                binding.transactionDate.text =
+                    DateFormatter.convertLongToDate(it.transactionDate.toLong())
                 selectedDate = it.transactionDate
                 if (it.transactionMode == EXPENSE) {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
