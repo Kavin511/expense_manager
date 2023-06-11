@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.devstudio.expensemanager.db.models.Category
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 @Dao
 interface CategoryDao {
@@ -20,10 +21,10 @@ interface CategoryDao {
     fun getCategoriesFlow(): Flow<List<Category>>
 
     @Query("SELECT * FROM CATEGORY_TABLE WHERE  id=:categoryId")
-    fun findCategoryById(categoryId: Long): Category
+    fun findCategoryById(categoryId: UUID): Category
 
     @Query("DELETE FROM CATEGORY_TABLE WHERE ID=:categoryId")
-    fun deleteCategory(categoryId: Long)
+    fun deleteCategory(categoryId: UUID)
 
     @Update
     fun updateCategory(category: Category)

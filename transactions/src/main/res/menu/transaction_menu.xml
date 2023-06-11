@@ -5,6 +5,5 @@
         android:id="@+id/transaction_delete"
         android:icon="@drawable/ic_menu_delete"
         app:showAsAction="always"
-        android:visible="false"
         android:title="Delete"/>
 </menu>
