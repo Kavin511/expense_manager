@@ -1,41 +1,56 @@
 package com.devstudio.transactions.acivity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ComponentActivity
+import androidx.core.net.toUri
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkBuilder
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.expensemanager.db.models.TransactionMode
 import com.devstudio.transactions.R
 import com.devstudio.transactions.databinding.ActivityTransactionBinding
 import com.devstudio.transactions.uicomponents.TransactionKeyboard
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
-import com.devstudio.utils.model.TransactionMode
+import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudioworks.ui.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
 
 @AndroidEntryPoint
 class TransactionActivity : AppCompatActivity() {
 
     private var _binding: ActivityTransactionBinding? = null
     private val transactionViewModel by viewModels<TransactionViewModel>()
-    var selectedCategoryIndex = 0
+    var selectedCategoryIndexList: MutableList<Int> = mutableListOf(0, 0)
     private val binding
         get() = _binding!!
+    private var categoryList = listOf<Category>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +69,10 @@ class TransactionActivity : AppCompatActivity() {
 
     private fun initialiseSaveTransactionFlow() {
         binding.keyboard.saveTransaction.setOnClickListener {
+            if (categoryList.isEmpty()) {
+                categoryAdditionSnackBar()
+                return@setOnClickListener
+            }
             lifecycleScope.launch {
                 val oldTransaction = transactionViewModel.transaction.value
                 if (transactionViewModel.isEditingOldTransaction.value == true && oldTransaction != null) {
@@ -77,7 +96,7 @@ class TransactionActivity : AppCompatActivity() {
             note = binding.noteText.text.toString(),
             transactionMode = transactionViewModel.transactionType.value.toString(),
             transactionDate = selectedDate,
-            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+            categoryId = categoryList[getSelectedCategoryIndex()].id
         )
         transactionViewModel.insertTransaction(transaction)
     }
@@ -87,12 +106,13 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private suspend fun updateOldTransaction(oldTransaction: Transaction) {
+        val selectedCategoryId = categoryList[getSelectedCategoryIndex()].id
         oldTransaction.apply {
             amount = TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
-            category = transactionViewModel.transactionType.value.categoryList[selectedCategoryIndex]
+            categoryId = selectedCategoryId
         }
         transactionViewModel.updateTransaction(oldTransaction)
     }
@@ -109,34 +129,36 @@ class TransactionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val id = intent.getLongExtra("id", 0)
             transactionViewModel.getAndUpdateTransactionById(id)
-            updateCategoryBasedOnTransactionTypeSelection()
+            updateSelectedCategory()
         }
         transactionViewModel.isEditingOldTransaction.observe(this) {
             if (it) {
-                binding.keyboard.saveTransaction.text = getString(com.devstudioworks.core.ui.R.string.update_transaction)
+                binding.keyboard.saveTransaction.text =
+                    getString(com.devstudioworks.core.ui.R.string.update_transaction)
             }
         }
     }
 
-    private suspend fun updateCategoryBasedOnTransactionTypeSelection() {
-        transactionViewModel.transaction.collectLatest {
+    private suspend fun updateSelectedCategory() {
+        transactionViewModel.transaction.first().let {
             if (it != null) {
+                transactionMenu?.findItem(R.id.transaction_delete)?.isVisible = true
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
-                binding.transactionDate.text =
-                    DateFormatter.convertLongToDate(it.transactionDate.toLong())
+                binding.transactionDate.text = DateFormatter.convertLongToDate(it.transactionDate.toLong())
                 selectedDate = it.transactionDate
-                if (it.transactionMode == "EXPENSE") {
+                if (it.transactionMode == EXPENSE) {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     binding.transactionMode.check(R.id.expense_mode)
-                    selectedCategoryIndex = TransactionMode.EXPENSE.categoryList.indexOf(it.category)
-                    binding.categoryGroup.check(selectedCategoryIndex)
                 } else {
                     transactionViewModel.transactionType.value = TransactionMode.INCOME
                     binding.transactionMode.check(R.id.income_mode)
-                    selectedCategoryIndex = TransactionMode.INCOME.categoryList.indexOf(it.category)
-                    binding.categoryGroup.check(selectedCategoryIndex)
                 }
+                categoryList = transactionViewModel.getCategories(it.transactionMode).first()
+                setSelectedCategoryIndex(categoryList.indexOfFirst { category ->
+                    category.id == it.categoryId
+                })
+                binding.categoryGroup.check(getSelectedCategoryIndex())
             }
         }
     }
@@ -146,13 +168,12 @@ class TransactionActivity : AppCompatActivity() {
             when (checkedId) {
                 R.id.expense_mode -> {
                     if (isChecked) {
-                        selectedCategoryIndex = 0
                         transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                     }
                 }
-                R.id.income_mode  -> {
+
+                R.id.income_mode -> {
                     if (isChecked) {
-                        selectedCategoryIndex = 0
                         transactionViewModel.transactionType.value = TransactionMode.INCOME
                     }
                 }
@@ -166,20 +187,23 @@ class TransactionActivity : AppCompatActivity() {
     private suspend fun initialiseTransactionCategory() {
         transactionViewModel.transactionType.collectLatest {
             binding.categoryGroup.removeAllViews()
-            transactionViewModel.transactionType.value
-            it.categoryList.forEachIndexed { index, value ->
-                val chip = layoutInflater.inflate(R.layout.category_chip, null) as Chip
-                chip.text = value
-                chip.id = index
-                chip.isCheckable = true
-                if (selectedCategoryIndex == index) {
-                    chip.isChecked = true
+            with(transactionViewModel.getCategories(it.name).first()) {
+                categoryList = this
+                forEachIndexed { index, value ->
+                    val chip = layoutInflater.inflate(R.layout.category_chip, null) as Chip
+                    chip.text = value.name
+                    chip.id = index
+                    chip.isCheckable = true
+                    if (getSelectedCategoryIndex() == index) {
+                        chip.isChecked = true
+                    }
+                    chip.checkedIcon = null
+                    chip.setOnClickListener {
+                        setSelectedCategoryIndex(index)
+                    }
+                    binding.categoryGroup.addView(chip)
                 }
-                chip.checkedIcon =null
-                chip.setOnClickListener {
-                    selectedCategoryIndex = index
-                }
-                binding.categoryGroup.addView(chip)
+                binding.categoryGroup.requestLayout()
             }
         }
     }
@@ -197,11 +221,6 @@ class TransactionActivity : AppCompatActivity() {
             binding.keyboard
         )
         transactionKeyboard.initialiseListeners()
-        transactionViewModel.viewModelScope.launch {
-            binding.keyboard.amountText.selectionPosition.flowWithLifecycle(lifecycle).collect {
-                transactionKeyboard.selectionPosition = it
-            }
-        }
         binding.keyboard.amountText.requestFocus()
     }
 
@@ -227,13 +246,44 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.transaction_menu, menu)
-        lifecycleScope.launch {
-            transactionViewModel.transaction.collectLatest {
-                menu?.findItem(R.id.transaction_delete)?.isVisible = it != null
-            }
+    private fun getSelectedCategoryIndex(type: String = transactionViewModel.transactionType.value.name): Int {
+        return if (type == TransactionMode.EXPENSE.name) {
+            selectedCategoryIndexList[0]
+        } else {
+            selectedCategoryIndexList[1]
         }
+    }
+    private fun setSelectedCategoryIndex(index: Int) {
+        val selectedIndex = if (categoryList.isEmpty()) {
+            categoryAdditionSnackBar()
+            0
+        } else if (index >= 0) index  else {
+            Toast.makeText(
+                applicationContext,
+                "First category is selected as old category is not available for this transaction type",
+                Toast.LENGTH_LONG
+            ).show()
+            0
+        }
+        if (transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
+            selectedCategoryIndexList[0] = selectedIndex
+        } else {
+            selectedCategoryIndexList[1] = selectedIndex
+        }
+    }
+
+    private fun categoryAdditionSnackBar() {
+        Snackbar.make(
+            binding.root,
+            "No category available for this transaction type",
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    var transactionMenu: Menu? = null
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        transactionMenu = menu
+        menuInflater.inflate(R.menu.transaction_menu, menu)
         return true
     }
 

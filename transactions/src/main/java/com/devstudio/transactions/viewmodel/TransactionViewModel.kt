@@ -5,10 +5,12 @@ import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.core_data.repository.TransactionsRepository
+import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.expensemanager.db.models.TransactionMode
 import com.devstudio.transactions.models.TransactionFilter
-import com.devstudio.utils.model.TransactionMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionViewModel @Inject constructor(private val repository: TransactionsRepository) :
+class TransactionViewModel @Inject constructor(private val repository: TransactionsRepository,private val categoryRepository: CategoryRepository) :
     ViewModel() {
     var transactionFilterOptions: List<TransactionFilter>
     val selectedTransactionFilter = MutableStateFlow<TransactionFilter?>(null)
@@ -106,6 +108,14 @@ class TransactionViewModel @Inject constructor(private val repository: Transacti
                 sumOfIncome.value = totalIncome
             }
         }
+    }
+
+    fun getTransactionCategoryName(categoryId: Long): String {
+        return repository.getTransactionCategoryName(categoryId) ?: "Category Deleted"
+    }
+
+    fun getCategories(type: String): Flow<List<Category>> {
+        return categoryRepository.getCategoriesStream(type)
     }
 
     companion object Factory {

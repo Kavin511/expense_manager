@@ -47,4 +47,7 @@ interface TransactionDao {
 
     @Query("SELECT count(id) FROM TRANSACTIONS_TABLE WHERE strftime('%m',transactionDate / 1000,'unixepoch')=:month and strftime('%Y',transactionDate / 1000,'unixepoch')=:year order by transactionDate desc")
     fun getCurrentMonthTransactionCount(month: String, year: String):Int
+
+    @Query("SELECT name FROM category_table WHERE id=:categoryId")
+    fun getTransactionCategoryName(categoryId: Long): String?
 }

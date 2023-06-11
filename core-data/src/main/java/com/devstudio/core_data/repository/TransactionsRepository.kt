@@ -22,6 +22,7 @@ interface TransactionsRepository {
     fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
     fun getTotalTransactionCount(): Int
     fun getCurrentMonthTransactionCount(): Int
+    fun getTransactionCategoryName(categoryId: Long): String?
 }
 
 @Singleton
@@ -49,6 +50,10 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
             DateFormatter.getCurrentYear(
                 Calendar.getInstance()
             ).toString())
+    }
+
+    override fun getTransactionCategoryName(categoryId: Long): String? {
+        return transactionDao.getTransactionCategoryName(categoryId)
     }
 
     private fun formatCurrentMonth() = ("0" + (DateFormatter.getCurrentMonth(

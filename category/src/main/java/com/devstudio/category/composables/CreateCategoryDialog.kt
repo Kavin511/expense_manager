@@ -2,13 +2,16 @@ package com.devstudio.category.composables
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -18,19 +21,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.expensemanager.db.models.Category
+import com.devstudio.utils.utils.AppConstants.Companion.supportedTransactionTypes
 import com.devstudioworks.core.ui.R
 
 
 @Composable
 fun CreateCategoryDialog(context: Context, category: Category, categoryCallback: CategoryCallback) {
-    var categoryValue by remember {
+    var categoryName by remember {
         mutableStateOf(category.name)
+    }
+    var categoryType by remember {
+        mutableStateOf(if (category.categoryType.isEmpty()) supportedTransactionTypes[0] else category.categoryType)
     }
     var isError by remember {
         mutableStateOf(false)
@@ -41,28 +47,48 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
         Card(shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))) {
             Column(
                 modifier = Modifier
-                    .background(color = Color.White)
                     .padding(16.dp)
             ) {
-                TextField(value = categoryValue, onValueChange = {
+                TextField(value = categoryName, onValueChange = {
                     if (it.isNotBlank()) {
                         isError = false
                     }
-                    categoryValue = it
+                    categoryName = it
                 }, isError = isError)
-
-                FilledIconButton(
-                    onClick = {
-                        if (categoryValue.isNotBlank()) {
-                            category.name = categoryValue
-                            category.timeStamp = System.currentTimeMillis()
-                            categoryCallback::onAddCategory.invoke(
-                                category
+                LazyColumn {
+                    items(supportedTransactionTypes.size) { index ->
+                        Row {
+                            RadioButton(
+                                selected = categoryType == supportedTransactionTypes[index],
+                                onClick = {
+                                    categoryType = supportedTransactionTypes[index]
+                                },
+                                modifier = Modifier.align(Alignment.CenterVertically)
                             )
+                            Text(text = supportedTransactionTypes[index], modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .clickable {
+                                    categoryType = supportedTransactionTypes[index]
+                                })
+                        }
+                    }
+                }
+
+
+                OutlinedButton(
+                    onClick = {
+                        if (categoryName.isNotBlank()) {
+                            category.name = categoryName
+                            category.categoryType = categoryType
+                            category.timeStamp = System.currentTimeMillis()
+                            categoryCallback::onAddCategory.invoke(category)
                         } else {
                             isError = true
-                            Toast.makeText(context, "Invalid category length", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(
+                                context,
+                                "Category name cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     modifier = Modifier
@@ -72,7 +98,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
                         .align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))
                 ) {
-                    Text(text = "Add")
+                    Text(text = if (categoryName.isNotBlank()) "Update" else "Add")
                 }
             }
         }

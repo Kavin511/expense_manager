@@ -1,4 +1,4 @@
-package com.devstudio.utils.model
+package com.devstudio.expensemanager.db.models
 
 enum class TransactionMode(val categoryList: List<String>) {
     EXPENSE(

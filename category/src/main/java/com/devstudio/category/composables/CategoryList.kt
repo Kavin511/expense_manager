@@ -1,7 +1,9 @@
 package com.devstudio.category.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -23,7 +26,7 @@ import com.devstudio.category.CategoryViewModel
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudioworks.ui.components.MaterialAlert
-
+import com.devstudioworks.ui.theme.appColors
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -33,6 +36,9 @@ fun CategoryList(categoryStateList: List<Category>) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .background(color = appColors.material.surface),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "Tap + to create categories"
@@ -45,7 +51,7 @@ fun CategoryList(categoryStateList: List<Category>) {
             mutableStateOf(false)
         }
         var selectedCategory by remember {
-            mutableStateOf(Category())
+            mutableStateOf(Category(categoryType = ""))
         }
         if (shouldShowDialog) {
             CreateCategoryDialog(context, selectedCategory, object : CategoryCallback {
@@ -60,7 +66,9 @@ fun CategoryList(categoryStateList: List<Category>) {
                 }
             })
         }
-        LazyColumn() {
+        LazyColumn(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()) {
             items(categoryStateList) {
 
                 Card(modifier = Modifier

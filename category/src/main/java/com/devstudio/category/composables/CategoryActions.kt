@@ -31,7 +31,7 @@ fun CategoryFloatingActionButton() {
         mutableStateOf(false)
     }
     if (shouldShowDialog) {
-        val category = Category()
+        val category = Category(categoryType = "")
         CreateCategoryDialog(context,category,object : CategoryCallback {
             override fun onDismiss() {
                 shouldShowDialog = false

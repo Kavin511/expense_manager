@@ -1,5 +1,6 @@
 package com.devstudio.expensemanager.db
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.devstudio.expensemanager.db.dao.CategoryDao

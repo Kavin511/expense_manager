@@ -2,6 +2,7 @@ package com.devstudio.expensemanager.viewmodel
 
 import android.os.Environment
 import androidx.lifecycle.ViewModel
+import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.core_data.repository.TransactionsRepository
 import com.devstudio.expensemanager.models.BackupStatus
 import com.devstudio.utils.formatters.DateFormatter
@@ -12,7 +13,7 @@ import java.io.FileWriter
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TransactionsRepository) :
+class HomeViewModel @Inject constructor(private val repository: TransactionsRepository, private val categoryRepository: CategoryRepository) :
     ViewModel() {
     fun exportTransactions(): BackupStatus {
         return try {
@@ -32,7 +33,7 @@ class HomeViewModel @Inject constructor(private val repository: TransactionsRepo
             csvWriter.writeNext(
                 i.id.toString(), arrayOf(
                     i.amount.toString(),
-                    i.category,
+                    categoryRepository.findCategoryById(i.categoryId).name,
                     DateFormatter.convertLongToDate(i.transactionDate.toLong()),
                     i.note,
                     i.transactionMode
@@ -53,7 +54,9 @@ class HomeViewModel @Inject constructor(private val repository: TransactionsRepo
             folder.mkdirs()
         }
         val file = File(folder.absolutePath, "transactions.csv")
-        file.createNewFile()
+        if (file.exists().not()) {
+            file.createNewFile()
+        }
         return CSVWriter(FileWriter(file, false))
     }
 }

@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import com.devstudio.category.composables.CategoryMainScreen
+import com.devstudio.category.composables.CreateCategoryDialog
 import com.devstudio.expensemanager.models.ExpressWalletAppState
 import com.devstudio.expensemanager.ui.home.composables.HomeScreen
 
@@ -21,7 +23,20 @@ fun Navigation(
         composable(route = ExpressWalletAppState.HomeScreen.route) {
             HomeScreen(navController)
         }
-        composable(route = "/category") {
+        composable(route = ExpressWalletAppState.CategoryScreen.route, deepLinks = listOf(
+            navDeepLink {
+                uriPattern =
+                    "android:app://com.devstudio.expensemanager.ui.home.activity.HomeActivity/categoryMainScreen"
+            }
+        )) {
+            CategoryMainScreen()
+        }
+        composable(route = ExpressWalletAppState.CategoryScreen.route, deepLinks = listOf(
+            navDeepLink {
+                uriPattern =
+                    "android:app://com.devstudio.expensemanager.ui.home.activity.HomeActivity/categoryMainScreen"
+            }
+        )) {
             CategoryMainScreen()
         }
     }

@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet

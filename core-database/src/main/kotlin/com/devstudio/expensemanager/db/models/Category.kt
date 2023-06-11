@@ -9,5 +9,6 @@ class Category(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long = 0,
     @ColumnInfo(name = "name") var name: String = "",
     @ColumnInfo(name = "status") var status: Boolean = true,
-    @ColumnInfo(name = "timeStamp") var timeStamp: Long = 0
+    @ColumnInfo(name = "timeStamp") var timeStamp: Long = 0,
+    @ColumnInfo(name = "categoryType") var categoryType: String
 )

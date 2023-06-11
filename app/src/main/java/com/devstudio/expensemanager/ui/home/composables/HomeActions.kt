@@ -17,8 +17,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
+import com.devstudio.expensemanager.models.ExpressWalletAppState
 import com.devstudio.expensemanager.viewmodel.HomeViewModel
 
 
@@ -102,7 +105,7 @@ fun HomeActions(navController: NavHostController) {
         Icon(Icons.Rounded.Backup, "Backup")
     }
     IconButton(onClick = {
-        navController.navigate("/category"){
+        navController.navigate(ExpressWalletAppState.CategoryScreen.route) {
             launchSingleTop = true
         }
     }) {

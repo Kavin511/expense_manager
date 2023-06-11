@@ -6,7 +6,6 @@ import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.expensemanager.db.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,10 +14,12 @@ class CategoryViewModel @Inject constructor(val categoryRepository: CategoryRepo
     ViewModel() {
     val categoryState = MutableStateFlow<CategoryState>(CategoryState.LOADING)
 
-    init {
+    fun loadCategoriesForSelectedType(type: String = "") {
         viewModelScope.launch {
-            categoryRepository.getCategoriesFlow().collectLatest {
-                categoryState.value = CategoryState.COMPLETED(it)
+            if (type.isEmpty()) {
+                categoryState.value = CategoryState.COMPLETED(categoryRepository.getAllCategories())
+            } else {
+                categoryState.value = CategoryState.COMPLETED(categoryRepository.getCategoriesStream(type))
             }
         }
     }

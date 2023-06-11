@@ -13,6 +13,9 @@ interface CategoryDao {
     @Insert(onConflict = IGNORE)
     fun insertCategory(category: Category)
 
+    @Insert(onConflict = IGNORE)
+    fun insertCategories(category: List<Category>)
+
     @Query("SELECT * FROM CATEGORY_TABLE ORDER BY id")
     fun getCategoriesFlow(): Flow<List<Category>>
 
@@ -24,4 +27,13 @@ interface CategoryDao {
 
     @Update
     fun updateCategory(category: Category)
+
+    @Query("SELECT * FROM CATEGORY_TABLE WHERE categoryType==:type")
+    fun getCategoriesStream(type: String): Flow<List<Category>>
+
+    @Query("SELECT * FROM CATEGORY_TABLE")
+    fun getAllCategories(): Flow<List<Category>>
+
+    @Query("SELECT * FROM CATEGORY_TABLE WHERE categoryType==:type")
+    fun getCategories(type: String): List<Category>
 }
