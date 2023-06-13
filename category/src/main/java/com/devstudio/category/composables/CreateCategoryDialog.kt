@@ -98,7 +98,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
                         .align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))
                 ) {
-                    Text(text = if (categoryName.isNotBlank()) "Update" else "Add")
+                    Text(text = if (category.name.isNotBlank()) "Update" else "Add")
                 }
             }
         }

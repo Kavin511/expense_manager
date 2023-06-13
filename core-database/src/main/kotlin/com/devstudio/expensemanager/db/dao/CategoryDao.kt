@@ -17,10 +17,10 @@ interface CategoryDao {
     @Insert(onConflict = IGNORE)
     fun insertCategories(category: List<Category>)
 
-    @Query("SELECT * FROM CATEGORY_TABLE ORDER BY id")
+    @Query("SELECT * FROM CATEGORY_TABLE ORDER BY timeStamp desc")
     fun getCategoriesFlow(): Flow<List<Category>>
 
-    @Query("SELECT * FROM CATEGORY_TABLE WHERE  id=:categoryId")
+    @Query("SELECT * FROM CATEGORY_TABLE WHERE  id=:categoryId order by timeStamp desc")
     fun findCategoryById(categoryId: UUID): Category
 
     @Query("DELETE FROM CATEGORY_TABLE WHERE ID=:categoryId")
@@ -29,12 +29,12 @@ interface CategoryDao {
     @Update
     fun updateCategory(category: Category)
 
-    @Query("SELECT * FROM CATEGORY_TABLE WHERE categoryType==:type")
+    @Query("SELECT * FROM CATEGORY_TABLE WHERE categoryType==:type ORDER BY timeStamp desc")
     fun getCategoriesStream(type: String): Flow<List<Category>>
 
-    @Query("SELECT * FROM CATEGORY_TABLE")
+    @Query("SELECT * FROM CATEGORY_TABLE ORDER BY timeStamp desc")
     fun getAllCategories(): Flow<List<Category>>
 
-    @Query("SELECT * FROM CATEGORY_TABLE WHERE categoryType==:type")
+    @Query("SELECT * FROM CATEGORY_TABLE WHERE categoryType==:type ORDER BY timeStamp desc")
     fun getCategories(type: String): List<Category>
 }
