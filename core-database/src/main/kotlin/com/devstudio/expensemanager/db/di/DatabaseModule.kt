@@ -70,7 +70,7 @@ class DatabaseModule {
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN categoryId INTEGER not null default 0")
-        database.execSQL("CREATE TABLE CATEGORY_TABLE (id INTEGER NOT NULL,\n" + "name TEXT not null,\n" + "status integer NOT NULL DEFAULT null,\n" + "timeStamp INTEGER NOT NULL default null,categoryType TEXT NOT NULL DEFAULT NULL, PRIMARY KEY (id))")
+        database.execSQL("CREATE TABLE CATEGORY_TABLE (id TEXT NOT NULL,\n" + "name TEXT not null,\n" + "status integer NOT NULL DEFAULT null,\n" + "timeStamp INTEGER NOT NULL default null,categoryType TEXT NOT NULL DEFAULT NULL, PRIMARY KEY (id))")
         TransactionMode.EXPENSE.categoryList.forEachIndexed { index, it ->
             database.execSQL("INSERT INTO CATEGORY_TABLE (name,timestamp,status,CATEGORYTYPE) VALUES ('${it}',${System.currentTimeMillis()},1,'EXPENSE')")
         }
