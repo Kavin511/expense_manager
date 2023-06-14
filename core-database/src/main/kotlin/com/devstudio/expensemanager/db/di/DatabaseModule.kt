@@ -71,11 +71,11 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN categoryId INTEGER not null default 0")
         database.execSQL("CREATE TABLE CATEGORY_TABLE (id INTEGER NOT NULL,\n" + "name TEXT not null,\n" + "status integer NOT NULL DEFAULT null,\n" + "timeStamp INTEGER NOT NULL default null,categoryType TEXT NOT NULL DEFAULT NULL, PRIMARY KEY (id))")
-        TransactionMode.EXPENSE.categoryList.forEachIndexed { index, it ->
+        TransactionMode.EXPENSE.categoryList.forEach {
             database.execSQL("INSERT INTO CATEGORY_TABLE (name,timestamp,status,CATEGORYTYPE) VALUES ('${it}',${System.currentTimeMillis()},1,'EXPENSE')")
         }
-        TransactionMode.INCOME.categoryList.forEachIndexed { index, it ->
-        database.execSQL("INSERT INTO CATEGORY_TABLE (name,timestamp,status,CATEGORYTYPE) VALUES ('${it}',${System.currentTimeMillis()},1,'INCOME')")
+        TransactionMode.INCOME.categoryList.forEach {
+            database.execSQL("INSERT INTO CATEGORY_TABLE (name,timestamp,status,CATEGORYTYPE) VALUES ('${it}',${System.currentTimeMillis()},1,'INCOME')")
         }
         database.execSQL("UPDATE TRANSACTIONS_TABLE   SET CATEGORYID= (SELECT id FROM CATEGORY_TABLE WHERE NAME like CATEGORY)")
         database.execSQL("create table transactions_table_backup (id INTEGER NOT NULL,\n" + "note TEXT not null default null,\n" + "amount REAL NOT NULL DEFAULT null,\n" + "categoryId INTEGER not null,\n" + "isEditingOldTransaction TEXT not null,\n" + "transactionDate TEXT not null,\n" + "PRIMARY KEY (id))")
