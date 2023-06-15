@@ -111,7 +111,7 @@ class TransactionViewModel @Inject constructor(private val repository: Transacti
         }
     }
 
-    fun getTransactionCategoryName(categoryId: UUID): String {
+    fun getTransactionCategoryName(categoryId: String): String {
         return repository.getTransactionCategoryName(categoryId) ?: "Category Deleted"
     }
 

@@ -23,7 +23,7 @@ interface TransactionsRepository {
     fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
     fun getTotalTransactionCount(): Int
     fun getCurrentMonthTransactionCount(): Int
-    fun getTransactionCategoryName(categoryId: UUID): String?
+    fun getTransactionCategoryName(categoryId: String): String?
 }
 
 @Singleton
@@ -53,7 +53,7 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
             ).toString())
     }
 
-    override fun getTransactionCategoryName(categoryId: UUID): String? {
+    override fun getTransactionCategoryName(categoryId: String): String? {
         return transactionDao.getTransactionCategoryName(categoryId)
     }
 

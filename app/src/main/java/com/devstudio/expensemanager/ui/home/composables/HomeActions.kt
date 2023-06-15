@@ -117,6 +117,6 @@ private fun backupTransactions(
     homeViewModel: HomeViewModel,
     context: Context
 ) {
-    val backupStatus = homeViewModel.exportTransactions()
+    val backupStatus = homeViewModel.exportTransactions(context)
     Toast.makeText(context, backupStatus.message, Toast.LENGTH_SHORT).show()
 }

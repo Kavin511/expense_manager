@@ -1,6 +1,8 @@
 package com.devstudio.expensemanager.viewmodel
 
+import android.content.Context
 import android.os.Environment
+import androidx.core.os.BuildCompat
 import androidx.lifecycle.ViewModel
 import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.core_data.repository.TransactionsRepository
@@ -13,11 +15,14 @@ import java.io.FileWriter
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: TransactionsRepository, private val categoryRepository: CategoryRepository) :
+class HomeViewModel @Inject constructor(
+    private val repository: TransactionsRepository,
+    private val categoryRepository: CategoryRepository
+) :
     ViewModel() {
-    fun exportTransactions(): BackupStatus {
+    fun exportTransactions(context: Context): BackupStatus {
         return try {
-            val csvWriter = createFileDirectoryToStoreTransaction()
+            val csvWriter = createFileDirectoryToStoreTransaction(context)
             writeTransactionsAsCSV(csvWriter)
             BackupStatus.success("Transactions backed up successfully")
         } catch (e: Exception) {
@@ -47,16 +52,22 @@ class HomeViewModel @Inject constructor(private val repository: TransactionsRepo
         "Amount", "Category", "Transaction Date", "Note", "Transaction Mode"
     )
 
-    private fun createFileDirectoryToStoreTransaction(): CSVWriter {
+    @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
+    private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
+        val path = if (BuildCompat.isAtLeastT()) {
+            context.filesDir.absolutePath
+        } else {
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS
+            ).absolutePath
+        }
         val folder =
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/expressWallet/")
+            File("$path/expressWallet/")
         if (!folder.exists()) {
             folder.mkdirs()
         }
         val file = File(folder.absolutePath, "transactions.csv")
-        if (file.exists().not()) {
-            file.createNewFile()
-        }
+        file.createNewFile()
         return CSVWriter(FileWriter(file, false))
     }
 }

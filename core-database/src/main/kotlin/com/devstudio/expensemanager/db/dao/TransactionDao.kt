@@ -50,5 +50,5 @@ interface TransactionDao {
     fun getCurrentMonthTransactionCount(month: String, year: String):Int
 
     @Query("SELECT name FROM category_table WHERE id=:categoryId")
-    fun getTransactionCategoryName(categoryId: UUID): String?
+    fun getTransactionCategoryName(categoryId: String): String?
 }

@@ -10,7 +10,7 @@ import javax.inject.Singleton
 interface CategoryRepository {
     fun insertCategory(category: Category)
     fun getCategoriesFlow(): Flow<List<Category>>
-    fun findCategoryById(id: UUID): Category
+    fun findCategoryById(id: String): Category
     fun deleteCategory(category: Category)
     fun updateCategory(category: Category)
     fun getCategoriesStream(type: String): Flow<List<Category>>
@@ -45,7 +45,7 @@ class CategoryRepositoryImpl @Inject constructor(private val categoryDao: Catego
         return categoryDao.getCategoriesFlow()
     }
 
-    override fun findCategoryById(id: UUID): Category {
+    override fun findCategoryById(id: String): Category {
         return categoryDao.findCategoryById(id)
     }
 
