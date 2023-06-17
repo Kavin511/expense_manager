@@ -70,16 +70,16 @@ class DatabaseModule {
 
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN categoryId INTEGER not null default 0")
+        database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN categoryId TEXT not null default ''")
         database.execSQL("CREATE TABLE CATEGORY_TABLE (id TEXT NOT NULL,\n" + "name TEXT not null,\n" + "status integer NOT NULL DEFAULT null,\n" + "timeStamp INTEGER NOT NULL default null,categoryType TEXT NOT NULL DEFAULT NULL, PRIMARY KEY (id))")
-        TransactionMode.EXPENSE.categoryList.forEachIndexed { index, it ->
+        TransactionMode.EXPENSE.categoryList.forEachIndexed { _, it ->
             database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','${it}',${System.currentTimeMillis()},1,'EXPENSE')")
         }
-        TransactionMode.INCOME.categoryList.forEachIndexed { index, it ->
+        TransactionMode.INCOME.categoryList.forEachIndexed { _, it ->
             database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','${it}',${System.currentTimeMillis()},1,'INCOME')")
         }
-        database.execSQL("UPDATE TRANSACTIONS_TABLE   SET CATEGORYID= (SELECT id FROM CATEGORY_TABLE WHERE NAME like CATEGORY)")
-        database.execSQL("create table transactions_table_backup (id INTEGER NOT NULL,\n" + "note TEXT not null default null,\n" + "amount REAL NOT NULL DEFAULT null,\n" + "categoryId TEXT not null,\n" + "isEditingOldTransaction TEXT not null,\n" + "transactionDate TEXT not null,\n" + "PRIMARY KEY (id))")
+        database.execSQL("UPDATE TRANSACTIONS_TABLE   SET CATEGORYID= coalesce((SELECT id FROM CATEGORY_TABLE WHERE NAME like CATEGORY),CATEGORY)")
+        database.execSQL("create table transactions_table_backup (id INTEGER NOT NULL default 0,\n" + "note TEXT not null default '',\n" + "amount REAL NOT NULL default 0.0 ,\n" + "categoryId TEXT not null default '',\n" + "isEditingOldTransaction TEXT not null default '',\n" + "transactionDate TEXT not null default '',\n" + "PRIMARY KEY (id))")
         database.execSQL(
             "INSERT INTO TRANSACTIONS_TABLE_Backup SELECT id,\n" +
                     "note,\n" +
