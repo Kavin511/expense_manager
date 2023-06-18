@@ -18,7 +18,7 @@ class HomeViewModel @Inject constructor(private val application: Application) :
     ViewModel() {
     val workManager: WorkManager = WorkManager.getInstance(application)
     val outputWorkInformation: LiveData<List<WorkInfo>> =
-        workManager.getWorkInfosByTagLiveData(TAG)
+        workManager.getWorkInfosByTagLiveData(BACK_UP_WORK_NAME)
 
     fun exportTransactions() {
         workManager

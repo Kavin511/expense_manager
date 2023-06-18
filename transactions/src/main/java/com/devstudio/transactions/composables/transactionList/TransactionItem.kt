@@ -80,7 +80,7 @@ fun TransactionItem(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(
-                    text = transaction.category,
+                    text = transactionViewModel.getTransactionCategoryName(transaction.categoryId),
                     color = appColors.material.onPrimaryContainer,
                     fontSize = 16.sp
                 )

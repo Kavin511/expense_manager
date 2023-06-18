@@ -11,18 +11,23 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backup
+import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavHostController
+import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.expensemanager.viewmodel.HomeViewModel
 
 
 @Composable
-fun HomeActions() {
+fun HomeActions(navController: NavHostController) {
     val context = LocalContext.current
     var readPermissionGranted = false
     var writePermissionGranted = false
@@ -66,9 +71,15 @@ fun HomeActions() {
 
     fun isSdk33Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
-    fun isReadPermissionRequired(context: Context) = ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED || isSdk33Up()
+    fun isReadPermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
+        context,
+        READ_EXTERNAL_STORAGE
+    ) == PERMISSION_GRANTED || isSdk33Up()
 
-    fun isWritePermissionRequired(context: Context) = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED || isSdk29Up()
+    fun isWritePermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
+        context,
+        WRITE_EXTERNAL_STORAGE
+    ) == PERMISSION_GRANTED || isSdk29Up()
 
     fun checkPermissionToStartBackup(context: Context): Boolean {
         readPermissionGranted = isReadPermissionRequired(context)
@@ -106,5 +117,12 @@ fun HomeActions() {
         }
     }) {
         Icon(Icons.Rounded.Backup, "Backup")
+    }
+    IconButton(onClick = {
+        navController.navigate(ExpressWalletAppState.CategoryScreen.route) {
+            launchSingleTop = true
+        }
+    }) {
+        Icon(Icons.Rounded.Category, "Category")
     }
 }

@@ -2,6 +2,7 @@ package com.devstudio.core_data.repository
 
 import android.content.Context
 import android.os.Environment
+import androidx.core.os.BuildCompat
 import androidx.room.Room
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -33,7 +34,7 @@ class TransactionDataBackupWorker(
 
     private fun exportTransactions(): BackupStatus {
         return try {
-            val csvWriter = createFileDirectoryToStoreTransaction()
+            val csvWriter = createFileDirectoryToStoreTransaction(context)
             writeTransactionsAsCSV(csvWriter)
             BackupStatus.success("Transactions backed up successfully")
         } catch (e: Exception) {
@@ -49,7 +50,7 @@ class TransactionDataBackupWorker(
             csvWriter.writeNext(
                 i.id.toString(), arrayOf(
                     i.amount.toString(),
-                    i.category,
+                    db.categoryDao().findCategoryById(i.categoryId).name,
                     DateFormatter.convertLongToDate(i.transactionDate.toLong()),
                     i.note,
                     i.transactionMode
@@ -63,9 +64,17 @@ class TransactionDataBackupWorker(
         "Amount", "Category", "Transaction Date", "Note", "Transaction Mode"
     )
 
-    private fun createFileDirectoryToStoreTransaction(): CSVWriter {
+    @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
+    private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
+        val path = if (BuildCompat.isAtLeastT()) {
+            context.filesDir.absolutePath
+        } else {
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS
+            ).absolutePath
+        }
         val folder =
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/expressWallet/")
+            File("$path/expressWallet/")
         if (!folder.exists()) {
             folder.mkdirs()
         }

@@ -27,6 +27,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
@@ -36,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = SheetState(
@@ -58,7 +60,7 @@ fun HomeScreen() {
             },
             topBar = {
                 TopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, actions = {
-                    HomeActions()
+                    HomeActions(navController)
                 })
             },
         ) {
