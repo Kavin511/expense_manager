@@ -16,5 +16,6 @@ class AppConstants {
         const val TAG = "TAG_OUTPUT"
         const val BACK_UP_WORK_NAME = "backUp"
         const val BACK_UP_RESPONSE_KEY = "is_success"
+        const val WORK_TRIGGERING_MODE_KEY = "isManuallyTriggered"
     }
 }

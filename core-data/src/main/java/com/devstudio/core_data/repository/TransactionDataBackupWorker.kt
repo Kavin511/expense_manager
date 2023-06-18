@@ -2,6 +2,7 @@ package com.devstudio.core_data.repository
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import androidx.core.os.BuildCompat
 import androidx.room.Room
 import androidx.work.Worker
@@ -11,7 +12,9 @@ import com.devstudio.core_model.models.BackupStatus
 import com.devstudio.expensemanager.db.ExpenseManagerDataBase
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_RESPONSE_KEY
+import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
 import com.devstudio.utils.utils.CSVWriter
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import java.io.FileWriter
 
@@ -27,6 +30,10 @@ class TransactionDataBackupWorker(
     ).allowMainThreadQueries().build()
 
     override fun doWork(): Result {
+        Log.d("doingWork", "doWork:${inputData.getBoolean(WORK_TRIGGERING_MODE_KEY, false)} ")
+        if (inputData.getBoolean(WORK_TRIGGERING_MODE_KEY, false).not()) {
+            return Result.failure()
+        }
         val backupStatus = exportTransactions()
         val outputData = workDataOf(BACK_UP_RESPONSE_KEY to backupStatus.message)
         return Result.success(outputData)
@@ -36,8 +43,10 @@ class TransactionDataBackupWorker(
         return try {
             val csvWriter = createFileDirectoryToStoreTransaction(context)
             writeTransactionsAsCSV(csvWriter)
-            BackupStatus.success("Transactions backed up successfully")
+            BackupStatus.success("Transactions backed up to documents folder successfully")
         } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance()
+                .recordException(Throwable(e.message ?: "Failure in transactions backup"))
             BackupStatus.failure(e.message.toString())
         }
     }
@@ -50,7 +59,7 @@ class TransactionDataBackupWorker(
             csvWriter.writeNext(
                 i.id.toString(), arrayOf(
                     i.amount.toString(),
-                    db.categoryDao().findCategoryById(i.categoryId).name,
+                    db.categoryDao().findCategoryById(i.categoryId)?.name ?: i.categoryId,
                     DateFormatter.convertLongToDate(i.transactionDate.toLong()),
                     i.note,
                     i.transactionMode
@@ -64,23 +73,29 @@ class TransactionDataBackupWorker(
         "Amount", "Category", "Transaction Date", "Note", "Transaction Mode"
     )
 
-    @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
     private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
-        val path = if (BuildCompat.isAtLeastT()) {
-            context.filesDir.absolutePath
-        } else {
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS
-            ).absolutePath
-        }
-        val folder =
-            File("$path/expressWallet/")
+        val backupPath = backupPath(context)
+        val folder = File(backupPath)
         if (!folder.exists()) {
             folder.mkdirs()
         }
         val file = File(folder.absolutePath, "transactions.csv")
         file.createNewFile()
         return CSVWriter(FileWriter(file, false))
+    }
+
+    companion object {
+        @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
+        fun backupPath(context: Context): String {
+            val path = if (BuildCompat.isAtLeastT()) {
+                context.filesDir.absolutePath
+            } else {
+                Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOCUMENTS
+                ).absolutePath
+            }
+            return "$path/${context.applicationInfo.packageName}"
+        }
     }
 
 }

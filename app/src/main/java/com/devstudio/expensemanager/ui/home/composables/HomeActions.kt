@@ -19,6 +19,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.os.BuildCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
@@ -49,7 +50,7 @@ fun HomeActions(navController: NavHostController) {
                     readPermissionGranted = true
                 }
                 if (readPermissionGranted && writePermissionGranted) {
-                    homeViewModel.exportTransactions()
+                    homeViewModel.exportTransactions(true)
                 }
             }
         }
@@ -98,22 +99,9 @@ fun HomeActions(navController: NavHostController) {
         }
     }
 
-    val outputWorkInfo = homeViewModel.outputWorkInformation.observeAsState()
-    (outputWorkInfo.value).let {
-        if (it?.isNotEmpty() == true) {
-            if (it[0].state.isFinished) {
-                Toast.makeText(
-                    LocalContext.current,
-                    it[0].outputData.getString("is_success"),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
     IconButton(onClick = {
         if (checkPermissionToStartBackup(context)) {
-            homeViewModel.exportTransactions()
+            homeViewModel.exportTransactions(true)
         }
     }) {
         Icon(Icons.Rounded.Backup, "Backup")
