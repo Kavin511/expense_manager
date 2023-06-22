@@ -63,6 +63,7 @@ dependencies {
     implementation libs.viewmodel
     implementation libs.navigation.compose
     implementation libs.firebaseCrashlytics
+    implementation libs.compose.runtime.lifecycle
     implementation libs.firebaseAnalytics
 
     testImplementation libs.junit

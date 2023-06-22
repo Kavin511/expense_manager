@@ -9,9 +9,11 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.devstudio.core_model.models.BackupStatus
+import com.devstudio.core_model.models.Status
 import com.devstudio.expensemanager.db.ExpenseManagerDataBase
 import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_RESPONSE_KEY
+import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
+import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
 import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
 import com.devstudio.utils.utils.CSVWriter
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -35,7 +37,10 @@ class TransactionDataBackupWorker(
             return Result.failure()
         }
         val backupStatus = exportTransactions()
-        val outputData = workDataOf(BACK_UP_RESPONSE_KEY to backupStatus.message)
+        val outputData = workDataOf(
+            BACK_UP_STATUS_KEY to (backupStatus.status == Status.SUCCESS),
+            BACK_UP_STATUS_MESSAGE to backupStatus.message
+        )
         return Result.success(outputData)
     }
 
@@ -45,8 +50,7 @@ class TransactionDataBackupWorker(
             writeTransactionsAsCSV(csvWriter)
             BackupStatus.success("Transactions backed up to documents folder successfully")
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance()
-                .recordException(Throwable(e.message ?: "Failure in transactions backup"))
+            FirebaseCrashlytics.getInstance().recordException(Throwable(e.message ?: "Failure in transactions backup"))
             BackupStatus.failure(e.message.toString())
         }
     }
@@ -74,17 +78,21 @@ class TransactionDataBackupWorker(
     )
 
     private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
-        val backupPath = backupPath(context)
-        val folder = File(backupPath)
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
-        val file = File(folder.absolutePath, "transactions.csv")
+        val file = getFileToStoreTransactions(context)
         file.createNewFile()
         return CSVWriter(FileWriter(file, false))
     }
 
+
     companion object {
+        fun getFileToStoreTransactions(context: Context): File {
+            val backupPath = backupPath(context)
+            val folder = File(backupPath)
+            if (!folder.exists()) {
+                folder.mkdirs()
+            }
+            return File(folder.absolutePath, BACK_UP_FILE_NAME)
+        }
         @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
         fun backupPath(context: Context): String {
             val path = if (BuildCompat.isAtLeastT()) {
@@ -96,6 +104,7 @@ class TransactionDataBackupWorker(
             }
             return "$path/${context.applicationInfo.packageName}"
         }
+        const val BACK_UP_FILE_NAME = "transactions.csv"
     }
 
 }

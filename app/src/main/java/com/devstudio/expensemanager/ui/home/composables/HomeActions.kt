@@ -14,21 +14,28 @@ import androidx.compose.material.icons.rounded.Backup
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
-import androidx.core.os.BuildCompat
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
+import com.devstudio.core_data.repository.TransactionDataBackupWorker
+import com.devstudio.core_model.models.BackupStatus
 import com.devstudio.core_model.models.ExpressWalletAppState
+import com.devstudio.core_model.models.Status
 import com.devstudio.expensemanager.viewmodel.HomeViewModel
+import com.devstudio.expensemanager.viewmodel.HomeViewModel.Companion.SHARE
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun HomeActions(navController: NavHostController) {
+fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHostState) {
     val context = LocalContext.current
     var readPermissionGranted = false
     var writePermissionGranted = false
@@ -37,9 +44,8 @@ fun HomeActions(navController: NavHostController) {
 
     val activityResultLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    )
-    { permissions ->
-        permissions.entries.forEach {
+    ) { permissions ->
+        permissions.entries.forEach { it ->
             val permissionName = it.key
             val isGranted = it.value
             if (isGranted) {
@@ -50,15 +56,13 @@ fun HomeActions(navController: NavHostController) {
                     readPermissionGranted = true
                 }
                 if (readPermissionGranted && writePermissionGranted) {
-                    homeViewModel.exportTransactions(true)
+                    backUpTransactions(homeViewModel, snackBarHostState, context)
                 }
             }
         }
         if (permissions.entries.any { !it.value }) {
             Toast.makeText(
-                context,
-                "Permissions required to start backup",
-                Toast.LENGTH_SHORT
+                context, "Permissions required to start backup", Toast.LENGTH_SHORT
             ).show()
             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri: Uri = Uri.fromParts("package", context.packageName, null)
@@ -73,13 +77,11 @@ fun HomeActions(navController: NavHostController) {
     fun isSdk33Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
     fun isReadPermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
-        context,
-        READ_EXTERNAL_STORAGE
+        context, READ_EXTERNAL_STORAGE
     ) == PERMISSION_GRANTED || isSdk33Up()
 
     fun isWritePermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
-        context,
-        WRITE_EXTERNAL_STORAGE
+        context, WRITE_EXTERNAL_STORAGE
     ) == PERMISSION_GRANTED || isSdk29Up()
 
     fun checkPermissionToStartBackup(context: Context): Boolean {
@@ -101,10 +103,10 @@ fun HomeActions(navController: NavHostController) {
 
     IconButton(onClick = {
         if (checkPermissionToStartBackup(context)) {
-            homeViewModel.exportTransactions(true)
+            backUpTransactions(homeViewModel, snackBarHostState, context)
         }
     }) {
-        Icon(Icons.Rounded.Backup, "Backup")
+        Icon(Icons.Rounded.Backup, BACKUP)
     }
     IconButton(onClick = {
         navController.navigate(ExpressWalletAppState.CategoryScreen.route) {
@@ -114,3 +116,56 @@ fun HomeActions(navController: NavHostController) {
         Icon(Icons.Rounded.Category, "Category")
     }
 }
+
+private fun backUpTransactions(
+    homeViewModel: HomeViewModel, snackBarHostState: SnackbarHostState, context: Context
+) {
+    homeViewModel.exportTransactions(true) {
+        if (it.status == Status.SUCCESS) {
+            showBackUpResultAlert(it, snackBarHostState, context)
+        } else {
+            Toast.makeText(
+                context, it.message ?: "", Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+}
+
+private fun showBackUpResultAlert(backStatus: BackupStatus, snackBarHostState: SnackbarHostState, context: Context) {
+    CoroutineScope(Dispatchers.Main).launch {
+        val snackBarResult = snackBarHostState.showSnackbar(
+            actionLabel = SHARE,
+            duration = SnackbarDuration.Short,
+            message = backStatus.message,
+            withDismissAction = true,
+        )
+        when (snackBarResult) {
+            SnackbarResult.Dismissed -> {
+
+            }
+
+            SnackbarResult.ActionPerformed -> {
+                createIntentToShareTransactions(context)
+            }
+        }
+    }
+}
+
+fun createIntentToShareTransactions(context: Context) {
+    val intent = Intent()
+    intent.action = Intent.ACTION_SEND
+    intent.type = HomeViewModel.CSV_INTENT_TYPE
+    intent.putExtra(
+        Intent.EXTRA_STREAM, FileProvider.getUriForFile(
+            context,
+            context.packageName + ".provider",
+            TransactionDataBackupWorker.getFileToStoreTransactions(context)
+        )
+    )
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.putExtra(Intent.EXTRA_SUBJECT, "Transactions export")
+    context.startActivity(Intent.createChooser(intent, "Share Transactions"))
+}
+
+const val BACKUP = "Backup"

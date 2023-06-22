@@ -9,17 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
@@ -45,6 +36,7 @@ fun HomeScreen(navController: NavHostController) {
             initialValue = SheetValue.Hidden, skipPartiallyExpanded = true
         )
     )
+    val snackBarHostState = remember { SnackbarHostState() }
     BottomSheetScaffold(modifier = Modifier.pointerInput(Unit) {
         detectTapGestures {
             coroutineScope.launch {
@@ -55,12 +47,17 @@ fun HomeScreen(navController: NavHostController) {
         TransactionFilterBottomSheet(coroutineScope, bottomSheetScaffoldState)
     }, scaffoldState = bottomSheetScaffoldState) {
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackBarHostState) {
+                    HomeSnackBar(snackBarHostState)
+                }
+            },
             floatingActionButton = {
                 AddTransactions()
             },
             topBar = {
                 TopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, actions = {
-                    HomeActions(navController)
+                    HomeActions(navController, snackBarHostState)
                 })
             },
         ) {
