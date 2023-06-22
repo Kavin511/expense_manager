@@ -1,4 +1,5 @@
-package com.devstudio.core_data.repository
+
+package com.devstudio.core_data
 
 import androidx.annotation.WorkerThread
 import com.devstudio.expensemanager.db.dao.TransactionDao
@@ -22,7 +23,6 @@ interface TransactionsRepository {
     fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
     fun getTotalTransactionCount(): Int
     fun getCurrentMonthTransactionCount(): Int
-    fun getTransactionCategoryName(categoryId: String): String?
 }
 
 @Singleton
@@ -50,10 +50,6 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
             DateFormatter.getCurrentYear(
                 Calendar.getInstance()
             ).toString())
-    }
-
-    override fun getTransactionCategoryName(categoryId: String): String? {
-        return transactionDao.getTransactionCategoryName(categoryId)
     }
 
     private fun formatCurrentMonth() = ("0" + (DateFormatter.getCurrentMonth(

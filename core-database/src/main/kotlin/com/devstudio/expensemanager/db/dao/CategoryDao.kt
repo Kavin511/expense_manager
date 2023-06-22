@@ -21,7 +21,7 @@ interface CategoryDao {
     fun getCategoriesFlow(): Flow<List<Category>>
 
     @Query("SELECT * FROM CATEGORY_TABLE WHERE  id=:categoryId order by timeStamp desc")
-    fun findCategoryById(categoryId: String): Category
+    fun findCategoryById(categoryId: String): Category?
 
     @Query("DELETE FROM CATEGORY_TABLE WHERE ID=:categoryId")
     fun deleteCategory(categoryId: String)

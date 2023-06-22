@@ -54,6 +54,7 @@ dependencies {
     implementation project(path: ':core-designSystem')
     implementation project(path: ':core-database')
     implementation project(path: ':core-data')
+    implementation project(path: ':core-model')
     implementation project(path: ':transactions')
     implementation project(path: ':category')
 
@@ -66,6 +67,7 @@ dependencies {
     implementation libs.viewmodel
     implementation libs.navigation.compose
     implementation libs.firebaseCrashlytics
+    implementation libs.compose.runtime.lifecycle
     implementation libs.firebaseAnalytics
 
     testImplementation libs.junit
@@ -84,6 +86,7 @@ dependencies {
     implementation libs.hilt.android
     implementation libs.hilt.navigation.compose
     kapt libs.hilt.android.compiler
-
+    implementation libs.androidx.work
+    kapt  libs.androidx.hilt.compiler
 
 }

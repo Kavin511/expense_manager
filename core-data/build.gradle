@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -35,5 +37,9 @@ dependencies {
 
     implementation libs.hilt.android
     implementation project(path: ':utils')
+    implementation project(path: ':core-model')
+    implementation libs.androidx.room
     kapt libs.hilt.android.compiler
+    implementation libs.androidx.work
+    implementation libs.firebaseCrashlytics
 }
