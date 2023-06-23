@@ -12,8 +12,6 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,6 +25,10 @@ android {
     lint {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 dependencies {
@@ -36,7 +38,9 @@ dependencies {
     implementation project(path: ':core-designSystem')
     implementation project(path: ':core-database')
     implementation project(path: ':core-data')
+    implementation project(path: ':core-model')
     implementation libs.hilt.android
+    implementation libs.androidx.room
     kapt libs.hilt.android.compiler
     implementation libs.hilt.navigation.compose
     implementation libs.bundles.compose

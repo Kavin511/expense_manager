@@ -11,4 +11,12 @@ class AppConstants {
         const val ALL = "All"
         val supportedTransactionTypes = listOf(EXPENSE, INCOME)
     }
+
+    object StringConstants {
+        const val TAG = "TAG_OUTPUT"
+        const val BACK_UP_WORK_NAME = "backUp"
+        const val BACK_UP_STATUS_KEY = "is_success"
+        const val BACK_UP_STATUS_MESSAGE = "backUpStatusMessage"
+        const val WORK_TRIGGERING_MODE_KEY = "isManuallyTriggered"
+    }
 }

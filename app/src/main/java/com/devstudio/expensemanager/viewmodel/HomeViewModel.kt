@@ -1,73 +1,73 @@
 package com.devstudio.expensemanager.viewmodel
 
+import android.app.Application
 import android.content.Context
-import android.os.Environment
-import androidx.core.os.BuildCompat
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.widget.Toast
+import androidx.compose.material3.Snackbar
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.FileProvider
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.devstudio.core_data.repository.CategoryRepository
-import com.devstudio.core_data.repository.TransactionsRepository
-import com.devstudio.expensemanager.models.BackupStatus
-import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.CSVWriter
+import androidx.lifecycle.viewModelScope
+import androidx.work.*
+import com.devstudio.core_data.repository.TransactionDataBackupWorker
+import com.devstudio.core_model.models.BackupStatus
+import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
+import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
+import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_WORK_NAME
+import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
-import java.io.FileWriter
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val repository: TransactionsRepository,
-    private val categoryRepository: CategoryRepository
-) :
-    ViewModel() {
-    fun exportTransactions(context: Context): BackupStatus {
-        return try {
-            val csvWriter = createFileDirectoryToStoreTransaction(context)
-            writeTransactionsAsCSV(csvWriter)
-            BackupStatus.success("Transactions backed up successfully")
-        } catch (e: Exception) {
-            BackupStatus.failure(e.message.toString())
-        }
-    }
+class HomeViewModel @Inject constructor(private val application: Application) : ViewModel() {
+    private val workManager: WorkManager = WorkManager.getInstance(application)
+    val transactionBackUpStatus = MutableStateFlow<BackupStatus?>(null)
 
-    private fun writeTransactionsAsCSV(csvWriter: CSVWriter) {
-        csvWriter.writeNext(
-            "ID", columnNames()
+    fun exportTransactions(isManuallyTriggered: Boolean, resultEvent: (BackupStatus) -> Unit) {
+        val transactionDataBackupWorker =
+            OneTimeWorkRequest.Builder(TransactionDataBackupWorker::class.java)
+                .addTag(BACK_UP_WORK_NAME).setInputData(
+                    Data.Builder().putBoolean(WORK_TRIGGERING_MODE_KEY, isManuallyTriggered).build()
+                ).build()
+        val transactionBackupWork = workManager.beginUniqueWork(
+            BACK_UP_WORK_NAME, ExistingWorkPolicy.REPLACE, transactionDataBackupWorker
         )
-        for (i in repository.transactions()) {
-            csvWriter.writeNext(
-                i.id.toString(), arrayOf(
-                    i.amount.toString(),
-                    categoryRepository.findCategoryById(i.categoryId).name,
-                    DateFormatter.convertLongToDate(i.transactionDate.toLong()),
-                    i.note,
-                    i.transactionMode
-                )
-            )
+        transactionBackupWork.enqueue()
+        viewModelScope.launch {
+            transactionBackupWork.workInfosLiveData.observeForever { result ->
+                if (result.isNullOrEmpty().not() && result[0].state.isFinished) {
+                    if (result[0].outputData.getBoolean(BACK_UP_STATUS_KEY, false)) {
+                        resultEvent.invoke(
+                            BackupStatus.success(
+                                result[0].outputData.getString(
+                                    BACK_UP_STATUS_MESSAGE
+                                ) ?: ""
+                            )
+                        )
+                    } else {
+                        resultEvent.invoke(
+                            BackupStatus.failure(
+                                result[0].outputData.getString(
+                                    BACK_UP_STATUS_MESSAGE
+                                ) ?: ""
+                            )
+                        )
+                    }
+                }
+            }
         }
-        csvWriter.close()
+        return
     }
 
-    private fun columnNames(): Array<String?> = arrayOf(
-        "Amount", "Category", "Transaction Date", "Note", "Transaction Mode"
-    )
 
-    @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
-    private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
-        val path = if (BuildCompat.isAtLeastT()) {
-            context.filesDir.absolutePath
-        } else {
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS
-            ).absolutePath
-        }
-        val folder =
-            File("$path/expressWallet/")
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
-        val file = File(folder.absolutePath, "transactions.csv")
-        file.createNewFile()
-        return CSVWriter(FileWriter(file, false))
+    companion object {
+        const val CSV_INTENT_TYPE = "text/*"
+        const val SHARE = "Share"
     }
 }
