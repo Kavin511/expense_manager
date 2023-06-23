@@ -1,5 +1,4 @@
-name: Android-CI
-
+name: automated-build-android-app-with-github-action
 on:
   push:
     branches: [ "master" ]
