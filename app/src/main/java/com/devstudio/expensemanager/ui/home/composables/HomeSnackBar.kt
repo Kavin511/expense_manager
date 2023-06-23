@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.devstudioworks.ui.theme.appColors
+import com.devstudioworks.ui.theme.model.AppColor
 
 @Preview(name = "")
 @Composable
@@ -23,7 +25,7 @@ fun HomeSnackBar(
             TextButton(onClick = {
                 snackBarHostState.currentSnackbarData?.performAction()
             }) {
-                Text(text = snackBarHostState.currentSnackbarData?.visuals?.actionLabel ?: "")
+                Text(text = snackBarHostState.currentSnackbarData?.visuals?.actionLabel ?: "", color = appColors.material.primary)
             }
         },
     ) {

@@ -162,8 +162,7 @@ fun createIntentToShareTransactions(context: Context) {
             TransactionDataBackupWorker.getFileToStoreTransactions(context)
         )
     )
-    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     intent.putExtra(Intent.EXTRA_SUBJECT, "Transactions export")
     context.startActivity(Intent.createChooser(intent, "Share Transactions"))
 }

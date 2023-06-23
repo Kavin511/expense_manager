@@ -67,7 +67,7 @@ class HomeViewModel @Inject constructor(private val application: Application) : 
 
 
     companion object {
-        const val CSV_INTENT_TYPE = "text/csv"
+        const val CSV_INTENT_TYPE = "text/*"
         const val SHARE = "Share"
     }
 }

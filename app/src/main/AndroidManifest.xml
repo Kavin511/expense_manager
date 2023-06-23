@@ -48,6 +48,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:mimeType="text/comma_separated_values/csv" />
                 <data
                     android:host="expensemanager"
                     android:scheme="android:app" />
