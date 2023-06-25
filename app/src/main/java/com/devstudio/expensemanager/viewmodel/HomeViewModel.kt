@@ -5,6 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.widget.Toast
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Snackbar
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
@@ -27,7 +31,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val application: Application) : ViewModel() {
     private val workManager: WorkManager = WorkManager.getInstance(application)
-    val transactionBackUpStatus = MutableStateFlow<BackupStatus?>(null)
 
     fun exportTransactions(isManuallyTriggered: Boolean, resultEvent: (BackupStatus) -> Unit) {
         val transactionDataBackupWorker =

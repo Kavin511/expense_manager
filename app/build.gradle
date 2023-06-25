@@ -57,6 +57,7 @@ dependencies {
     implementation project(path: ':core-model')
     implementation project(path: ':transactions')
     implementation project(path: ':category')
+    implementation project(path: ':profile')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
@@ -65,10 +66,9 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.livedata
     implementation libs.viewmodel
-    implementation libs.navigation.compose
-    implementation libs.firebaseCrashlytics
-    implementation libs.compose.runtime.lifecycle
-    implementation libs.firebaseAnalytics
+    implementation libs.firebase.crashlytics
+    implementation libs.firebase.analytics
+    implementation libs.firebase.auth
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit

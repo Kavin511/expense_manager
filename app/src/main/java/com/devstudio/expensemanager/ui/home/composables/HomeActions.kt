@@ -109,7 +109,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
         Icon(Icons.Rounded.Backup, BACKUP)
     }
     IconButton(onClick = {
-        navController.navigate(ExpressWalletAppState.CategoryScreen.route) {
+        navController.navigate(ExpressWalletAppState.HomeScreen.CategoryScreen.route) {
             launchSingleTop = true
         }
     }) {

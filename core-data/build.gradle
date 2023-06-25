@@ -41,5 +41,5 @@ dependencies {
     implementation libs.androidx.room
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
-    implementation libs.firebaseCrashlytics
+    implementation libs.firebase.crashlytics
 }

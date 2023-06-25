@@ -1,15 +1,18 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
-    id 'dagger.hilt.android.plugin'
 }
+
 android {
-    namespace 'com.devstudio.category'
+    namespace 'com.devstudio.account'
     compileSdk 33
 
     defaultConfig {
         minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
@@ -19,6 +22,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.6"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -32,18 +36,9 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':core-designSystem')
-    implementation project(path: ':core-database')
-    implementation project(path: ':core-data')
-    implementation project(path: ':utils')
-    implementation libs.hilt.android
-    kapt libs.hilt.android.compiler
-    implementation libs.hilt.navigation.compose
-    implementation libs.bundles.compose
-    implementation libs.livedata
-    implementation libs.viewmodel
+
     implementation libs.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
-    androidTestImplementation libs.androidx.test.junit
+    implementation libs.bundles.compose
 }

@@ -27,6 +27,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,7 +49,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionDashBoard(
-    filterBottomSheetScaffoldState: BottomSheetScaffoldState
+    filterBottomSheetScaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 ) {
     Surface(
         modifier = Modifier
