@@ -3,7 +3,8 @@ androidGradlePlugin = "7.3.0"
 coreKtx = "1.7.0"
 hilt = "2.44.2"
 hiltNavigationCompose = '1.0.0'
-kotlin = "1.8.10"
+kotlin = "1.8.20"
+dynamicFeature="8.0.2"
 androidxRoom = "2.4.3"
 materialVersion = "1.1.0-rc01"
 androidxCoreVersion = "1.9.0"
@@ -30,6 +31,7 @@ coroutines = "1.6.4"
 workManagerVersion = "2.7.1"
 hiltWorkVersion = "1.0.0"
 hiltCompilerVersion = "1.0.0"
+billingVersion = "6.0.1"
 
 [libraries]
 #room
@@ -80,7 +82,7 @@ androidx_test_espresso = { module = 'androidx.test.espresso:espresso-core', vers
 google_truth= { module="com.google.truth:truth", version.ref="googleTruth" }
 androidx_compose_ui_test_junit4= { module='androidx.compose.ui:ui-test-junit4', version.ref="androidxComposeUiTestJunit4" }
 androidx_room_room_testing= { module="androidx.room:room-testing", version.ref="androidxRoomTesting" }
-
+android_billingclient = {module="com.android.billingclient:billing", version.ref="billingVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -88,6 +90,9 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt-gradle = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+hilt-gradle-plugin = { id = "dagger.hilt.android.plugin", version.ref = "hilt" }
+kotlin-jvm = {id="org.jetbrains.kotlin.jvm",version.ref="kotlin"}
+android-dynamic-feature = {id="com.android.dynamic-feature",version.ref="dynamicFeature"}
 
 [bundles]
 compose=["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose","viewmodel_compose","compose_runtime_livedata"]

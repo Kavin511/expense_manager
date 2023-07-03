@@ -1,7 +1,7 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
+    alias libs.plugins.android.application
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.kapt
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
@@ -87,6 +87,6 @@ dependencies {
     implementation libs.hilt.navigation.compose
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
-    kapt  libs.androidx.hilt.compiler
+    kapt libs.androidx.hilt.compiler
 
 }
