@@ -31,6 +31,11 @@ coroutines = "1.6.4"
 workManagerVersion = "2.7.1"
 hiltWorkVersion = "1.0.0"
 hiltCompilerVersion = "1.0.0"
+playServicesAuth="20.5.0"
+androidxCoreSplashscreen = "1.0.0"
+protobuf = "3.23.0"
+protobufPlugin = "0.9.3"
+androidxDataStore = "1.0.0"
 
 [libraries]
 #room
@@ -55,6 +60,11 @@ compose_runtime_lifecycle = {module='androidx.lifecycle:lifecycle-runtime-compos
 kotlinx_coroutines_android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx_coroutines_test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
+androidx-dataStore-core = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
+protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+
 androidx_core = { module = 'androidx.core:core-ktx', version.ref = 'androidxCoreVersion' }
 androidx_appcompat = { module = 'androidx.appcompat:appcompat', version.ref = 'androidxAppcompat' }
 livedata = { module = 'androidx.lifecycle:lifecycle-livedata-ktx', version.ref = 'livedata' }
@@ -65,7 +75,8 @@ constraintlayout = { module = 'androidx.constraintlayout:constraintlayout', vers
 navigation_compose = { module = 'androidx.navigation:navigation-compose', version.ref = 'navigationCompose' }
 firebase_crashlytics = { module = 'com.google.firebase:firebase-crashlytics', version.ref = 'firebaseCrashlytics' }
 firebase_analytics = { module = 'com.google.firebase:firebase-analytics', version.ref = 'firebaseAnalytics' }
-firebase_auth = {module = 'com.google.firebase:firebase-auth-ktx',version.ref='firebaseAuth' }
+#firebase_auth = {module = 'com.google.firebase:firebase-auth-ktx',version.ref='firebaseAuth' }
+play_services_auth = {module= 'com.google.android.gms:play-services-auth',version.ref="playServicesAuth" }
 androidx_work = { module = 'androidx.work:work-runtime-ktx', version.ref = 'workManagerVersion' }
 #androidx_hilt_work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWorkVersion" }
 androidx_hilt_compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompilerVersion" }
@@ -90,6 +101,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt-gradle = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 
 [bundles]
 compose=["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose","viewmodel_compose","compose_runtime_livedata","navigation_compose","compose_runtime_lifecycle"]

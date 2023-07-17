@@ -5,8 +5,27 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.protobuf)
+
 }
 
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
 android {
     namespace 'com.devstudio.expensemanager'
     compileSdk 33
@@ -88,5 +107,7 @@ dependencies {
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
     kapt  libs.androidx.hilt.compiler
+
+    implementation(libs.protobuf.kotlin.lite)
 
 }
