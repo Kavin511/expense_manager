@@ -23,6 +23,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.twotone.AccountCircle
+import androidx.compose.material.icons.twotone.Category
+import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
@@ -140,7 +146,7 @@ fun HomeBottomActions(navController: NavHostController) {
                             if (selectedIndex.value == index) it.selectedIcon else it.unselectedIcon,
                             contentDescription = it.name,
                             modifier = Modifier
-                                .fillMaxHeight()
+                                .fillParentMaxSize(0.5f)
                                 .align(alignment = Alignment.Center)
                         )
                     }
@@ -153,27 +159,26 @@ fun HomeBottomActions(navController: NavHostController) {
 
 @Composable
 private fun getBottomNavigationItems(): List<BottomNavigationItem> {
-    val bottomNavigationList = listOf(
+    return listOf(
         BottomNavigationItem(
             name = stringResource(id = com.devstudio.expensemanager.R.string.transaction),
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
+            selectedIcon = Icons.Rounded.Home,
+            unselectedIcon = Icons.TwoTone.Home,
             navigationRoute = ExpressWalletAppState.HomeScreen.route
         ),
         BottomNavigationItem(
             name = stringResource(id = com.devstudio.expensemanager.R.string.category),
-            selectedIcon = Icons.Filled.Category,
-            unselectedIcon = Icons.Outlined.Category,
+            selectedIcon = Icons.Rounded.Category,
+            unselectedIcon = Icons.TwoTone.Category,
             navigationRoute = ExpressWalletAppState.HomeScreen.CategoryScreen.route
         ),
         BottomNavigationItem(
             name = stringResource(id = com.devstudio.expensemanager.R.string.profile),
-            selectedIcon = Icons.Filled.AccountCircle,
-            unselectedIcon = Icons.Outlined.AccountCircle,
+            selectedIcon = Icons.Rounded.AccountCircle,
+            unselectedIcon = Icons.TwoTone.AccountCircle,
             navigationRoute = ExpressWalletAppState.HomeScreen.AccountScreen.route
         )
     )
-    return bottomNavigationList
 }
 
 @Composable
