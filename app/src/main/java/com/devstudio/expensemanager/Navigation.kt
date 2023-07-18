@@ -65,7 +65,7 @@ fun Navigation(
             }
 
             composable(route = ExpressWalletAppState.HomeScreen.AccountScreen.route) {
-                AccountScreen()
+                ProfileMainScreen(navController)
             }
         }
     }

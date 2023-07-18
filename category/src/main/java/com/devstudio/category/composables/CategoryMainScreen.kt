@@ -34,46 +34,20 @@ fun CategoryMainScreen() {
     val selectedFilterType = remember {
         mutableStateOf("")
     }
+    val topAppBarState = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
     Scaffold(topBar = {
-        CategoryTopBar()
+        CategoryTopBar(scrollBehavior)
     }, floatingActionButton = {
         CategoryFloatingActionButton()
     }) {
         Column(
             modifier = Modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .fillMaxWidth()
                 .padding(it)
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                FilterChip(
-                    modifier = Modifier.padding(4.5.dp),
-                    selected = selectedFilterType.value == "",
-                    onClick = {
-                        selectedFilterType.value = ""
-                        categoryViewModel.categoryState.value = CategoryState.LOADING
-                    },
-                    label = { Text(text = ALL.toPascalCase()) })
-                FilterChip(
-                    modifier = Modifier.padding(4.5.dp),
-                    selected = selectedFilterType.value == EXPENSE,
-                    onClick = {
-                        selectedFilterType.value = EXPENSE
-                        categoryViewModel.categoryState.value = CategoryState.LOADING
-                    },
-                    label = { Text(text = EXPENSE.toPascalCase()) })
-                FilterChip(
-                    modifier = Modifier.padding(4.5.dp),
-                    selected = selectedFilterType.value == INCOME,
-                    onClick = {
-                        selectedFilterType.value = INCOME
-                        categoryViewModel.categoryState.value = CategoryState.LOADING
-                    },
-                    label = { Text(text = INCOME.toPascalCase()) })
-            }
+            CategoryActions(selectedFilterType)
             with(categoryViewModel.categoryState.collectAsState()) {
                 when (value) {
                     is CategoryState.LOADING -> {
@@ -104,5 +78,40 @@ fun CategoryMainScreen() {
                 }
             }
         }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun CategoryActions(
+    selectedFilterType: MutableState<String>
+)  {
+    val categoryViewModel = hiltViewModel<CategoryViewModel>()
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        FilterChip(modifier = Modifier.padding(4.5.dp),
+            selected = selectedFilterType.value == "",
+            onClick = {
+                selectedFilterType.value = ""
+                categoryViewModel.categoryState.value = CategoryState.LOADING
+            },
+            label = { Text(text = ALL.toPascalCase()) })
+        FilterChip(modifier = Modifier.padding(4.5.dp),
+            selected = selectedFilterType.value == EXPENSE,
+            onClick = {
+                selectedFilterType.value = EXPENSE
+                categoryViewModel.categoryState.value = CategoryState.LOADING
+            },
+            label = { Text(text = EXPENSE.toPascalCase()) })
+        FilterChip(modifier = Modifier.padding(4.5.dp),
+            selected = selectedFilterType.value == INCOME,
+            onClick = {
+                selectedFilterType.value = INCOME
+                categoryViewModel.categoryState.value = CategoryState.LOADING
+            },
+            label = { Text(text = INCOME.toPascalCase()) })
     }
 }

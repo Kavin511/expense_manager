@@ -25,7 +25,7 @@ fun HomeSnackBar(
             TextButton(onClick = {
                 snackBarHostState.currentSnackbarData?.performAction()
             }) {
-                Text(text = snackBarHostState.currentSnackbarData?.visuals?.actionLabel ?: "", color = appColors.material.primary)
+                Text(text = snackBarHostState.currentSnackbarData?.visuals?.actionLabel ?: "", color = appColors.material.inversePrimary)
             }
         },
     ) {

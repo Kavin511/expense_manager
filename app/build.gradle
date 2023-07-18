@@ -108,6 +108,7 @@ dependencies {
     implementation libs.androidx.work
     kapt  libs.androidx.hilt.compiler
 
+    implementation(libs.androidx.dataStore.core)
     implementation(libs.protobuf.kotlin.lite)
 
 }

@@ -1,19 +1,6 @@
 package com.devstudio.expensemanager.viewmodel
 
 import android.app.Application
-import android.content.Context
-import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.widget.Toast
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Snackbar
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.FileProvider
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
@@ -24,7 +11,6 @@ import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MES
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_WORK_NAME
 import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
