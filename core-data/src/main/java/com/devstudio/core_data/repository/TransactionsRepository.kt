@@ -3,6 +3,7 @@ package com.devstudio.core_data.repository
 import androidx.annotation.WorkerThread
 import com.devstudio.expensemanager.db.dao.TransactionDao
 import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.expensemanager.db.models.TransactionMode
 import com.devstudio.utils.formatters.DateFormatter
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
@@ -23,6 +24,7 @@ interface TransactionsRepository {
     fun getTotalTransactionCount(): Int
     fun getCurrentMonthTransactionCount(): Int
     fun getTransactionCategoryName(categoryId: String): String?
+    fun getTotalAssets(): Double
 }
 
 @Singleton
@@ -30,6 +32,10 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
     TransactionsRepository {
     override fun transactions(): List<Transaction> {
         return transactionDao.getTransactions()
+    }
+
+    override fun getTotalAssets(): Double {
+        return transactionDao.getTotalAssets(TransactionMode.EXPENSE.name) + transactionDao.getTotalAssets(TransactionMode.INCOME.name)
     }
 
     override fun getTransactionsForCurrentMonth(): Flow<List<Transaction>> {
