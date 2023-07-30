@@ -10,12 +10,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.devstudio.core_model.models.ExpressWalletAppState
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
-import com.devstudio.account.AccountScreen
 import com.devstudio.category.composables.CategoryMainScreen
+import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.expensemanager.ui.home.composables.HomeScreen
+import com.devstudio.profile.BudgetScreen
+import com.devstudio.profile.ProfileMainScreen
+import com.devstudio.profile.RemainderScreen
+import com.devstudio.profile.ThemeScreen
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +38,9 @@ fun Navigation(
                 )
             )
             HomeScreen(navController, bottomSheetScaffoldState!!)
+        }
+        composable(route = ExpressWalletAppState.BudgetScreen.route) {
+            BudgetScreen()
         }
         navigation(route = "/", startDestination = ExpressWalletAppState.HomeScreen.route) {
             composable(route = ExpressWalletAppState.HomeScreen.TransactionsScreen.route,
@@ -66,6 +72,12 @@ fun Navigation(
 
             composable(route = ExpressWalletAppState.HomeScreen.AccountScreen.route) {
                 ProfileMainScreen(navController)
+            }
+            composable(route = ExpressWalletAppState.ThemeScreen.route) {
+                ThemeScreen(navController)
+            }
+            composable(route = ExpressWalletAppState.RemainderScreen.route) {
+                RemainderScreen(navController)
             }
         }
     }

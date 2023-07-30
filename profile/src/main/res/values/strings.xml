@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">profile</string>
+    <string name="default_web_client_id">xyz</string>
+    <string name="loading">Loading...</string>
 </resources>

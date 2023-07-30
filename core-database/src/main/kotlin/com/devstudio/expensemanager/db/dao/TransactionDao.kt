@@ -5,7 +5,6 @@ import androidx.room.*
 import androidx.room.OnConflictStrategy.IGNORE
 import com.devstudio.expensemanager.db.models.Transaction
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 
 @Dao
 interface TransactionDao {
@@ -47,8 +46,11 @@ interface TransactionDao {
     fun getTotalTransactionCount(): Int
 
     @Query("SELECT count(id) FROM TRANSACTIONS_TABLE WHERE strftime('%m',transactionDate / 1000,'unixepoch')=:month and strftime('%Y',transactionDate / 1000,'unixepoch')=:year order by transactionDate desc")
-    fun getCurrentMonthTransactionCount(month: String, year: String):Int
+    fun getCurrentMonthTransactionCount(month: String, year: String): Int
 
     @Query("SELECT name FROM category_table WHERE id=:categoryId")
     fun getTransactionCategoryName(categoryId: String): String?
+
+    @Query("SELECT SUM(amount) FROM TRANSACTIONS_TABLE WHERE isEditingOldTransaction=:mode")
+    fun getTotalAssets(mode: String): Double
 }

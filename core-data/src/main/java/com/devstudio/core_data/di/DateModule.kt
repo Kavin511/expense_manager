@@ -2,6 +2,8 @@ package com.devstudio.core_data.di
 
 import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.core_data.repository.CategoryRepositoryImpl
+import com.devstudio.core_data.repository.RemainderRepository
+import com.devstudio.core_data.repository.RemainderRepositoryInterface
 import com.devstudio.core_data.repository.TransactionsRepository
 import com.devstudio.core_data.repository.TransactionsRepositoryImpl
 import dagger.Binds
@@ -18,4 +20,7 @@ abstract class DateModule {
 
     @Binds
     abstract fun providesCategoryRepository(categoryRepositoryImpl: CategoryRepositoryImpl): CategoryRepository
+
+    @Binds
+    abstract fun providesRemainderRepository(remainderRepository: RemainderRepository): RemainderRepositoryInterface
 }

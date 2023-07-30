@@ -26,6 +26,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.sharp.Home
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material.icons.twotone.Home
@@ -162,20 +163,20 @@ private fun getBottomNavigationItems(): List<BottomNavigationItem> {
     return listOf(
         BottomNavigationItem(
             name = stringResource(id = com.devstudio.expensemanager.R.string.transaction),
-            selectedIcon = Icons.Rounded.Home,
-            unselectedIcon = Icons.TwoTone.Home,
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
             navigationRoute = ExpressWalletAppState.HomeScreen.route
         ),
         BottomNavigationItem(
             name = stringResource(id = com.devstudio.expensemanager.R.string.category),
             selectedIcon = Icons.Rounded.Category,
-            unselectedIcon = Icons.TwoTone.Category,
+            unselectedIcon = Icons.Outlined.Category,
             navigationRoute = ExpressWalletAppState.HomeScreen.CategoryScreen.route
         ),
         BottomNavigationItem(
             name = stringResource(id = com.devstudio.expensemanager.R.string.profile),
             selectedIcon = Icons.Rounded.AccountCircle,
-            unselectedIcon = Icons.TwoTone.AccountCircle,
+            unselectedIcon = Icons.Outlined.AccountCircle,
             navigationRoute = ExpressWalletAppState.HomeScreen.AccountScreen.route
         )
     )
@@ -188,7 +189,6 @@ private fun AddTransactions() {
         onClickAddTransaction(context)
     }
 }
-
 
 fun onClickAddTransaction(context: Context) {
     val intent = Intent(context, TransactionActivity::class.java)
