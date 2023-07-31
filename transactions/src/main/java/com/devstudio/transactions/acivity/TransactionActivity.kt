@@ -40,6 +40,7 @@ class TransactionActivity : AppCompatActivity() {
         get() = _binding!!
     private var categoryList = listOf<Category>()
     private var currentTransaction: Transaction? = null
+    private lateinit var selectedTransactionMode: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +53,23 @@ class TransactionActivity : AppCompatActivity() {
         initialiseNavigation()
         initialiseSaveTransactionFlow()
         hideKeyboardOnFocusChange()
-        initialiseTransactionDateClickListener()
+        initialiseListeners()
         binding.keyboard.amountText.showSoftInputOnFocus = false
+    }
+
+    private fun initialiseListeners() {
+        initialiseFuturePaymentListeners()
+        initialiseTransactionDateClickListener()
+    }
+
+    private fun initialiseFuturePaymentListeners() {
+        binding.futurePayment.setOnCheckedChangeListener { _, isChecked ->
+            if (transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
+                transactionViewModel.futurePaymentModeStatus.isDebit = isChecked
+            } else {
+                transactionViewModel.futurePaymentModeStatus.isCredit = isChecked
+            }
+        }
     }
 
     private fun initialiseSaveTransactionFlow() {
@@ -63,12 +79,9 @@ class TransactionActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             lifecycleScope.launch {
-                val oldTransaction = transactionViewModel.transaction.value
-                if (transactionViewModel.isEditingOldTransaction.value == true && oldTransaction != null) {
-                    updateOldTransaction(oldTransaction)
-                } else {
-                    createNewTransaction()
-                }
+                val transaction = transactionViewModel.transaction.value
+                    ?: Transaction(id = Calendar.getInstance().time.time)
+                createNewTransaction(transaction)
             }
             finish()
         }
@@ -78,34 +91,30 @@ class TransactionActivity : AppCompatActivity() {
         var selectedDate = Calendar.getInstance().time.time.toString()
     }
 
-    private suspend fun createNewTransaction() {
-        val transaction = Transaction(
-            id = Calendar.getInstance().time.time,
-            amount = getTransactionAmount(),
-            note = binding.noteText.text.toString(),
-            transactionMode = transactionViewModel.transactionType.value.toString(),
-            transactionDate = selectedDate,
-            categoryId = categoryList[getSelectedCategoryIndex()].id
-        )
-        transactionViewModel.insertTransaction(transaction)
-    }
-
     private fun getTransactionAmount(): Double {
         return TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
     }
 
-    private suspend fun updateOldTransaction(oldTransaction: Transaction) {
-        val selectedCategoryId = categoryList[getSelectedCategoryIndex()].id
-        oldTransaction.apply {
-            amount =
-                TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
+    private suspend fun createNewTransaction(transaction: Transaction) {
+        transaction.apply {
+            amount = getTransactionAmount()
             note = binding.noteText.text.toString()
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
-            categoryId = selectedCategoryId
+            categoryId = categoryList[getSelectedCategoryIndex()].id
+            paymentStatus  = getPaymentStatus().name
         }
-        transactionViewModel.updateTransaction(oldTransaction)
+        transactionViewModel.insertTransaction(transaction)
     }
+
+    private fun getPaymentStatus(): PaymentStatus =
+        if (binding.futurePayment.isChecked && transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
+            PaymentStatus.DEBT
+        } else if (binding.futurePayment.isChecked && transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
+            PaymentStatus.CREDIT
+        } else {
+            PaymentStatus.COMPLETED
+        }
 
     private fun hideKeyboardOnFocusChange() {
         binding.keyboard.amountText.setOnFocusChangeListener { view, _ ->
@@ -138,14 +147,13 @@ class TransactionActivity : AppCompatActivity() {
                 binding.transactionDate.text =
                     DateFormatter.convertLongToDate(it.transactionDate.toLong())
                 selectedDate = it.transactionDate
-                if (it.transactionMode == EXPENSE) {
+                selectedTransactionMode = it.transactionMode
+                if (selectedTransactionMode == EXPENSE) {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
-                    binding.transactionMode.check(R.id.expense_mode)
                 } else {
                     transactionViewModel.transactionType.value = TransactionMode.INCOME
-                    binding.transactionMode.check(R.id.income_mode)
                 }
-                categoryList = transactionViewModel.getCategories(it.transactionMode).first()
+                categoryList = transactionViewModel.getCategories(selectedTransactionMode).first()
                 setSelectedCategoryIndex(categoryList.indexOfFirst { category ->
                     category.id == it.categoryId
                 })
@@ -171,31 +179,49 @@ class TransactionActivity : AppCompatActivity() {
             }
         }
         lifecycleScope.launch {
-            initialiseTransactionCategory()
+            observeTransactionType()
         }
     }
 
-    private suspend fun initialiseTransactionCategory() {
+    private suspend fun observeTransactionType() {
         transactionViewModel.transactionType.collectLatest {
-            binding.categoryGroup.removeAllViews()
-            with(transactionViewModel.getCategories(it.name).first()) {
-                categoryList = this
-                forEachIndexed { index, value ->
-                    val chip = layoutInflater.inflate(R.layout.category_chip, null) as Chip
-                    chip.text = value.name
-                    chip.id = index
-                    chip.isCheckable = true
-                    if (getSelectedCategoryIndex() == index) {
-                        chip.isChecked = true
-                    }
-                    chip.checkedIcon = null
-                    chip.setOnClickListener {
-                        setSelectedCategoryIndex(index)
-                    }
-                    binding.categoryGroup.addView(chip)
+            when (it) {
+                TransactionMode.EXPENSE -> {
+                    updateCategoriesBasedOnTransactionType(TransactionMode.EXPENSE)
+                    binding.transactionMode.check(R.id.expense_mode)
+                    binding.futurePayment.text = "Mark transaction as Debt"
+                    binding.futurePayment.isChecked = transactionViewModel.futurePaymentModeStatus.isDebit
                 }
-                binding.categoryGroup.requestLayout()
+
+                else -> {
+                    updateCategoriesBasedOnTransactionType(TransactionMode.INCOME)
+                    binding.transactionMode.check(R.id.income_mode)
+                    binding.futurePayment.text = "Mark transaction as Credit"
+                    binding.futurePayment.isChecked = transactionViewModel.futurePaymentModeStatus.isCredit
+                }
             }
+        }
+    }
+
+    private suspend fun updateCategoriesBasedOnTransactionType(transactionMode: TransactionMode) {
+        binding.categoryGroup.removeAllViews()
+        with(transactionViewModel.getCategories(transactionMode.name).first()) {
+            categoryList = this
+            forEachIndexed { index, value ->
+                val chip = layoutInflater.inflate(R.layout.category_chip, null) as Chip
+                chip.text = value.name
+                chip.id = index
+                chip.isCheckable = true
+                if (getSelectedCategoryIndex() == index) {
+                    chip.isChecked = true
+                }
+                chip.checkedIcon = null
+                chip.setOnClickListener {
+                    setSelectedCategoryIndex(index)
+                }
+                binding.categoryGroup.addView(chip)
+            }
+            binding.categoryGroup.requestLayout()
         }
     }
 
@@ -274,7 +300,7 @@ class TransactionActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.transaction_menu, menu)
-        menu?.findItem(R.id.transaction_delete)?.isVisible = currentTransaction!= null
+        menu?.findItem(R.id.transaction_delete)?.isVisible = currentTransaction != null
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -301,4 +327,10 @@ class TransactionActivity : AppCompatActivity() {
             }
         )
     }
+}
+
+enum class PaymentStatus {
+    DEBT,
+    CREDIT,
+    COMPLETED
 }

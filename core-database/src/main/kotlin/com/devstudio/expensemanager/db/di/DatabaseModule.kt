@@ -63,7 +63,7 @@ class DatabaseModule {
             applicationContext,
             ExpenseManagerDataBase::class.java,
             "expense_manager_database"
-        ).allowMainThreadQueries().addCallback(rdc).addMigrations(MIGRATION_1_2)
+        ).allowMainThreadQueries().addCallback(rdc).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
     }
 }
@@ -91,4 +91,11 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("DROP TABLE TRANSACTIONS_TABLE")
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE_Backup RENAME to TRANSACTIONS_TABLE")
     }
+}
+
+val MIGRATION_2_3 = object : Migration(2,3){
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN paymentStatus TEXT not null default 'COMPLETED'")
+    }
+
 }

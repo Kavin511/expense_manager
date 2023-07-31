@@ -15,7 +15,7 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions_table order by transactionDate DESC")
     fun getTransactions(): List<Transaction>
 
-    @Insert(onConflict = IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transactionMode: Transaction)
 
     @WorkerThread
