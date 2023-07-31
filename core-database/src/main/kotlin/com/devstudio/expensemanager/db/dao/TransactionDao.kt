@@ -2,10 +2,8 @@ package com.devstudio.expensemanager.db.dao
 
 import androidx.annotation.WorkerThread
 import androidx.room.*
-import androidx.room.OnConflictStrategy.IGNORE
 import com.devstudio.expensemanager.db.models.Transaction
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 
 @Dao
 interface TransactionDao {
@@ -16,7 +14,7 @@ interface TransactionDao {
     fun getTransactions(): List<Transaction>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTransaction(transactionMode: Transaction)
+    suspend fun upsertTransaction(transactionMode: Transaction)
 
     @WorkerThread
     @Query("SELECT * FROM transactions_table")

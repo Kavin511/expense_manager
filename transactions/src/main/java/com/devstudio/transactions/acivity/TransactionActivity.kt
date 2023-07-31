@@ -81,7 +81,7 @@ class TransactionActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val transaction = transactionViewModel.transaction.value
                     ?: Transaction(id = Calendar.getInstance().time.time)
-                createNewTransaction(transaction)
+                updateTransaction(transaction)
             }
             finish()
         }
@@ -95,7 +95,7 @@ class TransactionActivity : AppCompatActivity() {
         return TransactionInputFormula().calculate(binding.keyboard.amountText.text.toString())
     }
 
-    private suspend fun createNewTransaction(transaction: Transaction) {
+    private suspend fun updateTransaction(transaction: Transaction) {
         transaction.apply {
             amount = getTransactionAmount()
             note = binding.noteText.text.toString()
@@ -104,13 +104,13 @@ class TransactionActivity : AppCompatActivity() {
             categoryId = categoryList[getSelectedCategoryIndex()].id
             paymentStatus  = getPaymentStatus().name
         }
-        transactionViewModel.insertTransaction(transaction)
+        transactionViewModel.upsertTransaction(transaction)
     }
 
     private fun getPaymentStatus(): PaymentStatus =
         if (binding.futurePayment.isChecked && transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
             PaymentStatus.DEBT
-        } else if (binding.futurePayment.isChecked && transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
+        } else if (binding.futurePayment.isChecked && transactionViewModel.transactionType.value == TransactionMode.INCOME) {
             PaymentStatus.CREDIT
         } else {
             PaymentStatus.COMPLETED

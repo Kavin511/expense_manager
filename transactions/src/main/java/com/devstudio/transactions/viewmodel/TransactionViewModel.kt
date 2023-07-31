@@ -47,8 +47,8 @@ class TransactionViewModel @Inject constructor(
     var transactionType = MutableStateFlow(TransactionMode.EXPENSE)
     var isEditingOldTransaction = MutableLiveData<Boolean>()
 
-    suspend fun insertTransaction(transaction: Transaction) {
-        repository.insert(transaction)
+    suspend fun upsertTransaction(transaction: Transaction) {
+        repository.upsertTransaction(transaction)
     }
 
     suspend fun getAndUpdateTransactionById(id: Long) {
