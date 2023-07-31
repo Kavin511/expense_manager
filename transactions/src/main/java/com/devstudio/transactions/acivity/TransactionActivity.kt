@@ -150,8 +150,12 @@ class TransactionActivity : AppCompatActivity() {
                 selectedTransactionMode = it.transactionMode
                 if (selectedTransactionMode == EXPENSE) {
                     transactionViewModel.transactionType.value = TransactionMode.EXPENSE
+                    binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
+                    transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
                 } else {
                     transactionViewModel.transactionType.value = TransactionMode.INCOME
+                    binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
+                    transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
                 }
                 categoryList = transactionViewModel.getCategories(selectedTransactionMode).first()
                 setSelectedCategoryIndex(categoryList.indexOfFirst { category ->
