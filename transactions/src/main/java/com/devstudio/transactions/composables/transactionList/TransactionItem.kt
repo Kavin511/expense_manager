@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
@@ -111,11 +112,18 @@ fun TransactionItem(
 
 @Composable
 private fun PaymentStatus(transaction: Transaction) {
-    AssistChip(onClick = {}, label = {
-        Text(text = transaction.paymentStatus.replaceFirstChar {
+    val paymentStatus = transaction.paymentStatus
+    Text(text = paymentStatus.lowercase().replaceFirstChar {
            it.uppercase()
-        }, modifier = Modifier.padding(0.dp))
-    }, enabled = false, modifier = Modifier.padding(0.dp), shape = RoundedCornerShape(50.dp))
+        }, modifier = Modifier
+        .padding(1.dp)
+        .background(
+            shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS),
+            color = appColors.material.tertiaryContainer
+        )
+        .padding(
+          horizontal =   6.dp,
+        ))
 }
 
 @Composable
