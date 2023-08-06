@@ -11,6 +11,14 @@ android {
     namespace 'com.devstudio.expensemanager'
     compileSdk 33
     buildToolsVersion "33.0.1"
+    signingConfigs {
+        release {
+            storeFile file('devstudiowork.jks')
+            storePassword 'devstudioworks'
+            keyAlias 'key0'
+            keyPassword 'devstudioworks'
+        }
+    }
 
     defaultConfig {
         applicationId "com.devstudio.expensemanager"
