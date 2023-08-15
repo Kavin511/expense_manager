@@ -12,5 +12,6 @@ class Transaction(
     @ColumnInfo(name = "amount") var amount: Double = 0.0,
     @ColumnInfo(name = "categoryId") var categoryId: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "isEditingOldTransaction") var transactionMode: String = "",
-    @ColumnInfo(name = "transactionDate") var transactionDate: String = ""
+    @ColumnInfo(name = "transactionDate") var transactionDate: String = "",
+    @ColumnInfo(name = "paymentStatus") var paymentStatus: String = "COMPLETED"
 )

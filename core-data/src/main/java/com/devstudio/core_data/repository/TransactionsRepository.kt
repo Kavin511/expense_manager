@@ -17,7 +17,7 @@ interface TransactionsRepository {
     suspend fun deleteTransactions(transaction: Transaction)
     suspend fun getExpenseTransaction(): Flow<List<Transaction>>
     suspend fun getIncomeTransaction(): Flow<List<Transaction>>
-    suspend fun insert(transaction: Transaction)
+    suspend fun upsertTransaction(transaction: Transaction)
     suspend fun updateTransaction(oldTransactionObject: Transaction)
     fun filterTransactionFromDateRange(dateRange: androidx.core.util.Pair<Long, Long>): Flow<List<Transaction>?>
     fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
@@ -87,8 +87,8 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
     }
 
     @WorkerThread
-    override suspend fun insert(transaction: Transaction) {
-        transactionDao.insertTransaction(transaction)
+    override suspend fun upsertTransaction(transaction: Transaction) {
+        transactionDao.upsertTransaction(transaction)
     }
 
     override suspend fun updateTransaction(oldTransactionObject: Transaction) {
