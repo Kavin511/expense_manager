@@ -8,7 +8,7 @@ import com.devstudio.expensemanager.db.dao.TransactionDao
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 
-@Database(entities = [Transaction::class,Category::class], version = 2, exportSchema = false)
+@Database(entities = [Transaction::class,Category::class], version = 3, exportSchema = false)
 abstract class ExpenseManagerDataBase : RoomDatabase() {
     abstract fun transactionsDao(): TransactionDao
     abstract fun categoryDao(): CategoryDao

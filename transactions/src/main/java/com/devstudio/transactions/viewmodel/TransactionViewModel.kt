@@ -15,12 +15,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionViewModel @Inject constructor(private val repository: TransactionsRepository,private val categoryRepository: CategoryRepository) :
+class TransactionViewModel @Inject constructor(
+    private val repository: TransactionsRepository,
+    private val categoryRepository: CategoryRepository
+) :
     ViewModel() {
+    val futurePaymentModeStatus = FuturePaymentStatus(isDebit = false, isCredit = false)
     var transactionFilterOptions: List<TransactionFilter>
     val selectedTransactionFilter = MutableStateFlow<TransactionFilter?>(null)
     val datePickerState = mutableStateOf(false)
@@ -44,13 +47,12 @@ class TransactionViewModel @Inject constructor(private val repository: Transacti
     var transactionType = MutableStateFlow(TransactionMode.EXPENSE)
     var isEditingOldTransaction = MutableLiveData<Boolean>()
 
-    suspend fun insertTransaction(transaction: Transaction) {
-        repository.insert(transaction)
+    suspend fun upsertTransaction(transaction: Transaction) {
+        repository.upsertTransaction(transaction)
     }
 
     suspend fun getAndUpdateTransactionById(id: Long) {
-        transaction.value =
-            repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
+        transaction.value = repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
     }
 
     private fun validateAndFilterTransactions(transactionFilter: TransactionFilter?): Flow<List<Transaction>?> {
