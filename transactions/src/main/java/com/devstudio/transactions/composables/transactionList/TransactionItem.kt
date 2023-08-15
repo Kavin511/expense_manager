@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -108,11 +110,11 @@ fun TransactionItem(
 
 @Composable
 private fun PaymentStatus(transaction: Transaction) {
+    val paymentStatus = transaction.paymentStatus
     Text(
-        text = transaction.paymentStatus.lowercase().replaceFirstChar {
+        text = paymentStatus.lowercase().replaceFirstChar {
             it.uppercase()
-        },
-        color = appColors.material.secondary,
+        }, color = appColors.material.secondary,
         fontSize = SECONDARY_TEXT_SIZE,
         modifier = Modifier
             .padding(2.dp)
