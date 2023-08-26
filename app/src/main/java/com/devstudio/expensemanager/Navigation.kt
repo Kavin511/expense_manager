@@ -16,9 +16,9 @@ import com.devstudio.category.composables.CategoryMainScreen
 import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.expensemanager.ui.home.composables.HomeScreen
 import com.devstudio.profile.BudgetScreen
-import com.devstudio.profile.ProfileMainScreen
-import com.devstudio.profile.RemainderScreen
-import com.devstudio.profile.ThemeScreen
+import com.devstudio.profile.composables.ProfileMainScreen
+import com.devstudio.profile.composables.RemainderScreen
+import com.devstudio.profile.ThemeSelectionScreen
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,7 +74,7 @@ fun Navigation(
                 ProfileMainScreen(navController)
             }
             composable(route = ExpressWalletAppState.ThemeScreen.route) {
-                ThemeScreen(navController)
+                ThemeSelectionScreen(navController)
             }
             composable(route = ExpressWalletAppState.RemainderScreen.route) {
                 RemainderScreen(navController)

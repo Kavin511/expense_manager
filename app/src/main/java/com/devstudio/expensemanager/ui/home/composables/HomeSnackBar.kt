@@ -20,7 +20,7 @@ fun HomeSnackBar(
     snackBarHostState: SnackbarHostState = SnackbarHostState()
 ) {
     Snackbar(
-        modifier = Modifier.padding(dimensionResource(id = com.devstudioworks.core.ui.R.dimen.default_padding)).fillMaxWidth().wrapContentSize(),
+        modifier = Modifier.padding(dimensionResource(id = com.devstudio.core.designsystem.R.dimen.default_padding)).fillMaxWidth().wrapContentSize(),
         action = {
             TextButton(onClick = {
                 snackBarHostState.currentSnackbarData?.performAction()

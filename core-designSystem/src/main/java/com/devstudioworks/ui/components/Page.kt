@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,17 +48,11 @@ inline fun Page(
             action()
         }, scrollBehavior = scrollBehavior, navigationIcon = {
             if (shouldNavigateUp) {
-                Image(
-                    imageVector = Icons.Rounded.ArrowBack,
-                    contentDescription = "",
-                    colorFilter = ColorFilter.tint(Color.White),
-                    modifier = Modifier
-                        .clickable {
-                            navController.popBackStack()
-                        }
-                        .padding(10.dp),
-                    alignment = Alignment.Center,
-                )
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "Back")
+                }
             }
         })
     }, floatingActionButton = {

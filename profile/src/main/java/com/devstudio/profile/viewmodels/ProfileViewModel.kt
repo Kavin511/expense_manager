@@ -1,4 +1,4 @@
-package com.devstudio.profile
+package com.devstudio.profile.viewmodels
 
 import android.content.Context
 import androidx.datastore.core.DataStore

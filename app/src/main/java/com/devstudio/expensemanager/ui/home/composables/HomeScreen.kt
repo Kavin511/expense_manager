@@ -58,7 +58,7 @@ import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
-import com.devstudioworks.core.ui.R
+import com.devstudio.core.designsystem.R
 import com.devstudioworks.ui.components.ExpressWalletFab
 import com.devstudioworks.ui.theme.appColors
 import kotlinx.coroutines.launch

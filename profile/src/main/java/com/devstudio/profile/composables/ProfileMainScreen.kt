@@ -1,27 +1,16 @@
-package com.devstudio.profile
+package com.devstudio.profile.composables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Numbers
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -43,10 +32,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.devstudio.account.R
 import com.devstudio.core_model.models.ExpressWalletAppState
+import com.devstudio.profile.viewmodels.EditableSettings
+import com.devstudio.profile.viewmodels.ProfileUiState
+import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
-import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudioworks.ui.theme.appColors
-import com.devstudioworks.ui.theme.model.AppColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,49 +58,11 @@ fun ProfileMainScreen(navController: NavHostController) {
                 when (uiState) {
                     ProfileUiState.Loading -> Text(text = stringResource(R.string.loading))
                     is ProfileUiState.Success -> {
-                        ProfilePanel(appColors, profileViewModel)
+                        ProfileSummary(appColors, profileViewModel)
                         PreferencesPanel(uiState.data, navController)
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-@OptIn(ExperimentalLayoutApi::class)
-private fun ProfilePanel(
-    appColors: AppColor,
-    profileViewModel: ProfileViewModel
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = appColors.material.tertiaryContainer,
-                shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS)
-            )
-            .padding(bottom = 10.dp)
-    ) {
-        FlowRow(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
-                .background(color = appColors.material.tertiaryContainer)
-                .padding(10.dp)
-                .align(
-                    Alignment.CenterHorizontally
-                )
-        ) {
-            ProfileInfoCardElement(
-                value = profileViewModel.getTotalAssets().toString(),
-                Icons.Filled.Money,
-                "Total Assets"
-            )
-            ProfileInfoCardElement(
-                value = profileViewModel.getTotalNumberOfTransactions().toString(),
-                Icons.Filled.Numbers,
-                "Total Transactions"
-            )
         }
     }
 }
@@ -193,25 +145,4 @@ fun Label(value: String) {
             color = appColors.material.onSurfaceVariant
         )
     )
-}
-
-@Composable
-private fun ProfileInfoCardElement(value: String, icon: ImageVector, title: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(.5f),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            imageVector = icon,
-            contentDescription = title,
-            modifier = Modifier
-                .width(25.dp)
-                .height(25.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        Text(text = value, modifier = Modifier.padding(top = 5.dp))
-        Text(text = title, modifier = Modifier.padding(top = 5.dp))
-    }
 }

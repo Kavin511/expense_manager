@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.core_data.UserPreferences
-import com.devstudio.profile.EditableSettings
+import com.devstudio.profile.viewmodels.EditableSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

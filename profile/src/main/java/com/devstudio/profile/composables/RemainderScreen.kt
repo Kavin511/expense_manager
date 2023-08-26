@@ -1,4 +1,4 @@
-package com.devstudio.profile
+package com.devstudio.profile.composables
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.BorderStroke
@@ -30,12 +30,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devstudio.core_data.repository.Remainder
+import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
 import com.devstudioworks.ui.theme.appColors
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 
 var hour = 0

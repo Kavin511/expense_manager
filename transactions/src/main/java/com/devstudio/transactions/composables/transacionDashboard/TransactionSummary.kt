@@ -27,7 +27,7 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel.Factory.DATE_RA
 import com.devstudio.transactions.viewmodel.TransactionViewModel.Factory.SHOW_ALL_ID
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
-import com.devstudioworks.core.ui.R
+import com.devstudio.core.designsystem.R
 import com.devstudioworks.ui.theme.appColors
 import java.util.Calendar
 

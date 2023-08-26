@@ -34,7 +34,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.6"
     }
-    namespace 'com.devstudioworks.core.ui'
+    namespace 'com.devstudio.core.designsystem'
 }
 
 dependencies {

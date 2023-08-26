@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -19,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import com.devstudio.core_data.Theme_proto
 import com.devstudio.expensemanager.Navigation
 import com.devstudio.expensemanager.ui.home.composables.HomeBottomActions
-import com.devstudio.profile.ProfileUiState
 import com.devstudioworks.ui.theme.MaterialTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -44,6 +44,9 @@ class HomeActivity : AppCompatActivity() {
         }
         setContent {
             val darkTheme = shouldUseDarkTheme(uiState)
+            AppCompatDelegate.setDefaultNightMode(
+                if (darkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            )
             MaterialTheme(darkTheme) {
                 val navController = rememberNavController()
                 Scaffold(bottomBar = {

@@ -133,7 +133,7 @@ class TransactionActivity : AppCompatActivity() {
         transactionViewModel.isEditingOldTransaction.observe(this) {
             if (it) {
                 binding.keyboard.saveTransaction.text =
-                    getString(com.devstudioworks.core.ui.R.string.update_transaction)
+                    getString(com.devstudio.core.designsystem.R.string.update_transaction)
             }
         }
     }

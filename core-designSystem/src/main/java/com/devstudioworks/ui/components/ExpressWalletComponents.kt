@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.devstudioworks.core.ui.R
+import com.devstudio.core.designsystem.R
 import com.devstudioworks.ui.theme.model.AppColor
 
 
