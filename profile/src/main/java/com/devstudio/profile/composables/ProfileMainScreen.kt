@@ -1,6 +1,7 @@
 package com.devstudio.profile.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,31 +32,29 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.devstudio.account.R
+import com.devstudio.core_data.Theme_proto.DARK
+import com.devstudio.core_data.Theme_proto.LIGHT
+import com.devstudio.core_data.Theme_proto.SYSTEM_DEFAULT
 import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.profile.viewmodels.EditableSettings
 import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
+import com.devstudioworks.ui.icons.EMAppIcons
 import com.devstudioworks.ui.theme.appColors
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileMainScreen(navController: NavHostController) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
     val profileUiState = profileViewModel.profileUiState.collectAsStateWithLifecycle()
-    val topAppBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
     Page(title = "Profile", navController = navController) {
         Surface(
             modifier = Modifier
                 .widthIn(max = 640.dp)
                 .padding(10.dp),
         ) {
-            Column(
-                modifier = Modifier
-            ) {
-                val uiState = profileUiState.value
-                when (uiState) {
+            Column {
+                when (val uiState = profileUiState.value) {
                     ProfileUiState.Loading -> Text(text = stringResource(R.string.loading))
                     is ProfileUiState.Success -> {
                         ProfileSummary(appColors, profileViewModel)
@@ -77,22 +76,40 @@ data class Preference(
 
 @Composable
 private fun PreferencesPanel(profileUiState: EditableSettings, navController: NavHostController) {
-    val preferenceList = listOf<Preference>(
-        Preference(
-            title = "Change Theme",
-            description = "Theme preferences",
-            icon = Icons.Filled.DarkMode,
-        ) {
-            navController.navigate(ExpressWalletAppState.ThemeScreen.route)
-        },
-        Preference(
-            title = "Custom Remainder",
-            description = "Remainder to update transactions",
-            icon = Icons.Filled.Notifications,
-        ) {
-            navController.navigate(ExpressWalletAppState.RemainderScreen.route)
+    val theme = profileUiState.theme
+    if (theme == SYSTEM_DEFAULT) {
+        if (isSystemInDarkTheme()) {
+            DARK
+        } else {
+            LIGHT
         }
-    )
+    }
+    val themeIcon = when (theme) {
+        LIGHT -> {
+            EMAppIcons.Light
+        }
+
+        DARK -> {
+            EMAppIcons.Dark
+        }
+
+        else -> {
+            EMAppIcons.Light
+        }
+    }
+    val preferenceList = listOf(Preference(
+        title = "Change Theme",
+        description = "Theme preferences",
+        icon = themeIcon,
+    ) {
+        navController.navigate(ExpressWalletAppState.ThemeScreen.route)
+    }, Preference(
+        title = "Custom Remainder",
+        description = "Remainder to update transactions",
+        icon = Icons.Filled.Notifications,
+    ) {
+        navController.navigate(ExpressWalletAppState.RemainderScreen.route)
+    })
     Column {
         Spacer(modifier = Modifier.padding(10.dp))
         Label("Preferences")
@@ -112,8 +129,7 @@ fun PreferenceItem(preference: Preference) {
         modifier = Modifier
             .padding(vertical = 5.dp)
             .clickable(onClick = preference.clickEvent)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = preference.icon,
