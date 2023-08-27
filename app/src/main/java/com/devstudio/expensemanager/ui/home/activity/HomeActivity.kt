@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,9 +32,10 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private var uiState = mutableStateOf<MainUiState>(MainUiState.Loading)
-    val mainViewModel by viewModels<MainViewModel>()
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splash  = installSplashScreen()
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -42,6 +46,7 @@ class HomeActivity : AppCompatActivity() {
                     .collect()
             }
         }
+        splash.setKeepOnScreenCondition { uiState.value is MainUiState.Loading }
         setContent {
             val darkTheme = shouldUseDarkTheme(uiState)
             AppCompatDelegate.setDefaultNightMode(

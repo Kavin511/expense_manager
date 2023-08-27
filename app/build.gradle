@@ -87,6 +87,7 @@ dependencies {
     implementation project(path: ':profile')
 
     implementation libs.androidx.core
+    implementation libs.androidx.core.splashscreen
     implementation libs.androidx.appcompat
     implementation libs.material
     implementation libs.compose.material3
