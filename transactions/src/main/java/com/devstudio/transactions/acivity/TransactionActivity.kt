@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.devstudio.core_data.repository.BooksRepository
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionActivity : AppCompatActivity() {
@@ -42,6 +44,9 @@ class TransactionActivity : AppCompatActivity() {
     private var currentTransaction: Transaction? = null
     private lateinit var selectedTransactionMode: String
 
+    @Inject
+    lateinit var booksRepository: BooksRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityTransactionBinding.inflate(layoutInflater)
@@ -51,7 +56,7 @@ class TransactionActivity : AppCompatActivity() {
         initialiseTransactionKeyboard()
         fetchAndUpdateTransactionToBeEdited()
         initialiseNavigation()
-        initialiseSaveTransactionFlow()
+        initialiseSaveClickListener()
         hideKeyboardOnFocusChange()
         initialiseListeners()
         binding.keyboard.amountText.showSoftInputOnFocus = false
@@ -72,7 +77,7 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun initialiseSaveTransactionFlow() {
+    private fun initialiseSaveClickListener() {
         binding.keyboard.saveTransaction.setOnClickListener {
             if (categoryList.isEmpty()) {
                 categoryAdditionSnackBar()
@@ -103,6 +108,7 @@ class TransactionActivity : AppCompatActivity() {
             transactionDate = selectedDate
             categoryId = categoryList[getSelectedCategoryIndex()].id
             paymentStatus  = getPaymentStatus().name
+            bookId = booksRepository.getSelectedBook().id
         }
         transactionViewModel.upsertTransaction(transaction)
     }
@@ -128,7 +134,7 @@ class TransactionActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val id = intent.getLongExtra("id", 0)
             transactionViewModel.getAndUpdateTransactionById(id)
-            updateSelectedCategory()
+            mapSelectedTransactionDetails()
         }
         transactionViewModel.isEditingOldTransaction.observe(this) {
             if (it) {
@@ -138,7 +144,7 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun updateSelectedCategory() {
+    private suspend fun mapSelectedTransactionDetails() {
         transactionViewModel.transaction.first().let {
             if (it != null) {
                 currentTransaction = it

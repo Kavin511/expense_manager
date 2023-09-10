@@ -1,7 +1,9 @@
 package com.devstudio.core_data.di
 
+import com.devstudio.core_data.repository.BooksRepository
 import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.core_data.repository.CategoryRepositoryImpl
+import com.devstudio.core_data.repository.BooksRepositoryInterface
 import com.devstudio.core_data.repository.RemainderRepository
 import com.devstudio.core_data.repository.RemainderRepositoryInterface
 import com.devstudio.core_data.repository.TransactionsRepository
@@ -23,4 +25,7 @@ abstract class DateModule {
 
     @Binds
     abstract fun providesRemainderRepository(remainderRepository: RemainderRepository): RemainderRepositoryInterface
+
+    @Binds
+    abstract fun providesBooksRepository(booksRepository: BooksRepository): BooksRepositoryInterface
 }

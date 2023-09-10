@@ -6,8 +6,11 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.devstudio.expensemanager.db.ExpenseManagerDataBase
+import com.devstudio.expensemanager.db.dao.BooksDao
 import com.devstudio.expensemanager.db.dao.CategoryDao
 import com.devstudio.expensemanager.db.dao.TransactionDao
+import com.devstudio.expensemanager.db.di.DatabaseModule.Companion.DEFAULT_BOOK_NAME
+import com.devstudio.expensemanager.db.models.Books
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.TransactionMode
 import dagger.Module
@@ -18,6 +21,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.UUID
 
 
@@ -32,6 +36,11 @@ class DatabaseModule {
     @Provides
     fun providesCategoryDao(expenseManagerDataBase: ExpenseManagerDataBase): CategoryDao {
         return expenseManagerDataBase.categoryDao()
+    }
+
+    @Provides
+    fun providesBooksDao(expenseManagerDataBase: ExpenseManagerDataBase): BooksDao {
+        return expenseManagerDataBase.booksDao()
     }
 
     @Provides
@@ -53,6 +62,12 @@ class DatabaseModule {
                                 categoryType = TransactionMode.INCOME.name
                             )
                         })
+                    providesExpenseManagerDatabase(applicationContext).booksDao().insertBooks(
+                        Books(
+                            name = DEFAULT_BOOK_NAME,
+                            timeStamp = Calendar.getInstance().timeInMillis
+                        )
+                    )
                 }
             }
 
@@ -63,8 +78,13 @@ class DatabaseModule {
             applicationContext,
             ExpenseManagerDataBase::class.java,
             "expense_manager_database"
-        ).allowMainThreadQueries().addCallback(rdc).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+        ).allowMainThreadQueries().addCallback(rdc)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .build()
+    }
+
+    companion object {
+        const val DEFAULT_BOOK_NAME = "Daily Book"
     }
 }
 
@@ -93,9 +113,18 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
-val MIGRATION_2_3 = object : Migration(2,3){
+val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN paymentStatus TEXT not null default 'COMPLETED'")
     }
 
+}
+
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE BOOKS_TABLE (ID INTEGER NOT NULL,NAME TEXT NOT NULL,TIMESTAMP INTEGER NOT NULL DEFAULT 0,PRIMARY KEY (ID))")
+        database.execSQL("INSERT INTO BOOKS_TABLE (NAME,TIMESTAMP) VALUES (1,'$DEFAULT_BOOK_NAME',${System.currentTimeMillis()})")
+        database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN bookId  INTEGER  not null default null CONSTRAINT bookId REFERENCES BOOKS_TABLE(ID) on delete cascade ")
+        database.execSQL("UPDATE TRANSACTIONS_TABLE SET bookId=1")
+    }
 }

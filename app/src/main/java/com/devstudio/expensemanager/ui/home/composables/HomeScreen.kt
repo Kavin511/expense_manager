@@ -59,6 +59,8 @@ import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
 import com.devstudio.core.designsystem.R
+import com.devstudio.feature.books.navigation.BooksNavigation
+import com.devstudio.feature.books.navigation.navigateToBooksGraph
 import com.devstudioworks.ui.components.ExpressWalletFab
 import com.devstudioworks.ui.theme.appColors
 import kotlinx.coroutines.launch
@@ -93,7 +95,11 @@ fun HomeScreen(
                 AddTransactions()
             },
             topBar = {
-                TopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, actions = {
+                TopAppBar(title = {
+                    Text(stringResource(id = R.string.app_name), modifier = Modifier.clickable {
+                        navController.navigateToBooksGraph()
+                    })
+                }, actions = {
                     HomeActions(navController, snackBarHostState)
                 }, scrollBehavior = scrollBehavior)
             },

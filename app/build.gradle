@@ -85,6 +85,7 @@ dependencies {
     implementation project(path: ':transactions')
     implementation project(path: ':category')
     implementation project(path: ':profile')
+    implementation project(path: ':books')
 
     implementation libs.androidx.core
     implementation libs.androidx.core.splashscreen
