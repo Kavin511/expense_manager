@@ -9,7 +9,6 @@ import com.devstudio.expensemanager.db.ExpenseManagerDataBase
 import com.devstudio.expensemanager.db.dao.BooksDao
 import com.devstudio.expensemanager.db.dao.CategoryDao
 import com.devstudio.expensemanager.db.dao.TransactionDao
-import com.devstudio.expensemanager.db.di.DatabaseModule.Companion.DEFAULT_BOOK_NAME
 import com.devstudio.expensemanager.db.models.Books
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -45,42 +44,45 @@ class DatabaseModule {
 
     @Provides
     fun providesExpenseManagerDatabase(@ApplicationContext applicationContext: Context): ExpenseManagerDataBase {
+        var INSTANCE: ExpenseManagerDataBase? = null
         val rdc = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
-                CoroutineScope(SupervisorJob()).launch {
-                    providesExpenseManagerDatabase(applicationContext).categoryDao()
-                        .insertCategories(TransactionMode.EXPENSE.categoryList.map {
-                            Category(
-                                name = it,
-                                categoryType = TransactionMode.EXPENSE.name
-                            )
-                        })
-                    providesExpenseManagerDatabase(applicationContext).categoryDao()
-                        .insertCategories(TransactionMode.INCOME.categoryList.map {
-                            Category(
-                                name = it,
-                                categoryType = TransactionMode.INCOME.name
-                            )
-                        })
-                    providesExpenseManagerDatabase(applicationContext).booksDao().insertBooks(
-                        Books(
-                            name = DEFAULT_BOOK_NAME,
-                            timeStamp = Calendar.getInstance().timeInMillis
-                        )
-                    )
-                }
+                prepopulateDatabase(INSTANCE)
             }
 
             override fun onOpen(db: SupportSQLiteDatabase) {
             }
         }
-        return Room.databaseBuilder(
-            applicationContext,
-            ExpenseManagerDataBase::class.java,
-            "expense_manager_database"
-        ).allowMainThreadQueries().addCallback(rdc)
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
-            .build()
+        return INSTANCE ?: synchronized(this@DatabaseModule) {
+            Room.databaseBuilder(
+                applicationContext, ExpenseManagerDataBase::class.java, "expense_manager_database"
+            ).allowMainThreadQueries().addCallback(rdc)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
+                .also { INSTANCE = it }
+        }
+    }
+
+    private fun prepopulateDatabase(expenseManagerDataBase: ExpenseManagerDataBase?) {
+        CoroutineScope(SupervisorJob()).launch {
+            expenseManagerDataBase?.categoryDao()?.let { categoryDao ->
+                categoryDao.insertCategories(TransactionMode.EXPENSE.categoryList.map {
+                    Category(
+                        name = it, categoryType = TransactionMode.EXPENSE.name
+                    )
+                })
+                categoryDao.insertCategories(TransactionMode.INCOME.categoryList.map {
+                    Category(
+                        name = it, categoryType = TransactionMode.INCOME.name
+                    )
+                })
+            }
+            expenseManagerDataBase?.booksDao()?.insertBooks(
+                Books(
+                    name = DEFAULT_BOOK_NAME,
+                    timeStamp = Calendar.getInstance().timeInMillis
+                )
+            )
+        }
     }
 
     companion object {
