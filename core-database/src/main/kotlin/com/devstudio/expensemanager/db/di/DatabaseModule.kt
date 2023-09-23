@@ -9,6 +9,7 @@ import com.devstudio.expensemanager.db.ExpenseManagerDataBase
 import com.devstudio.expensemanager.db.dao.BooksDao
 import com.devstudio.expensemanager.db.dao.CategoryDao
 import com.devstudio.expensemanager.db.dao.TransactionDao
+import com.devstudio.expensemanager.db.di.DatabaseModule.Companion.DEFAULT_BOOK_NAME
 import com.devstudio.expensemanager.db.models.Books
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.TransactionMode
