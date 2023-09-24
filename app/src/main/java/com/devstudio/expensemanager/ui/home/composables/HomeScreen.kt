@@ -17,22 +17,16 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Category
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.sharp.Home
-import androidx.compose.material.icons.twotone.AccountCircle
-import androidx.compose.material.icons.twotone.Category
-import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -43,6 +37,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,14 +48,17 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.devstudio.core.designsystem.R
 import com.devstudio.core_model.models.ExpressWalletAppState
+import com.devstudio.expensemanager.viewmodel.HomeUiState
+import com.devstudio.expensemanager.viewmodel.HomeViewModel
+import com.devstudio.feature.books.BooksMainScreen
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
-import com.devstudio.core.designsystem.R
-import com.devstudio.feature.books.navigation.BooksNavigation
-import com.devstudio.feature.books.navigation.navigateToBooksGraph
 import com.devstudioworks.ui.components.ExpressWalletFab
 import com.devstudioworks.ui.theme.appColors
 import kotlinx.coroutines.launch
@@ -75,43 +73,61 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val topAppBarState = rememberTopAppBarState()
+    val shouldShowBookSelection: MutableState<Boolean> = remember {
+        mutableStateOf(false)
+    }
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val homeScreenUiState = homeViewModel.homeScreenUiState.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
-    BottomSheetScaffold(modifier = Modifier.pointerInput(Unit) {
-        detectTapGestures {
-            coroutineScope.launch {
-                bottomSheetScaffoldState.bottomSheetState.hide()
-            }
+    when(homeScreenUiState.value){
+        is HomeUiState.Loading -> {
+            CircularProgressIndicator()
         }
-    }, sheetContent = {
-        TransactionFilterBottomSheet(coroutineScope, bottomSheetScaffoldState)
-    }, scaffoldState = bottomSheetScaffoldState) {
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(hostState = snackBarHostState) {
-                    HomeSnackBar(snackBarHostState)
+        is HomeUiState.Success -> {
+            val homeScreenData = (homeScreenUiState.value as HomeUiState.Success).data
+            BottomSheetScaffold(modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.hide()
+                    }
                 }
-            },
-            floatingActionButton = {
-                AddTransactions()
-            },
-            topBar = {
-                TopAppBar(title = {
-                    Text(stringResource(id = R.string.app_name), modifier = Modifier.clickable {
-                        navController.navigateToBooksGraph()
-                    })
-                }, actions = {
-                    HomeActions(navController, snackBarHostState)
-                }, scrollBehavior = scrollBehavior)
-            },
-        ) {
-            Box(
-                contentAlignment = Alignment.TopCenter,
-                modifier = Modifier
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                TransactionDashBoard(bottomSheetScaffoldState)
+            }, sheetContent = {
+                TransactionFilterBottomSheet(coroutineScope, bottomSheetScaffoldState)
+            }, scaffoldState = bottomSheetScaffoldState) {
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackBarHostState) {
+                            HomeSnackBar(snackBarHostState)
+                        }
+                    },
+                    floatingActionButton = {
+                        AddTransactions()
+                    },
+                    topBar = {
+                        TopAppBar(title = {
+                            Text(text = "homeScreenData.selectedBookId.name", modifier = Modifier.clickable {
+                                shouldShowBookSelection.value = true
+                            })
+                        }, actions = {
+                            HomeActions(navController, snackBarHostState)
+                        }, scrollBehavior = scrollBehavior)
+                    },
+                ) {
+                    if (shouldShowBookSelection.value) {
+                        BooksMainScreen(navController = navController) {
+                            shouldShowBookSelection.value = false
+                        }
+                    }
+                    Box(
+                        contentAlignment = Alignment.TopCenter,
+                        modifier = Modifier
+                            .nestedScroll(scrollBehavior.nestedScrollConnection)
+                            .fillMaxSize()
+                            .padding(it)
+                    ) {
+                        TransactionDashBoard(bottomSheetScaffoldState)
+                    }
+                }
             }
         }
     }

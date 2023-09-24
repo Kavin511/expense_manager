@@ -8,57 +8,71 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devstudio.expensemanager.db.models.Books
+import com.devstudioworks.ui.theme.appColors
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun BooksMainScreenRoute() {
-    val booksViewModel = hiltViewModel<BooksViewModel>()
-//    ModalBottomSheet(onDismissRequest = { }) {
-    BooksMainScreen(booksViewModel)
-//    }
-}
-
-@Composable
-fun BooksMainScreen(booksViewModel: BooksViewModel) {
-        val booksUiState by booksViewModel.booksUiState.collectAsState()
-    when (booksUiState) {
-        is BooksUiState.Loading -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceAround
-            ) {
-                CircularProgressIndicator()
-            }
+fun BooksMainScreen(
+    booksViewModel: BooksViewModel = hiltViewModel(),
+    navController: NavHostController,
+    callback: () -> Unit
+) {
+    val booksUiState by booksViewModel.booksUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    val sheetState: SheetState = rememberModalBottomSheetState()
+    ModalBottomSheet(onDismissRequest = {
+        coroutineScope.launch {
+            navController.popBackStack()
+            callback.invoke()
+            sheetState.hide()
         }
-
-        is BooksUiState.COMPLETED -> {
-            val books = (booksUiState as BooksUiState.COMPLETED).books
-            if (books.isNotEmpty()) {
-                LazyColumn(content = {
-                    items(books.size) { index ->
-                        val book = books[index]
-                        BookItem(book)
-                    }
-                })
-            } else {
-                Column {
-                    Text(text = "No Books Found", modifier = Modifier.padding(16.dp))
+    }, sheetState = sheetState, scrimColor = Color(0x4D87878A)) {
+        when (booksUiState) {
+            is BooksUiState.Loading -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.SpaceAround
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-        }
 
-        is BooksUiState.Error -> {
+            is BooksUiState.COMPLETED -> {
+                val books = (booksUiState as BooksUiState.COMPLETED).books
+                if (books.isNotEmpty()) {
+                    LazyColumn(content = {
+                        items(books.size) { index ->
+                            val book = books[index]
+                            BookItem(book)
+                        }
+                    })
+                } else {
+                    Column {
+                        Text(text = "No Books Found", modifier = Modifier.padding(16.dp))
+                    }
+                }
+            }
+
+            is BooksUiState.Error -> {
+            }
         }
     }
 }
