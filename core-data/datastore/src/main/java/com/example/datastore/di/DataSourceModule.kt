@@ -4,11 +4,11 @@ import androidx.datastore.core.DataStore
 import com.devstudio.core_data.Theme_proto
 import com.devstudio.core_data.UserPreferences
 import com.devstudio.core_data.copy
-import com.devstudio.core_model.models.Theme
-import com.devstudio.core_model.models.Theme.DARK
-import com.devstudio.core_model.models.Theme.LIGHT
-import com.devstudio.core_model.models.Theme.SYSTEM
-import com.devstudio.core_model.models.UserPreferencesData
+import com.devstudio.data.model.Theme
+import com.devstudio.data.model.Theme.DARK
+import com.devstudio.data.model.Theme.LIGHT
+import com.devstudio.data.model.Theme.SYSTEM
+import com.devstudio.data.model.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

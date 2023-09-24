@@ -44,9 +44,6 @@ class TransactionActivity : AppCompatActivity() {
     private var currentTransaction: Transaction? = null
     private lateinit var selectedTransactionMode: String
 
-    @Inject
-    lateinit var booksRepository: BooksRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityTransactionBinding.inflate(layoutInflater)
@@ -108,7 +105,7 @@ class TransactionActivity : AppCompatActivity() {
             transactionDate = selectedDate
             categoryId = categoryList[getSelectedCategoryIndex()].id
             paymentStatus  = getPaymentStatus().name
-            bookId = booksRepository.getSelectedBook().id
+            bookId = transaction.bookId
         }
         transactionViewModel.upsertTransaction(transaction)
     }

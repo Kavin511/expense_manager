@@ -1,4 +1,4 @@
-package com.devstudio.core_model.models
+package com.devstudio.data.model
 
 data class UserPreferencesData(
     val theme: Theme,

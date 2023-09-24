@@ -1,23 +1,22 @@
 package com.devstudio.profile.viewmodels
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.account.R
-import com.devstudio.core_data.Theme_proto
-import com.devstudio.core_data.UserPreferences
-import com.devstudio.core_data.copy
 import com.devstudio.core_data.repository.Remainder
 import com.devstudio.core_data.repository.RemainderRepository
 import com.devstudio.core_data.repository.TransactionsRepository
+import com.devstudio.core_data.repository.UserDataRepository
+import com.devstudio.data.model.Theme
+import com.devstudio.data.model.UserPreferencesData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -25,15 +24,13 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val transactionRepository: TransactionsRepository,
     private val remainderRepository: RemainderRepository,
-    val userPreferencesDataStore: DataStore<UserPreferences>
+    val userDataRepository: UserDataRepository
 ) :
     ViewModel() {
 
-    val profileUiState: StateFlow<ProfileUiState> = userPreferencesDataStore.data.map { userData ->
+    val profileUiState: StateFlow<ProfileUiState> = userDataRepository.userData.map { userData ->
         ProfileUiState.Success(
-            EditableSettings(
-                theme = userData.theme
-            )
+            userData
         )
     }.stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = ProfileUiState.Loading)
 
@@ -45,11 +42,9 @@ class ProfileViewModel @Inject constructor(
         return transactionRepository.getTotalTransactionCount()
     }
 
-    suspend fun updateTheme(theme: Theme_proto) {
-        userPreferencesDataStore.updateData {
-            it.copy {
-                this.theme = theme
-            }
+    fun updateTheme(theme: Theme) {
+        viewModelScope.launch {
+            userDataRepository.updateTheme(theme)
         }
     }
 
@@ -70,22 +65,12 @@ class ProfileViewModel @Inject constructor(
             .build();
     }
 
-    suspend fun getTheme() {
-        return userPreferencesDataStore.data.collectLatest {
-            it.theme
-        }
-    }
-
     fun setRemainders(remainder: List<Remainder>,context: Context) {
         remainderRepository.setRemainders(remainder,context)
     }
 }
 
-data class EditableSettings(
-    val theme: Theme_proto
-)
-
 sealed interface ProfileUiState {
     object Loading : ProfileUiState
-    data class Success(val data: EditableSettings) : ProfileUiState
+    data class Success(val data: UserPreferencesData) : ProfileUiState
 }

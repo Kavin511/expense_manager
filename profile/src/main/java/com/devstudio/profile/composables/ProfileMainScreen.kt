@@ -75,9 +75,9 @@ data class Preference(
 
 
 @Composable
-private fun PreferencesPanel(profileUiState: EditableSettings, navController: NavHostController) {
+private fun PreferencesPanel(profileUiState: UserPreferencesData, navController: NavHostController) {
     val theme = profileUiState.theme
-    if (theme == SYSTEM_DEFAULT) {
+    if (theme == SYSTEM) {
         if (isSystemInDarkTheme()) {
             DARK
         } else {

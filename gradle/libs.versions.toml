@@ -104,6 +104,7 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt-gradle = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 hilt-android = { id = 'dagger.hilt.android.plugin', version.ref = "hiltAndroid" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 [bundles]
 compose=["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose","viewmodel_compose","compose_runtime_livedata","navigation_compose","compose_runtime_lifecycle"]

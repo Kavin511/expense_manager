@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.hilt.android)
 //    implementation project(path: ':core-model')
     implementation(project(mapOf("path" to ":core-model")))
+    implementation(project(mapOf("path" to ":core-data:model")))
     kapt(libs.hilt.android.compiler)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.dataStore.core)

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.protobuf)
     id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
 }
@@ -31,6 +32,24 @@ android {
     }
 }
 
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
 dependencies {
     implementation project(path: ':core-designSystem')
     implementation project(path: ':core-database')
@@ -45,5 +64,7 @@ dependencies {
     implementation libs.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
+    implementation(libs.androidx.dataStore.core)
+    implementation(libs.protobuf.kotlin.lite)
     androidTestImplementation libs.androidx.test.junit
 }

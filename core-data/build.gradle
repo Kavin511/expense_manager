@@ -57,6 +57,8 @@ dependencies {
     implementation project(path: ':utils')
     implementation project(path: ':core-model')
     implementation libs.androidx.room
+    implementation project(path: ':core-data:model')
+    implementation project(path: ':core-data:datastore')
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
     implementation libs.firebase.crashlytics

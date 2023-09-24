@@ -31,8 +31,6 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,6 +68,7 @@ dependencies {
     implementation libs.play.services.auth
     implementation libs.hilt.android
     implementation project(path: ':core-model')
+    implementation project(path: ':core-data:model')
     kapt libs.hilt.android.compiler
     implementation libs.hilt.navigation.compose
     implementation(libs.androidx.dataStore.core)
