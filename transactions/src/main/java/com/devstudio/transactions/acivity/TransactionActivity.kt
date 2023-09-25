@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.devstudio.core_data.repository.BooksRepository
+import com.devstudio.core_data.repository.BooksRepositoryImpl
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -45,7 +45,7 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var selectedTransactionMode: String
 
     @Inject
-    lateinit var booksRepository: BooksRepository
+    lateinit var booksRepositoryImpl: BooksRepositoryImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +108,7 @@ class TransactionActivity : AppCompatActivity() {
             transactionDate = selectedDate
             categoryId = categoryList[getSelectedCategoryIndex()].id
             paymentStatus  = getPaymentStatus().name
-            bookId = booksRepository.getSelectedBook().id
+            bookId = booksRepositoryImpl.getSelectedBook().id
         }
         transactionViewModel.upsertTransaction(transaction)
     }

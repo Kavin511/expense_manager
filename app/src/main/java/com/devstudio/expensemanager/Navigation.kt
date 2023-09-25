@@ -15,7 +15,6 @@ import androidx.navigation.navigation
 import com.devstudio.category.composables.CategoryMainScreen
 import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.expensemanager.ui.home.composables.HomeScreen
-import com.devstudio.feature.books.navigation.booksGraph
 import com.devstudio.profile.BudgetScreen
 import com.devstudio.profile.composables.ProfileMainScreen
 import com.devstudio.profile.composables.RemainderScreen
@@ -43,7 +42,6 @@ fun Navigation(
         composable(route = ExpressWalletAppState.BudgetScreen.route) {
             BudgetScreen()
         }
-        booksGraph()
         navigation(route = "/", startDestination = ExpressWalletAppState.HomeScreen.route) {
             composable(route = ExpressWalletAppState.HomeScreen.TransactionsScreen.route,
                 arguments = listOf(
