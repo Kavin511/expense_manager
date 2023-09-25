@@ -1,9 +1,8 @@
 package com.devstudio.expensemanager.ui.home.activity
 
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devstudio.core_data.UserPreferences
+import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.profile.viewmodels.EditableSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userPreferencesDataStore: DataStore<UserPreferences>
+    private val userPreferencesDataStore: UserDataRepository
 ) : ViewModel() {
     val mainUiState: StateFlow<MainUiState> = userPreferencesDataStore.data.map { userData ->
         MainUiState.Success(

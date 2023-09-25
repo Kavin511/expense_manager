@@ -1,16 +1,15 @@
 package com.devstudio.profile.viewmodels
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.account.R
 import com.devstudio.core_data.Theme_proto
-import com.devstudio.core_data.UserPreferences
-import com.devstudio.core_data.copy
 import com.devstudio.core_data.repository.Remainder
 import com.devstudio.core_data.repository.RemainderRepository
 import com.devstudio.core_data.repository.TransactionsRepository
+import com.devstudio.core_data.repository.UserDataRepository
+import com.devstudio.data.model.Theme
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +24,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val transactionRepository: TransactionsRepository,
     private val remainderRepository: RemainderRepository,
-    val userPreferencesDataStore: DataStore<UserPreferences>
+    val userPreferencesDataStore: UserDataRepository
 ) :
     ViewModel() {
 
@@ -45,12 +44,8 @@ class ProfileViewModel @Inject constructor(
         return transactionRepository.getTotalTransactionCount()
     }
 
-    suspend fun updateTheme(theme: Theme_proto) {
-        userPreferencesDataStore.updateData {
-            it.copy {
-                this.theme = theme
-            }
-        }
+    suspend fun updateTheme(theme: Theme) {
+        userPreferencesDataStore.updateTheme(theme)
     }
 
     fun getActiveDays(): Long {
@@ -82,7 +77,7 @@ class ProfileViewModel @Inject constructor(
 }
 
 data class EditableSettings(
-    val theme: Theme_proto
+    val theme: Theme
 )
 
 sealed interface ProfileUiState {

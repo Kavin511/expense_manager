@@ -13,14 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.devstudio.core_data.Theme_proto
+import com.devstudio.data.model.Theme
 import com.devstudio.expensemanager.Navigation
 import com.devstudio.expensemanager.ui.home.composables.HomeBottomActions
 import com.devstudioworks.ui.theme.MaterialTheme
@@ -71,8 +70,8 @@ class HomeActivity : AppCompatActivity() {
             MainUiState.Loading -> isSystemInDarkTheme()
             is MainUiState.Success -> {
                 when ((uiState.value as MainUiState.Success).data.settings.theme) {
-                    Theme_proto.DARK -> true
-                    Theme_proto.LIGHT -> false
+                    Theme.DARK -> true
+                    Theme.LIGHT -> false
                     else -> {
                         isSystemInDarkTheme()
                     }

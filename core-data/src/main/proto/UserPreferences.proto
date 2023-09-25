@@ -6,6 +6,7 @@ option java_multiple_files = true;
 message UserPreferences {
   bool isDarkMode = 1;
   Theme_proto theme = 2;
+  int64 selected_Book_Id = 3;
 }
 enum Theme_proto {
   LIGHT = 0;

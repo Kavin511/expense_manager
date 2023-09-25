@@ -10,14 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,10 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.devstudio.account.R
-import com.devstudio.core_data.Theme_proto.DARK
-import com.devstudio.core_data.Theme_proto.LIGHT
-import com.devstudio.core_data.Theme_proto.SYSTEM_DEFAULT
 import com.devstudio.core_model.models.ExpressWalletAppState
+import com.devstudio.data.model.Theme
+import com.devstudio.data.model.Theme.*
 import com.devstudio.profile.viewmodels.EditableSettings
 import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
@@ -77,7 +72,7 @@ data class Preference(
 @Composable
 private fun PreferencesPanel(profileUiState: EditableSettings, navController: NavHostController) {
     val theme = profileUiState.theme
-    if (theme == SYSTEM_DEFAULT) {
+    if (theme == Theme.SYSTEM_DEFAULT) {
         if (isSystemInDarkTheme()) {
             DARK
         } else {

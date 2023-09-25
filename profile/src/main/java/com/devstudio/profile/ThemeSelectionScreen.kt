@@ -16,9 +16,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.devstudio.account.R
-import com.devstudio.core_data.Theme_proto
 import com.devstudio.core_data.UserPreferences
+import com.devstudio.data.model.Theme
 import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
 import kotlinx.coroutines.CoroutineScope
@@ -29,10 +28,10 @@ import kotlinx.coroutines.launch
 fun ThemeSelectionScreen(navController: NavHostController) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
     val theme =
-        profileViewModel.userPreferencesDataStore.data.collectAsState(initial = UserPreferences.getDefaultInstance()).value.theme
+        profileViewModel.userPreferencesDataStore.data.collectAsState(initial = UserPreferences.getDefaultInstance()).value
 
     val themeList = listOf(
-        Theme_proto.DARK, Theme_proto.LIGHT, Theme_proto.SYSTEM_DEFAULT
+        Theme.DARK, Theme.LIGHT, Theme.SYSTEM_DEFAULT
     )
     Page(title = "Choose Theme", navController = navController, shouldNavigateUp = true) {
         LazyColumn {

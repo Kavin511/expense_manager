@@ -1,4 +1,4 @@
-package com.devstudio.core_model.models
+package com.devstudio.data.model
 
 data class UserPreferencesData(
     val theme: Theme,
@@ -6,5 +6,5 @@ data class UserPreferencesData(
 )
 
 enum class Theme {
-    LIGHT, DARK, SYSTEM
+    LIGHT, DARK, SYSTEM_DEFAULT
 }

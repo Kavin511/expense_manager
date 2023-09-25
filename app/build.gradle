@@ -116,6 +116,7 @@ dependencies {
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
     kapt  libs.androidx.hilt.compiler
+    implementation project(path: ':core-data:model')
 
     implementation(libs.androidx.dataStore.core)
     implementation(libs.protobuf.kotlin.lite)
