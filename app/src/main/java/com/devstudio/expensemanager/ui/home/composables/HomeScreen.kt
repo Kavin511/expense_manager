@@ -3,11 +3,13 @@ package com.devstudio.expensemanager.ui.home.composables
 import HomeActions
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -53,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.devstudio.core.designsystem.R
 import com.devstudio.core_model.models.ExpressWalletAppState
+import com.devstudio.expensemanager.viewmodel.HomeUiData
 import com.devstudio.expensemanager.viewmodel.HomeUiState
 import com.devstudio.expensemanager.viewmodel.HomeViewModel
 import com.devstudio.feature.books.BooksMainScreen
@@ -60,6 +64,7 @@ import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
 import com.devstudioworks.ui.components.ExpressWalletFab
+import com.devstudioworks.ui.icons.EMAppIcons
 import com.devstudioworks.ui.theme.appColors
 import kotlinx.coroutines.launch
 
@@ -105,9 +110,7 @@ fun HomeScreen(
                     },
                     topBar = {
                         TopAppBar(title = {
-                            Text(text = homeScreenData.selectedBookId.name, modifier = Modifier.clickable {
-                                shouldShowBookSelection.value = true
-                            })
+                            BookSelectionTitle(shouldShowBookSelection, homeScreenData)
                         }, actions = {
                             HomeActions(navController, snackBarHostState)
                         }, scrollBehavior = scrollBehavior)
@@ -130,6 +133,25 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun BookSelectionTitle(
+    shouldShowBookSelection: MutableState<Boolean>,
+    homeScreenData: HomeUiData
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            shouldShowBookSelection.value = true
+        }) {
+        Text(text = homeScreenData.selectedBookId.name)
+        Image(
+            imageVector = EMAppIcons.DropDown,
+            colorFilter = ColorFilter.tint(appColors.material.onSurfaceVariant),
+            contentDescription = "Book selection arrow"
+        )
     }
 }
 

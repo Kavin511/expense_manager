@@ -1,5 +1,6 @@
 package com.devstudio.feature.books
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devstudio.expensemanager.db.models.Books
 import com.devstudioworks.ui.theme.appColors
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,11 +39,7 @@ fun BooksMainScreen(
     val coroutineScope = rememberCoroutineScope()
     val sheetState: SheetState = rememberModalBottomSheetState()
     ModalBottomSheet(onDismissRequest = {
-        coroutineScope.launch {
-            navController.popBackStack()
-            callback.invoke()
-            sheetState.hide()
-        }
+        closeSheet(coroutineScope, navController, callback, sheetState)
     }, sheetState = sheetState, scrimColor = Color(0x4D87878A)) {
         when (booksUiState) {
             is BooksUiState.Loading -> {
@@ -61,7 +59,10 @@ fun BooksMainScreen(
                     LazyColumn(content = {
                         items(books.size) { index ->
                             val book = books[index]
-                            BookItem(book)
+                            BookItem(book) {
+                                closeSheet(coroutineScope, navController, callback, sheetState)
+                                booksViewModel.storeSelectedBook(book.id)
+                            }
                         }
                     })
                 } else {
@@ -77,9 +78,29 @@ fun BooksMainScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+private fun closeSheet(
+    coroutineScope: CoroutineScope,
+    navController: NavHostController,
+    callback: () -> Unit,
+    sheetState: SheetState
+) {
+    coroutineScope.launch {
+        navController.popBackStack()
+        callback.invoke()
+        sheetState.hide()
+    }
+}
+
 @Composable
-fun BookItem(book: Books) {
-    Text(text = book.name, modifier = Modifier.padding(vertical = 16.dp, horizontal = 20.dp))
+fun BookItem(book: Books, itemSelectionCallback: (Books) -> Unit) {
+    Text(
+        text = book.name,
+        modifier = Modifier
+            .padding(vertical = 16.dp, horizontal = 20.dp)
+            .clickable {
+                itemSelectionCallback.invoke(book)
+            })
 }
 
 
