@@ -1,4 +1,4 @@
-package com.devstudio.transactions.viewmodel
+package com.devstudio.transactions.models
 
 data class FuturePaymentStatus(
     var isDebit: Boolean,

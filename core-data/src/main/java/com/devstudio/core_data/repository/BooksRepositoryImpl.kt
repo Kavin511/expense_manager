@@ -2,6 +2,7 @@ package com.devstudio.core_data.repository
 
 import com.devstudio.expensemanager.db.dao.BooksDao
 import com.devstudio.expensemanager.db.models.Books
+import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import javax.inject.Singleton
 

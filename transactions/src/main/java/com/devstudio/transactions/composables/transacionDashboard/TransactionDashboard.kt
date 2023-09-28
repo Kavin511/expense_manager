@@ -15,26 +15,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
@@ -44,13 +36,9 @@ import com.devstudio.transactions.models.DateSelectionStatus
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudioworks.ui.theme.appColors
 import com.google.android.material.datepicker.MaterialDatePicker
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionDashBoard(
-    filterBottomSheetScaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
-) {
+fun TransactionDashBoard() {
     Surface(
         modifier = Modifier
             .widthIn(max = 640.dp)
@@ -60,7 +48,7 @@ fun TransactionDashBoard(
             modifier = Modifier.padding(PaddingValues(6.dp))
         ) {
             TransactionSummary()
-            TransactionsList(filterBottomSheetScaffoldState)
+            TransactionsList()
         }
     }
 }
@@ -82,21 +70,11 @@ fun showDateRangePicker(
     dateRangePicker.showNow(fragmentManager, "")
 }
 
-@Preview()
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransactionOptions(
-    filterBottomSheetScaffoldState: BottomSheetScaffoldState = BottomSheetScaffoldState(
-        bottomSheetState = SheetState(
-            initialValue = SheetValue.Hidden,
-            skipPartiallyExpanded = true
-        ), snackbarHostState = SnackbarHostState()
-    )
-) {
-    val coroutineScope = rememberCoroutineScope()
+fun TransactionOptions(filterEvent: () -> Unit) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
     val selectedTransactionFilter =
-        transactionViewModel.selectedTransactionFilter.collectAsState().value
+        transactionViewModel.selectedListItem.collectAsState().value
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -136,9 +114,7 @@ fun TransactionOptions(
                 ButtonDefaults.filledTonalButtonColors()
             },
             onClick = {
-                coroutineScope.launch {
-                    filterBottomSheetScaffoldState.bottomSheetState.show()
-                }
+                filterEvent.invoke()
             },
             border = BorderStroke(width = 1.dp, color = appColors.material.onPrimaryContainer),
             modifier = Modifier.align(alignment = Alignment.CenterVertically)

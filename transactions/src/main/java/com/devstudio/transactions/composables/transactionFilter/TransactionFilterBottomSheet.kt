@@ -1,0 +1,65 @@
+package com.devstudio.transactions.composables.transactionFilter
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.devstudio.transactions.models.ListItem
+import com.devstudio.transactions.viewmodel.TransactionViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TransactionFilterBottomSheet(
+    filterBottomSheetState: SheetState,
+    event: (ListItem?) -> Unit
+) {
+    val transactionViewModel = hiltViewModel<TransactionViewModel>()
+    ModalBottomSheet(onDismissRequest = {
+        event.invoke(null)
+    }, sheetState = filterBottomSheetState) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Filter Range",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+            )
+            LazyColumn {
+                items(transactionViewModel.listItemOptions) { transactionFilter ->
+                    TransactionFilterItem(transactionFilter, event)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TransactionFilterItem(
+    listItem: ListItem,
+    event: (ListItem) -> Unit
+) {
+    return Text(text = listItem.name,
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = Modifier
+            .padding(vertical = 9.dp, horizontal = 4.dp)
+            .fillMaxWidth()
+            .clickable {
+                event.invoke(listItem)
+            })
+}

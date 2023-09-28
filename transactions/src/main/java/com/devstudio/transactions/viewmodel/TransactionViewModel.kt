@@ -10,7 +10,8 @@ import com.devstudio.core_data.repository.TransactionsRepository
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
-import com.devstudio.transactions.models.TransactionFilter
+import com.devstudio.transactions.models.FuturePaymentStatus
+import com.devstudio.transactions.models.ListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,26 +22,29 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(
     private val repository: TransactionsRepository,
     private val categoryRepository: CategoryRepository
-) :
-    ViewModel() {
+) : ViewModel() {
     val futurePaymentModeStatus = FuturePaymentStatus(isDebit = false, isCredit = false)
-    var transactionFilterOptions: List<TransactionFilter>
-    val selectedTransactionFilter = MutableStateFlow<TransactionFilter?>(null)
-    val datePickerState = mutableStateOf(false)
+    var listItemOptions: List<ListItem>
+    val selectedListItem = MutableStateFlow<ListItem?>(null)
     var transactions = MutableStateFlow<List<Transaction>>(listOf())
     val transaction = MutableStateFlow<Transaction?>(null)
-    val sumOfExpense =
-        MutableStateFlow<Double>(0.0)
-    val sumOfIncome =
-        MutableStateFlow<Double>(0.0)
+    val sumOfExpense = MutableStateFlow<Double>(0.0)
+    val sumOfIncome = MutableStateFlow<Double>(0.0)
 
     init {
-        transactionFilterOptions =
-            listOf(TransactionFilter(id = SHOW_ALL_ID, SHOW_ALL, additionalData = null) {
-                updateSelectedTransactionFilter(this@TransactionFilter)
-            }, TransactionFilter(id = DATE_RANGE_ID, DATE_RANGE, additionalData = null) {
-                datePickerState.value = true
-            })
+        listItemOptions = listOf(
+            ListItem(
+                id = SHOW_ALL_ID,
+                SHOW_ALL,
+                additionalData = null,
+                filterType = TransactionFilterType.ALL
+            ), ListItem(
+                id = DATE_RANGE_ID,
+                DATE_RANGE,
+                additionalData = null,
+                filterType = TransactionFilterType.DATE_RANGE
+            )
+        )
         updateSelectedTransactionFilter(null)
     }
 
@@ -52,17 +56,18 @@ class TransactionViewModel @Inject constructor(
     }
 
     suspend fun getAndUpdateTransactionById(id: Long) {
-        transaction.value = repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
+        transaction.value =
+            repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
     }
 
-    private fun validateAndFilterTransactions(transactionFilter: TransactionFilter?): Flow<List<Transaction>?> {
+    private fun validateAndFilterTransactions(listItem: ListItem?): Flow<List<Transaction>?> {
         return when {
-            transactionFilter?.id == SHOW_ALL_ID -> {
+            listItem?.id == SHOW_ALL_ID -> {
                 repository.allTransactionsStream()
             }
 
-            transactionFilter?.id == DATE_RANGE_ID && (transactionFilter.additionalData is Pair<*, *>) -> {
-                repository.filterTransactionFromDateRange(transactionFilter.additionalData as Pair<Long, Long>)
+            listItem?.id == DATE_RANGE_ID && (listItem.additionalData is Pair<*, *>) -> {
+                repository.filterTransactionFromDateRange(listItem.additionalData as Pair<Long, Long>)
             }
 
             else -> {
@@ -93,10 +98,10 @@ class TransactionViewModel @Inject constructor(
         return repository.getCurrentMonthTransactionCount() > 0
     }
 
-    fun updateSelectedTransactionFilter(transactionFilter: TransactionFilter?) {
-        selectedTransactionFilter.value = transactionFilter
+    fun updateSelectedTransactionFilter(listItem: ListItem?) {
+        selectedListItem.value = listItem
         viewModelScope.launch {
-            validateAndFilterTransactions(transactionFilter).collect { transactionList ->
+            validateAndFilterTransactions(listItem).collect { transactionList ->
                 transactions.value = transactionList ?: emptyList()
                 var totalExpense = 0.0
                 var totalIncome = 0.0
@@ -128,4 +133,14 @@ class TransactionViewModel @Inject constructor(
         const val SHOW_ALL = "Show All"
         const val INCOME = "INCOME"
     }
+}
+
+enum class DateSelectionStatus {
+    SELECTED, CANCELED
+}
+
+open class Type
+sealed class TransactionFilterType : Type() {
+    object DATE_RANGE : TransactionFilterType()
+    object ALL : TransactionFilterType()
 }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -37,7 +36,7 @@ fun TransactionSummary() {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
     val expense = transactionViewModel.sumOfExpense.collectAsState()
     val income = transactionViewModel.sumOfIncome.collectAsState()
-    val selectedTransactionFilter = transactionViewModel.selectedTransactionFilter.collectAsState()
+    val selectedTransactionFilter = transactionViewModel.selectedListItem.collectAsState()
     val textColor = appColors.material.onTertiaryContainer
     return Card {
         Column(
