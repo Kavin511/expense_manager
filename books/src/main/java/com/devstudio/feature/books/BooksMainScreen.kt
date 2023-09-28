@@ -18,12 +18,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.expensemanager.db.models.Books
+import com.devstudioworks.ui.components.InputDialog
+import com.devstudioworks.ui.components.InputEnterDialog
 import com.devstudioworks.ui.icons.EMAppIcons
 import com.devstudioworks.ui.theme.appColors
 
@@ -35,6 +39,9 @@ fun BooksMainScreen(
 ) {
     val booksViewModel: BooksViewModel = hiltViewModel()
     val booksUiState by booksViewModel.booksUiState.collectAsState()
+    var createBooksState by remember {
+        mutableStateOf<Boolean>(false)
+    }
     ModalBottomSheet(onDismissRequest = {
         hideBottomSheet.invoke()
     }, sheetState = sheetState) {
@@ -53,35 +60,27 @@ fun BooksMainScreen(
             is BooksUiState.COMPLETED -> {
                 val books = (booksUiState as BooksUiState.COMPLETED).books
                 if (books.isNotEmpty()) {
+                    if (createBooksState) {
+                        InputEnterDialog(
+                            inputDialog = InputDialog.Builder.setHeading("Create Book")
+                                .setHint("Enter book name").setNegativeButtonText("Cancel")
+                                .setPositiveButtonText("Save").setInputLeadIcon(EMAppIcons.Book)
+                                .build(), {
+                                createBooksState = false
+                            }
+                        ) {
+                            booksViewModel.insertBook(it)
+                            createBooksState = false
+                        }
+                    }
                     Column(
                         modifier = Modifier
                             .padding(vertical = 8.dp, horizontal = 8.dp)
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                        ) {
-                            Text(
-                                text = "Select Books",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Image(
-                                imageVector = EMAppIcons.RoundedAddCircleOutline,
-                                colorFilter = ColorFilter.tint(appColors.material.tertiary),
-                                contentDescription = "Add books"
-                            )
+                        BooksHeading {
+                            createBooksState = true
                         }
-                        LazyColumn(content = {
-                            items(books.size) { index ->
-                                val book = books[index]
-                                BookItem(book) {
-                                    booksViewModel.storeSelectedBook(book.id)
-                                    hideBottomSheet.invoke()
-                                }
-                            }
-                        })
+                        BooksContent(books, booksViewModel, hideBottomSheet)
                     }
                 } else {
                     Column {
@@ -93,6 +92,46 @@ fun BooksMainScreen(
             is BooksUiState.Error -> {
             }
         }
+    }
+}
+
+@Composable
+private fun BooksContent(
+    books: List<Books>,
+    booksViewModel: BooksViewModel,
+    hideBottomSheet: () -> Unit
+) {
+    LazyColumn(content = {
+        items(books.size) { index ->
+            val book = books[index]
+            BookItem(book) {
+                booksViewModel.storeSelectedBook(book.id)
+                hideBottomSheet.invoke()
+            }
+        }
+    })
+}
+
+@Composable
+private fun BooksHeading(function: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Text(
+            text = "Select Books",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Image(
+            imageVector = EMAppIcons.RoundedAddCircleOutline,
+            colorFilter = ColorFilter.tint(appColors.material.tertiary),
+            contentDescription = "Add books",
+            modifier = Modifier.clickable {
+                function.invoke()
+            }
+        )
     }
 }
 

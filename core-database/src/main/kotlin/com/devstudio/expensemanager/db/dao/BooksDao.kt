@@ -13,7 +13,7 @@ import com.devstudio.expensemanager.db.models.Books
 @Dao
 interface BooksDao {
     @Insert(onConflict = IGNORE)
-    fun insertBooks(books: Books)
+    fun insertBook(books: Books)
 
     @Query("SELECT * FROM BOOKS_TABLE")
     fun getBooks(): List<Books>

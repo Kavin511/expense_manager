@@ -77,7 +77,7 @@ class DatabaseModule {
                     )
                 })
             }
-            expenseManagerDataBase?.booksDao()?.insertBooks(
+            expenseManagerDataBase?.booksDao()?.insertBook(
                 Books(
                     name = DEFAULT_BOOK_NAME,
                     timeStamp = Calendar.getInstance().timeInMillis

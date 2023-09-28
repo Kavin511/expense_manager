@@ -2,7 +2,6 @@ package com.devstudio.core_data.repository
 
 import com.devstudio.expensemanager.db.dao.BooksDao
 import com.devstudio.expensemanager.db.models.Books
-import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +16,8 @@ class BooksRepositoryImpl @Inject constructor(private val booksDao: BooksDao) : 
     }
 
     override fun getBookById(it: Long): Books?  = booksDao.getBookById(it)
+    override fun insertBook(it: Books) = booksDao.insertBook(it)
+
     override fun createBook(book: Books) {
     }
 
@@ -30,4 +31,5 @@ interface BooksRepository {
     fun updateBook(book: Books)
     fun getSelectedBook(): Books
     fun getBookById(it: Long): Books?
+    fun insertBook(it: Books)
 }
