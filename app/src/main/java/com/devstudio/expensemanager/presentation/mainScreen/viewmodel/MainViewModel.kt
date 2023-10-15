@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.ui.home.activity
+package com.devstudio.expensemanager.presentation.mainScreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,9 +12,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userPreferencesDataStore: UserDataRepository
+    userPreferencesDataStore: UserDataRepository
 ) : ViewModel() {
-    val mainUiState: StateFlow<MainUiState> = userPreferencesDataStore.data.map { userData ->
+    val mainUiState: StateFlow<MainUiState> = userPreferencesDataStore.userData.map { userData ->
         MainUiState.Success(
             MainUiData(
                 settings = EditableSettings(

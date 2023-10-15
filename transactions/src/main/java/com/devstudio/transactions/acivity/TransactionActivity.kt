@@ -108,7 +108,7 @@ class TransactionActivity : AppCompatActivity() {
             transactionDate = selectedDate
             categoryId = categoryList[getSelectedCategoryIndex()].id
             paymentStatus  = getPaymentStatus().name
-            bookId = booksRepositoryImpl.getSelectedBook().id
+            bookId = booksRepositoryImpl.getSelectedBook().first()
         }
         transactionViewModel.upsertTransaction(transaction)
     }

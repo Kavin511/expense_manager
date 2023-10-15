@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 fun ThemeSelectionScreen(navController: NavHostController) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
     val theme =
-        profileViewModel.userPreferencesDataStore.data.collectAsState(initial = UserPreferences.getDefaultInstance()).value
+        profileViewModel.userPreferencesDataStore.userData.collectAsState(initial = UserPreferences.getDefaultInstance()).value
 
     val themeList = listOf(
         Theme.DARK, Theme.LIGHT, Theme.SYSTEM_DEFAULT

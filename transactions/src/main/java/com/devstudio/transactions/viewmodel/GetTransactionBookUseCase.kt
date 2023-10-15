@@ -1,0 +1,48 @@
+package com.devstudio.transactions.viewmodel
+
+import com.devstudio.core_data.repository.BooksRepository
+import com.devstudio.core_data.repository.TransactionsRepository
+import com.devstudio.core_data.repository.UserDataRepository
+import com.devstudio.data.model.TransactionFilterType
+import com.devstudio.expensemanager.db.models.Books
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+
+class GetTransactionBookUseCase @Inject constructor(
+    private val transactionsRepository: TransactionsRepository,
+    private val userDataRepository: UserDataRepository,
+    private val booksRepository: BooksRepository
+) {
+    operator fun invoke(): Flow<TransactionBook> {
+        val userData = userDataRepository.userData
+        return userData.distinctUntilChanged().map {
+            val selectedBookId = it.selectedBookId
+            val transactionFilterType = it.filterType
+            val transactions = when (transactionFilterType) {
+                is TransactionFilterType.ALL -> {
+                    transactionsRepository.allTransactionsStream(selectedBookId)
+                        .distinctUntilChanged()
+                }
+
+                is TransactionFilterType.DATE_RANGE -> {
+                    transactionsRepository.filterTransactionFromDateRange(
+                        transactionFilterType.additionalData,
+                        selectedBookId
+                    )
+                }
+
+                else -> {
+                    transactionsRepository.getTransactionsForCurrentMonth(selectedBookId)
+                }
+            }
+            val book = booksRepository.getBookById(selectedBookId) ?: Books()
+            TransactionBook(
+                transactions = transactions, bookId = book.id, bookName = book.name, filterType = transactionFilterType
+            )
+
+        }
+
+    }
+}

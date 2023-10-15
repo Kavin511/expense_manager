@@ -23,7 +23,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +30,18 @@ import androidx.compose.ui.unit.dp
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.transactions.composables.transactionList.TransactionsList
 import com.devstudio.transactions.models.DateSelectionStatus
+import com.devstudio.transactions.models.TransactionOptionsEvent
+import com.devstudio.transactions.models.TransactionUiState
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudioworks.ui.theme.appColors
 import com.google.android.material.datepicker.MaterialDatePicker
 
+
 @Composable
-fun TransactionDashBoard() {
+fun TransactionDashBoard(uiState: TransactionUiState.Success, filterEvent: (TransactionOptionsEvent) -> Unit) {
     Surface(
         modifier = Modifier
             .widthIn(max = 640.dp)
@@ -47,17 +50,18 @@ fun TransactionDashBoard() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(PaddingValues(6.dp))
         ) {
-            TransactionSummary()
-            TransactionsList()
+            TransactionSummary(uiState.data)
+            TransactionOptions(uiState.data.filterType, filterEvent)
+            TransactionsList(uiState.data)
         }
     }
-}
 
+}
 
 fun showDateRangePicker(
     fragmentManager: FragmentManager,
     dateSelectionRange: Pair<Long, Long>?,
-    dateSelectionListener: (Any) -> Unit
+    dateSelectionListener: (DateSelectionStatus) -> Unit
 ) {
     val dateRangePicker =
         MaterialDatePicker.Builder.dateRangePicker().setSelection(dateSelectionRange).build()
@@ -71,31 +75,42 @@ fun showDateRangePicker(
 }
 
 @Composable
-fun TransactionOptions(filterEvent: () -> Unit) {
+fun TransactionOptions(filterType: TransactionFilterType, filterEvent: (TransactionOptionsEvent) -> Unit) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
-    val selectedTransactionFilter =
-        transactionViewModel.selectedListItem.collectAsState().value
+    TransactionOptionsRow(filterType, transactionViewModel, filterEvent)
+}
+
+@Composable
+private fun TransactionOptionsRow(
+    filterType: TransactionFilterType,
+    transactionViewModel: TransactionViewModel,
+    filterEvent: (TransactionOptionsEvent) -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         AnimatedVisibility(
-            visible = selectedTransactionFilter != null,
+            visible = filterType.isNotDefault(),
             enter = fadeIn(initialAlpha = .5f),
             exit = fadeOut(animationSpec = tween(durationMillis = 200))
         ) {
             TextButton(onClick = {
-                if (selectedTransactionFilter != null) {
-                    transactionViewModel.updateSelectedTransactionFilter(null)
+                if (filterType.isNotDefault()) {
+                    transactionViewModel.updateSelectedTransactionFilter(TransactionFilterType.CURRENT_MONTH)
                 }
             }) {
                 Text(
-                    text = if (selectedTransactionFilter == null) "" else "Reset",
-                    color = if (selectedTransactionFilter == null) {
-                        Color.Unspecified
+                    text = if (filterType.isNotDefault()) {
+                        "Reset"
                     } else {
+                        ""
+                    },
+                    color = if (filterType.isNotDefault()) {
                         appColors.material.tertiary
+                    } else {
+                        Color.Unspecified
                     },
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -103,18 +118,18 @@ fun TransactionOptions(filterEvent: () -> Unit) {
         }
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            shape = if (selectedTransactionFilter == null) {
-                ButtonDefaults.outlinedShape
-            } else {
+            shape = if (filterType.isNotDefault()) {
                 ButtonDefaults.filledTonalShape
-            },
-            colors = if (selectedTransactionFilter == null) {
-                ButtonDefaults.outlinedButtonColors()
             } else {
+                ButtonDefaults.outlinedShape
+            },
+            colors = if (filterType.isNotDefault()) {
                 ButtonDefaults.filledTonalButtonColors()
+            } else {
+                ButtonDefaults.outlinedButtonColors()
             },
             onClick = {
-                filterEvent.invoke()
+                filterEvent.invoke(TransactionOptionsEvent(true))
             },
             border = BorderStroke(width = 1.dp, color = appColors.material.onPrimaryContainer),
             modifier = Modifier.align(alignment = Alignment.CenterVertically)
@@ -122,4 +137,8 @@ fun TransactionOptions(filterEvent: () -> Unit) {
             Icon(imageVector = Icons.Filled.FilterList, contentDescription = "Filter")
         }
     }
+}
+
+private fun TransactionFilterType.isNotDefault(): Boolean {
+    return this != TransactionFilterType.CURRENT_MONTH
 }

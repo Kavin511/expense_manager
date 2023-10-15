@@ -2,14 +2,21 @@ syntax = "proto3";
 option java_package = "com.devstudio.core_data";
 option java_multiple_files = true;
 
-
 message UserPreferences {
   bool isDarkMode = 1;
   Theme_proto theme = 2;
   int64 selected_Book_Id = 3;
+  FilterType filterType = 4;
+  string filterStartDate = 5;
+  string filterEndDate = 6;
 }
 enum Theme_proto {
   LIGHT = 0;
   DARK = 1;
   SYSTEM_DEFAULT = 2;
+}
+enum FilterType {
+  DATE_RANGE = 0;
+  ALL = 1;
+  CURRENT_MONTH = 2;
 }

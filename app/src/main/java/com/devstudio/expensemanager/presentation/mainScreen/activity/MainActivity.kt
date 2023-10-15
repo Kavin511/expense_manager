@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.ui.home.activity
+package com.devstudio.expensemanager.presentation.mainScreen.activity
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -14,14 +14,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.devstudio.data.model.Theme
-import com.devstudio.expensemanager.Navigation
-import com.devstudio.expensemanager.ui.home.composables.HomeBottomActions
+import com.devstudio.expensemanager.presentation.mainScreen.NavigationHost
+import com.devstudio.expensemanager.presentation.home.composables.HomeBottomActions
+import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainUiState
+import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainViewModel
 import com.devstudioworks.ui.theme.MaterialTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -29,7 +30,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private var uiState = mutableStateOf<MainUiState>(MainUiState.Loading)
     private val mainViewModel by viewModels<MainViewModel>()
 
@@ -57,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
                     HomeBottomActions(navController)
                 }) {
                     Box(modifier = Modifier.padding(it)){
-                        Navigation(navController)
+                        NavigationHost(navController)
                     }
                 }
             }

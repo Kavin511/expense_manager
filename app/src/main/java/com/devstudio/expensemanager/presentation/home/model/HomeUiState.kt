@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.viewmodel
+package com.devstudio.expensemanager.presentation.home.model
 
 sealed interface HomeUiState {
     object Loading : HomeUiState

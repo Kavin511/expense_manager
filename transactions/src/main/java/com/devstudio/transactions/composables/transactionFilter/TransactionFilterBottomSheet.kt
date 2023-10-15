@@ -15,14 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.transactions.models.ListItem
+import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionFilterBottomSheet(
     filterBottomSheetState: SheetState,
-    event: (ListItem?) -> Unit
+    event: (FilterItem?) -> Unit
 ) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
     ModalBottomSheet(onDismissRequest = {
@@ -41,7 +41,7 @@ fun TransactionFilterBottomSheet(
                     .fillMaxWidth()
             )
             LazyColumn {
-                items(transactionViewModel.listItemOptions) { transactionFilter ->
+                items(transactionViewModel.filterItemOptions) { transactionFilter ->
                     TransactionFilterItem(transactionFilter, event)
                 }
             }
@@ -51,15 +51,15 @@ fun TransactionFilterBottomSheet(
 
 @Composable
 fun TransactionFilterItem(
-    listItem: ListItem,
-    event: (ListItem) -> Unit
+    filterItem: FilterItem,
+    event: (FilterItem) -> Unit
 ) {
-    return Text(text = listItem.name,
+    return Text(text = filterItem.name,
         style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
             .padding(vertical = 9.dp, horizontal = 4.dp)
             .fillMaxWidth()
             .clickable {
-                event.invoke(listItem)
+                event.invoke(filterItem)
             })
 }

@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.ui.home.composables
+package com.devstudio.expensemanager.presentation.home.composables
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

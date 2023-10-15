@@ -30,20 +30,21 @@ import com.devstudioworks.ui.components.InputDialog
 import com.devstudioworks.ui.components.InputEnterDialog
 import com.devstudioworks.ui.icons.EMAppIcons
 import com.devstudioworks.ui.theme.appColors
+import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksMainScreen(
     sheetState: SheetState,
-    hideBottomSheet: () -> Unit
+    hideBottomSheet: (Long?) -> Unit
 ) {
     val booksViewModel: BooksViewModel = hiltViewModel()
     val booksUiState by booksViewModel.booksUiState.collectAsState()
-    var createBooksState by remember {
-        mutableStateOf<Boolean>(false)
+    var shouldShowBookCreationDialog by remember {
+        mutableStateOf(false)
     }
     ModalBottomSheet(onDismissRequest = {
-        hideBottomSheet.invoke()
+        hideBottomSheet.invoke(null)
     }, sheetState = sheetState) {
         when (booksUiState) {
             is BooksUiState.Loading -> {
@@ -60,17 +61,17 @@ fun BooksMainScreen(
             is BooksUiState.COMPLETED -> {
                 val books = (booksUiState as BooksUiState.COMPLETED).books
                 if (books.isNotEmpty()) {
-                    if (createBooksState) {
+                    if (shouldShowBookCreationDialog) {
                         InputEnterDialog(
                             inputDialog = InputDialog.Builder.setHeading("Create Book")
                                 .setHint("Enter book name").setNegativeButtonText("Cancel")
                                 .setPositiveButtonText("Save").setInputLeadIcon(EMAppIcons.Book)
                                 .build(), {
-                                createBooksState = false
+                                shouldShowBookCreationDialog = false
                             }
                         ) {
                             booksViewModel.insertBook(it)
-                            createBooksState = false
+                            shouldShowBookCreationDialog = false
                         }
                     }
                     Column(
@@ -78,9 +79,9 @@ fun BooksMainScreen(
                             .padding(vertical = 8.dp, horizontal = 8.dp)
                     ) {
                         BooksHeading {
-                            createBooksState = true
+                            shouldShowBookCreationDialog = true
                         }
-                        BooksContent(books, booksViewModel, hideBottomSheet)
+                        BooksContent(books, hideBottomSheet)
                     }
                 } else {
                     Column {
@@ -98,22 +99,20 @@ fun BooksMainScreen(
 @Composable
 private fun BooksContent(
     books: List<Books>,
-    booksViewModel: BooksViewModel,
-    hideBottomSheet: () -> Unit
+    hideBottomSheet: (Long?) -> Unit
 ) {
     LazyColumn(content = {
         items(books.size) { index ->
             val book = books[index]
             BookItem(book) {
-                booksViewModel.storeSelectedBook(book.id)
-                hideBottomSheet.invoke()
+                hideBottomSheet.invoke(it.id)
             }
         }
     })
 }
 
 @Composable
-private fun BooksHeading(function: () -> Unit) {
+private fun BooksHeading(createBookCallback: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -129,7 +128,7 @@ private fun BooksHeading(function: () -> Unit) {
             colorFilter = ColorFilter.tint(appColors.material.tertiary),
             contentDescription = "Add books",
             modifier = Modifier.clickable {
-                function.invoke()
+                createBookCallback.invoke()
             }
         )
     }
@@ -140,6 +139,7 @@ fun BookItem(book: Books, itemSelectionCallback: (Books) -> Unit) {
     Text(
         text = book.name,
         modifier = Modifier
+            .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 8.dp)
             .clickable {
                 itemSelectionCallback.invoke(book)

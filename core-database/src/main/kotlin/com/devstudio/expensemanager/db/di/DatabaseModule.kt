@@ -65,24 +65,24 @@ class DatabaseModule {
 
     private fun prepopulateDatabase(expenseManagerDataBase: ExpenseManagerDataBase?) {
         CoroutineScope(SupervisorJob()).launch {
-            expenseManagerDataBase?.categoryDao()?.let { categoryDao ->
-                categoryDao.insertCategories(TransactionMode.EXPENSE.categoryList.map {
-                    Category(
-                        name = it, categoryType = TransactionMode.EXPENSE.name
-                    )
-                })
-                categoryDao.insertCategories(TransactionMode.INCOME.categoryList.map {
-                    Category(
-                        name = it, categoryType = TransactionMode.INCOME.name
-                    )
-                })
-            }
             expenseManagerDataBase?.booksDao()?.insertBook(
                 Books(
                     name = DEFAULT_BOOK_NAME,
                     timeStamp = Calendar.getInstance().timeInMillis
                 )
             )
+            expenseManagerDataBase?.categoryDao()?.let { categoryDao ->
+                categoryDao.insertCategories(TransactionMode.EXPENSE.categoryList.map {
+                    Category(
+                        name = it, categoryType = TransactionMode.EXPENSE.name, bookId = expenseManagerDataBase.booksDao().getBooks()[0].id
+                    )
+                })
+                categoryDao.insertCategories(TransactionMode.INCOME.categoryList.map {
+                    Category(
+                        name = it, categoryType = TransactionMode.INCOME.name, bookId = expenseManagerDataBase.booksDao().getBooks()[0].id
+                    )
+                })
+            }
         }
     }
 

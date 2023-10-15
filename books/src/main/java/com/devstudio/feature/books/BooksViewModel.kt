@@ -28,7 +28,7 @@ class BooksViewModel @Inject constructor(private val booksRepository: BooksRepos
         }
     }
 
-    fun storeSelectedBook(id: Long) {
+    fun saveSelectedBook(id: Long) {
         viewModelScope.launch {
             userDataRepository.updateSelectedBookId(id)
         }

@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.viewmodel
+package com.devstudio.expensemanager.presentation.home.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -11,6 +11,10 @@ import com.devstudio.core_data.repository.BooksRepositoryImpl
 import com.devstudio.core_data.repository.TransactionDataBackupWorker
 import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.core_model.models.BackupStatus
+import com.devstudio.core_model.models.BackupStatus.Companion.failure
+import com.devstudio.core_model.models.BackupStatus.Companion.success
+import com.devstudio.expensemanager.presentation.home.model.HomeUiData
+import com.devstudio.expensemanager.presentation.home.model.HomeUiState
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_WORK_NAME
@@ -49,7 +53,7 @@ class HomeViewModel @Inject constructor(
                 if (result.isNullOrEmpty().not() && result[0].state.isFinished) {
                     if (result[0].outputData.getBoolean(BACK_UP_STATUS_KEY, false)) {
                         resultEvent.invoke(
-                            BackupStatus.success(
+                            success(
                                 result[0].outputData.getString(
                                     BACK_UP_STATUS_MESSAGE
                                 ) ?: ""
@@ -57,7 +61,7 @@ class HomeViewModel @Inject constructor(
                         )
                     } else {
                         resultEvent.invoke(
-                            BackupStatus.failure(
+                            failure(
                                 result[0].outputData.getString(
                                     BACK_UP_STATUS_MESSAGE
                                 ) ?: ""
@@ -75,7 +79,7 @@ class HomeViewModel @Inject constructor(
             userDataRepository.getSelectedBookId().collectLatest {
                 homeScreenUiState.value = HomeUiState.Success(
                     HomeUiData(
-                        selectedBookId = booksRepositoryImpl.getBookById(it) ?: booksRepositoryImpl.getBooks().get(0)
+                        selectedBook = booksRepositoryImpl.getBookById(it) ?: booksRepositoryImpl.getBooks()[0]
                     )
                 )
             }

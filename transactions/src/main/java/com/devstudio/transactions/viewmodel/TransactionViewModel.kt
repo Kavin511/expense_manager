@@ -1,125 +1,122 @@
 package com.devstudio.transactions.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.core_data.repository.CategoryRepository
 import com.devstudio.core_data.repository.TransactionsRepository
+import com.devstudio.core_data.repository.UserDataRepository
+import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
+import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.models.FuturePaymentStatus
-import com.devstudio.transactions.models.ListItem
+import com.devstudio.transactions.models.TransactionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
-    private val repository: TransactionsRepository,
-    private val categoryRepository: CategoryRepository
+    private val transactionsRepository: TransactionsRepository,
+    private val categoryRepository: CategoryRepository,
+    private val getTransactionBookUseCase: GetTransactionBookUseCase,
+    private val userDataRepository: UserDataRepository
 ) : ViewModel() {
     val futurePaymentModeStatus = FuturePaymentStatus(isDebit = false, isCredit = false)
-    var listItemOptions: List<ListItem>
-    val selectedListItem = MutableStateFlow<ListItem?>(null)
-    var transactions = MutableStateFlow<List<Transaction>>(listOf())
+    var filterItemOptions: List<FilterItem>
     val transaction = MutableStateFlow<Transaction?>(null)
-    val sumOfExpense = MutableStateFlow<Double>(0.0)
-    val sumOfIncome = MutableStateFlow<Double>(0.0)
+    var uiState: StateFlow<TransactionUiState> =
+        initTransactionBookUiState()
+
+    private fun initTransactionBookUiState(): StateFlow<TransactionUiState> {
+        return getTransactionBookUseCase().map(
+            TransactionUiState::Success,
+        ).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = TransactionUiState.Loading,
+        )
+    }
+
 
     init {
-        listItemOptions = listOf(
-            ListItem(
+        filterItemOptions = listOf(
+            FilterItem(
                 id = SHOW_ALL_ID,
                 SHOW_ALL,
                 additionalData = null,
                 filterType = TransactionFilterType.ALL
-            ), ListItem(
+            ), FilterItem(
                 id = DATE_RANGE_ID,
                 DATE_RANGE,
                 additionalData = null,
-                filterType = TransactionFilterType.DATE_RANGE
+                filterType = TransactionFilterType.DATE_RANGE(Pair(0L, 0L))
             )
         )
-        updateSelectedTransactionFilter(null)
     }
 
     var transactionType = MutableStateFlow(TransactionMode.EXPENSE)
     var isEditingOldTransaction = MutableLiveData<Boolean>()
 
     suspend fun upsertTransaction(transaction: Transaction) {
-        repository.upsertTransaction(transaction)
+        transactionsRepository.upsertTransaction(transaction)
     }
 
     suspend fun getAndUpdateTransactionById(id: Long) {
         transaction.value =
-            repository.findTransactionById(id).also { isEditingOldTransaction.value = it != null }
+            transactionsRepository.findTransactionById(id)
+                .also { isEditingOldTransaction.value = it != null }
     }
 
-    private fun validateAndFilterTransactions(listItem: ListItem?): Flow<List<Transaction>?> {
-        return when {
-            listItem?.id == SHOW_ALL_ID -> {
-                repository.allTransactionsStream()
-            }
-
-            listItem?.id == DATE_RANGE_ID && (listItem.additionalData is Pair<*, *>) -> {
-                repository.filterTransactionFromDateRange(listItem.additionalData as Pair<Long, Long>)
-            }
-
-            else -> {
-                getTransactionsForCurrentMonth()
+    fun getTransactionSummaryDetails(transactions: List<Transaction>): Pair<Double, Double> {
+        var totalExpense = 0.0
+        var totalIncome = 0.0
+        viewModelScope.launch {
+            transactions.forEach {
+                if (it.transactionMode != INCOME) {
+                    totalExpense += it.amount
+                } else {
+                    totalIncome += it.amount
+                }
             }
         }
-    }
-
-    private fun getTransactionsForCurrentMonth(): Flow<List<Transaction>> {
-        return repository.getTransactionsForCurrentMonth()
-    }
-
-    suspend fun updateTransaction(oldTransactionObject: Transaction) {
-        repository.updateTransaction(oldTransactionObject)
+        return Pair(totalIncome, totalExpense)
     }
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
-            repository.deleteTransactions(transaction)
+            transactionsRepository.deleteTransactions(transaction)
         }
     }
 
     fun isHavingTransactions(): Boolean {
-        return repository.getTotalTransactionCount() > 0
+        return transactionsRepository.getTotalTransactionCount() > 0
     }
 
     fun isCurrentMonthHavingTransactions(): Boolean {
-        return repository.getCurrentMonthTransactionCount() > 0
+        return transactionsRepository.getCurrentMonthTransactionCount() > 0
     }
 
-    fun updateSelectedTransactionFilter(listItem: ListItem?) {
-        selectedListItem.value = listItem
+    fun updateSelectedTransactionFilter(filterItem: TransactionFilterType) {
         viewModelScope.launch {
-            validateAndFilterTransactions(listItem).collect { transactionList ->
-                transactions.value = transactionList ?: emptyList()
-                var totalExpense = 0.0
-                var totalIncome = 0.0
-                transactionList?.forEach {
-                    if (it.transactionMode != INCOME) {
-                        totalExpense += it.amount
-                    } else {
-                        totalIncome += it.amount
-                    }
-                }
-                sumOfExpense.value = totalExpense
-                sumOfIncome.value = totalIncome
-            }
+            userDataRepository.updateTransactionFilter(filterItem)
         }
     }
 
-    fun getTransactionCategoryName(categoryId: String): String {
-        return repository.getTransactionCategoryName(categoryId) ?: "Category Deleted"
+    fun getTransactionCategoryName(categoryId: String, result: (String) -> Unit) {
+        viewModelScope.launch {
+            result.invoke(
+                transactionsRepository.getTransactionCategoryName(categoryId) ?: "Category Deleted"
+            )
+        }
     }
 
     fun getCategories(type: String): Flow<List<Category>> {
@@ -133,14 +130,4 @@ class TransactionViewModel @Inject constructor(
         const val SHOW_ALL = "Show All"
         const val INCOME = "INCOME"
     }
-}
-
-enum class DateSelectionStatus {
-    SELECTED, CANCELED
-}
-
-open class Type
-sealed class TransactionFilterType : Type() {
-    object DATE_RANGE : TransactionFilterType()
-    object ALL : TransactionFilterType()
 }

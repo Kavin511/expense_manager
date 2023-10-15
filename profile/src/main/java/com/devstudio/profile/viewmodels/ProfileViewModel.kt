@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.account.R
-import com.devstudio.core_data.Theme_proto
 import com.devstudio.core_data.repository.Remainder
 import com.devstudio.core_data.repository.RemainderRepository
 import com.devstudio.core_data.repository.TransactionsRepository
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +26,7 @@ class ProfileViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val profileUiState: StateFlow<ProfileUiState> = userPreferencesDataStore.data.map { userData ->
+    val profileUiState: StateFlow<ProfileUiState> = userPreferencesDataStore.userData.map { userData ->
         ProfileUiState.Success(
             EditableSettings(
                 theme = userData.theme
@@ -48,11 +46,6 @@ class ProfileViewModel @Inject constructor(
         userPreferencesDataStore.updateTheme(theme)
     }
 
-    fun getActiveDays(): Long {
-        return Calendar.getInstance().timeInMillis - (transactionRepository.transactions()
-            .lastOrNull()?.transactionDate?.toLong() ?: 0L)
-    }
-
     fun authenticateUser(context: Context) {
         BeginSignInRequest.builder()
             .setGoogleIdTokenRequestOptions(
@@ -66,7 +59,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     suspend fun getTheme() {
-        return userPreferencesDataStore.data.collectLatest {
+        return userPreferencesDataStore.userData.collectLatest {
             it.theme
         }
     }

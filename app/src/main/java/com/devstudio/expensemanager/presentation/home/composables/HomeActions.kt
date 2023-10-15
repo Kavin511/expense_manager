@@ -27,8 +27,9 @@ import com.devstudio.core_data.repository.TransactionDataBackupWorker
 import com.devstudio.core_model.models.BackupStatus
 import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.core_model.models.Status
-import com.devstudio.expensemanager.viewmodel.HomeViewModel
-import com.devstudio.expensemanager.viewmodel.HomeViewModel.Companion.SHARE
+import com.devstudio.core_model.models.Status.SUCCESS
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeViewModel
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeViewModel.Companion.SHARE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -121,7 +122,7 @@ private fun backUpTransactions(
     homeViewModel: HomeViewModel, snackBarHostState: SnackbarHostState, context: Context
 ) {
     homeViewModel.exportTransactions(true) {
-        if (it.status == Status.SUCCESS) {
+        if (it.status == SUCCESS) {
             showBackUpResultAlert(it, snackBarHostState, context)
         } else {
             Toast.makeText(
