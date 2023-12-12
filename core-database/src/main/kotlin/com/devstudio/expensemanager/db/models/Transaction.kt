@@ -18,7 +18,7 @@ import java.util.UUID
 )
 class Transaction(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(name = "bookId") var bookId: Long = 0,
+    @ColumnInfo(name = "bookId", defaultValue = "0") var bookId: Long = 0,
     @ColumnInfo(name = "note") var note: String = "",
     @ColumnInfo(name = "amount") var amount: Double = 0.0,
     @ColumnInfo(name = "categoryId") var categoryId: String = UUID.randomUUID().toString(),

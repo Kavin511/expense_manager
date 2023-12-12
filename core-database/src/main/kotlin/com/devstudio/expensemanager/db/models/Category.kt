@@ -13,5 +13,5 @@ class Category(
     @ColumnInfo(name = "status") var status: Boolean = true,
     @ColumnInfo(name = "timeStamp") var timeStamp: Long = 0,
     @ColumnInfo(name = "categoryType") var categoryType: String,
-    @ColumnInfo(name = "bookId") var bookId: Long = 0,
+    @ColumnInfo(name = "bookId", defaultValue = "0") var bookId: Long = 0,
 )
