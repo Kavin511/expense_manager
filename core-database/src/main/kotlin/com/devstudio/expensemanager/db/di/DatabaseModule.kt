@@ -19,6 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -57,14 +58,14 @@ class DatabaseModule {
         return INSTANCE ?: synchronized(this@DatabaseModule) {
             Room.databaseBuilder(
                 applicationContext, ExpenseManagerDataBase::class.java, "expense_manager_database"
-            ).allowMainThreadQueries().addCallback(rdc)
+            ).allowMainThreadQueries().createFromAsset("")
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
                 .also { INSTANCE = it }
         }
     }
 
     private fun prepopulateDatabase(expenseManagerDataBase: ExpenseManagerDataBase?) {
-        CoroutineScope(SupervisorJob()).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             expenseManagerDataBase?.booksDao()?.insertBook(
                 Books(
                     name = DEFAULT_BOOK_NAME,
@@ -125,9 +126,10 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
 
 val MIGRATION_3_4 = object : Migration(3, 4) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("CREATE TABLE BOOKS_TABLE (ID INTEGER NOT NULL,NAME TEXT NOT NULL,TIMESTAMP INTEGER NOT NULL DEFAULT 0,PRIMARY KEY (ID))")
-        database.execSQL("INSERT INTO BOOKS_TABLE (NAME,TIMESTAMP) VALUES (1,'$DEFAULT_BOOK_NAME',${System.currentTimeMillis()})")
-        database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN bookId  INTEGER  not null default null CONSTRAINT bookId REFERENCES BOOKS_TABLE(ID) on delete cascade ")
+        database.execSQL("CREATE TABLE BOOKS_TABLE (id INTEGER NOT NULL default 0,name TEXT NOT NULL,timeStamp INTEGER NOT NULL DEFAULT 0,PRIMARY KEY (id))")
+        database.execSQL("INSERT INTO BOOKS_TABLE (ID,NAME,TIMESTAMP) VALUES (1,'$DEFAULT_BOOK_NAME',${System.currentTimeMillis()})")
+        database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN bookId INTEGER not null default 0 CONSTRAINT bookId REFERENCES books_table(id) on delete cascade ")
+        database.execSQL("ALTER TABLE CATEGORY_TABLE ADD COLUMN bookId INTEGER not null default 0")
         database.execSQL("UPDATE TRANSACTIONS_TABLE SET bookId=1")
     }
 }
