@@ -58,7 +58,7 @@ class DatabaseModule {
         return INSTANCE ?: synchronized(this@DatabaseModule) {
             Room.databaseBuilder(
                 applicationContext, ExpenseManagerDataBase::class.java, "expense_manager_database"
-            ).allowMainThreadQueries().createFromAsset("")
+            ).allowMainThreadQueries().addCallback(rdc)
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
                 .also { INSTANCE = it }
         }
