@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.expensemanager.db.models.Books
 import com.devstudioworks.ui.components.InputDialog
 import com.devstudioworks.ui.components.InputEnterDialog
@@ -38,7 +39,7 @@ fun BooksMainScreen(
     sheetState: SheetState,
     hideBottomSheet: (Long?) -> Unit
 ) {
-    val booksViewModel: BooksViewModel = hiltViewModel()
+    val booksViewModel: BooksViewModel  = viewModel()
     val booksUiState by booksViewModel.booksUiState.collectAsState()
     var shouldShowBookCreationDialog by remember {
         mutableStateOf(false)
@@ -50,7 +51,6 @@ fun BooksMainScreen(
             is BooksUiState.Loading -> {
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight()
                         .fillMaxWidth(),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
@@ -60,37 +60,40 @@ fun BooksMainScreen(
 
             is BooksUiState.COMPLETED -> {
                 val books = (booksUiState as BooksUiState.COMPLETED).books
-                if (books.isNotEmpty()) {
-                    if (shouldShowBookCreationDialog) {
-                        InputEnterDialog(
-                            inputDialog = InputDialog.Builder.setHeading("Create Book")
-                                .setHint("Enter book name").setNegativeButtonText("Cancel")
-                                .setPositiveButtonText("Save").setInputLeadIcon(EMAppIcons.Book)
-                                .build(), {
-                                shouldShowBookCreationDialog = false
-                            }
-                        ) {
-                            booksViewModel.insertBook(it)
+                if (shouldShowBookCreationDialog) {
+                    InputEnterDialog(
+                        inputDialog = InputDialog.Builder.setHeading("Create Book")
+                            .setHint("Enter book name").setNegativeButtonText("Cancel")
+                            .setPositiveButtonText("Save").setInputLeadIcon(EMAppIcons.Book)
+                            .build(), {
                             shouldShowBookCreationDialog = false
                         }
-                    }
-                    Column(
-                        modifier = Modifier
-                            .padding(vertical = 8.dp, horizontal = 8.dp)
                     ) {
-                        BooksHeading {
-                            shouldShowBookCreationDialog = true
-                        }
-                        BooksContent(books, hideBottomSheet)
+                        booksViewModel.insertBook(it)
+                        shouldShowBookCreationDialog = false
                     }
-                } else {
-                    Column {
-                        Text(text = "No Books Found", modifier = Modifier.padding(16.dp))
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp, horizontal = 8.dp)
+                ) {
+                    BooksHeading {
+                        shouldShowBookCreationDialog = true
+                    }
+                    if (books.isNotEmpty()) {
+                        BooksContent(books, hideBottomSheet)
+                    } else {
+                        Column {
+                            Text(text = "No Books Found", modifier = Modifier.padding(16.dp))
+                        }
                     }
                 }
             }
 
             is BooksUiState.Error -> {
+                Column {
+                    Text(text = "No Books Found", modifier = Modifier.padding(16.dp))
+                }
             }
         }
     }

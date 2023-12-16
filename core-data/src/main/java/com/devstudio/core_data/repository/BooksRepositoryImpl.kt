@@ -8,6 +8,10 @@ import javax.inject.Singleton
 
 @Singleton
 class BooksRepositoryImpl @Inject constructor(private val booksDao: BooksDao,private val userDataRepository: UserDataRepository) : BooksRepository {
+    override fun getBooksFlow():  Flow<List<Books>> {
+        return booksDao.getBooksFlow()
+    }
+
     override fun getBooks(): List<Books> {
         return booksDao.getBooks()
     }
@@ -27,10 +31,11 @@ class BooksRepositoryImpl @Inject constructor(private val booksDao: BooksDao,pri
 }
 
 interface BooksRepository {
-    fun getBooks(): List<Books>
+    fun getBooksFlow(): Flow<List<Books>>
     fun createBook(book: Books)
     fun updateBook(book: Books)
     suspend fun getSelectedBook(): Flow<Long>
     fun getBookById(it: Long): Books?
     fun insertBook(it: Books)
+    fun getBooks(): List<Books>
 }

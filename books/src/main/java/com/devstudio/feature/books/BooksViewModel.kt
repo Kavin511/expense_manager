@@ -6,27 +6,20 @@ import com.devstudio.core_data.repository.BooksRepository
 import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.expensemanager.db.models.Books
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BooksViewModel @Inject constructor(private val booksRepository: BooksRepository,private val userDataRepository: UserDataRepository) : ViewModel() {
-    val booksUiState: MutableStateFlow<BooksUiState> = MutableStateFlow(BooksUiState.Loading)
-
-    init {
-        loadBooks()
-    }
-
-    private fun loadBooks() {
-        booksUiState.value = BooksUiState.Loading
-        try {
-            val books = booksRepository.getBooks()
-            booksUiState.value = BooksUiState.COMPLETED(books)
-        } catch (e: Exception) {
-            booksUiState.value = BooksUiState.Error
-        }
-    }
+class BooksViewModel @Inject constructor(
+    private val booksRepository: BooksRepository,
+    private val userDataRepository: UserDataRepository
+) : ViewModel() {
+    val booksUiState = booksRepository.getBooksFlow().map { books ->
+        BooksUiState.COMPLETED(books)
+    }.stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = BooksUiState.Loading)
 
     fun saveSelectedBook(id: Long) {
         viewModelScope.launch {
@@ -39,7 +32,6 @@ class BooksViewModel @Inject constructor(private val booksRepository: BooksRepos
             val book = Books()
             book.name = name
             booksRepository.insertBook(book)
-            loadBooks()
         }
     }
 }
