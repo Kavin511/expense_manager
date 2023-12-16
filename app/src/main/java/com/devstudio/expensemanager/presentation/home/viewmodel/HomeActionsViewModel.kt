@@ -7,36 +7,23 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import com.devstudio.core_data.repository.BooksRepositoryImpl
 import com.devstudio.core_data.repository.TransactionDataBackupWorker
-import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.core_model.models.BackupStatus
 import com.devstudio.core_model.models.BackupStatus.Companion.failure
 import com.devstudio.core_model.models.BackupStatus.Companion.success
-import com.devstudio.expensemanager.presentation.home.model.HomeUiData
-import com.devstudio.expensemanager.presentation.home.model.HomeUiState
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_WORK_NAME
 import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val application: Application,
-    val booksRepositoryImpl: BooksRepositoryImpl,
-    val userDataRepository: UserDataRepository
+class HomeActionsViewModel @Inject constructor(
+    application: Application
 ) : ViewModel() {
     private val workManager: WorkManager = WorkManager.getInstance(application)
-    val homeScreenUiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-
-    init {
-        getSelectedBook()
-    }
 
     fun exportTransactions(isManuallyTriggered: Boolean, resultEvent: (BackupStatus) -> Unit) {
         val transactionDataBackupWorker =
@@ -73,19 +60,6 @@ class HomeViewModel @Inject constructor(
         }
         return
     }
-
-    fun getSelectedBook() {
-        viewModelScope.launch {
-            userDataRepository.getSelectedBookId().collectLatest {
-                homeScreenUiState.value = HomeUiState.Success(
-                    HomeUiData(
-                        selectedBook = booksRepositoryImpl.getBookById(it) ?: booksRepositoryImpl.getBooks()[0]
-                    )
-                )
-            }
-        }
-    }
-
 
     companion object {
         const val CSV_INTENT_TYPE = "text/*"

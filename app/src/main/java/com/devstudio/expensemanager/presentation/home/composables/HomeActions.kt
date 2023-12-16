@@ -26,10 +26,9 @@ import androidx.navigation.NavHostController
 import com.devstudio.core_data.repository.TransactionDataBackupWorker
 import com.devstudio.core_model.models.BackupStatus
 import com.devstudio.core_model.models.ExpressWalletAppState
-import com.devstudio.core_model.models.Status
 import com.devstudio.core_model.models.Status.SUCCESS
-import com.devstudio.expensemanager.presentation.home.viewmodel.HomeViewModel
-import com.devstudio.expensemanager.presentation.home.viewmodel.HomeViewModel.Companion.SHARE
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +40,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
     var readPermissionGranted = false
     var writePermissionGranted = false
     val permissionList = mutableListOf<String>()
-    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val homeActionsViewModel = hiltViewModel<HomeActionsViewModel>()
 
     val activityResultLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -57,7 +56,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
                     readPermissionGranted = true
                 }
                 if (readPermissionGranted && writePermissionGranted) {
-                    backUpTransactions(homeViewModel, snackBarHostState, context)
+                    backUpTransactions(homeActionsViewModel, snackBarHostState, context)
                 }
             }
         }
@@ -104,7 +103,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
 
     IconButton(onClick = {
         if (checkPermissionToStartBackup(context)) {
-            backUpTransactions(homeViewModel, snackBarHostState, context)
+            backUpTransactions(homeActionsViewModel, snackBarHostState, context)
         }
     }) {
         Icon(Icons.Rounded.Backup, BACKUP)
@@ -119,9 +118,9 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
 }
 
 private fun backUpTransactions(
-    homeViewModel: HomeViewModel, snackBarHostState: SnackbarHostState, context: Context
+    homeActionsViewModel: HomeActionsViewModel, snackBarHostState: SnackbarHostState, context: Context
 ) {
-    homeViewModel.exportTransactions(true) {
+    homeActionsViewModel.exportTransactions(true) {
         if (it.status == SUCCESS) {
             showBackUpResultAlert(it, snackBarHostState, context)
         } else {
@@ -155,7 +154,7 @@ private fun showBackUpResultAlert(backStatus: BackupStatus, snackBarHostState: S
 fun createIntentToShareTransactions(context: Context) {
     val intent = Intent()
     intent.action = Intent.ACTION_SEND
-    intent.type = HomeViewModel.CSV_INTENT_TYPE
+    intent.type = HomeActionsViewModel.CSV_INTENT_TYPE
     intent.putExtra(
         Intent.EXTRA_STREAM, FileProvider.getUriForFile(
             context,
