@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +18,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.devstudio.core_data.FilterType
 import com.devstudio.core_data.UserPreferences
 import com.devstudio.data.model.Theme
+import com.devstudio.data.model.TransactionFilterType
+import com.devstudio.data.model.UserPreferencesData
 import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
 import kotlinx.coroutines.CoroutineScope
@@ -27,8 +32,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ThemeSelectionScreen(navController: NavHostController) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
-    val theme =
-        profileViewModel.userPreferencesDataStore.userData.collectAsState(initial = UserPreferences.getDefaultInstance()).value
+    val theme: UserPreferencesData =
+        profileViewModel.userPreferencesDataStore.userData.collectAsState(
+            initial = UserPreferencesData(
+                Theme.SYSTEM_DEFAULT, selectedBookId = 0, filterType = TransactionFilterType.ALL
+            )).value
 
     val themeList = listOf(
         Theme.DARK, Theme.LIGHT, Theme.SYSTEM_DEFAULT
@@ -49,7 +57,7 @@ fun ThemeSelectionScreen(navController: NavHostController) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    RadioButton(selected = themeProto == theme, onClick = null)
+                    RadioButton(selected = themeProto == theme.theme, onClick = null)
                     val name = themeProto.name.replace("_", " ").lowercase()
                     Text(
                         text = name.replaceFirstChar { it.uppercase() },

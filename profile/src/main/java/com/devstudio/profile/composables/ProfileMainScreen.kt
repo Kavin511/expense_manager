@@ -98,13 +98,13 @@ private fun PreferencesPanel(profileUiState: EditableSettings, navController: Na
         icon = themeIcon,
     ) {
         navController.navigate(ExpressWalletAppState.ThemeScreen.route)
-    }, Preference(
+    }, /*Preference(
         title = "Custom Remainder",
         description = "Remainder to update transactions",
         icon = Icons.Filled.Notifications,
     ) {
         navController.navigate(ExpressWalletAppState.RemainderScreen.route)
-    })
+    }*/)
     Column {
         Spacer(modifier = Modifier.padding(10.dp))
         Label("Preferences")
