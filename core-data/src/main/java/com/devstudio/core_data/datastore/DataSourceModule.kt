@@ -85,13 +85,13 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
                     Theme_proto.DARK -> DARK
                     else -> SYSTEM_DEFAULT
                 },
-                selectedBookId = userData.selectedBookId,
+                selectedBookId = userData.selectedBookId.orDefault(1),
                 filterType = when (userData.filterType) {
                     FilterType.ALL -> ALL
                     FilterType.DATE_RANGE -> DATE_RANGE(
                         additionalData = Pair(
-                            userData.filterStartDate.toLong(),
-                            userData.filterEndDate.toLong()
+                            userData.filterStartDate.ifEmpty { "0" }.toLong(),
+                            userData.filterEndDate.ifEmpty { "0" }.toLong()
                         )
                     )
 
@@ -102,3 +102,11 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
 
 }
 
+
+fun Long.orDefault(default:Long): Long {
+    return if (this == 0L) {
+        default
+    } else {
+        this
+    }
+}

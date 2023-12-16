@@ -11,12 +11,12 @@ message UserPreferences {
   string filterEndDate = 6;
 }
 enum Theme_proto {
-  LIGHT = 0;
-  DARK = 1;
-  SYSTEM_DEFAULT = 2;
+  SYSTEM_DEFAULT = 0;
+  LIGHT = 1;
+  DARK = 2;
 }
 enum FilterType {
-  DATE_RANGE = 0;
-  ALL = 1;
-  CURRENT_MONTH = 2;
+  CURRENT_MONTH = 0;
+  DATE_RANGE = 1;
+  ALL = 2;
 }
