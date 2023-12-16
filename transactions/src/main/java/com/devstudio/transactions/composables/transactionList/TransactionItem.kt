@@ -3,23 +3,23 @@ package com.devstudio.transactions.composables.transactionList
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,9 +31,9 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudioworks.ui.theme.DEFAULT_CARD_ELEVATION
+import com.devstudioworks.ui.theme.SECONDARY_TEXT_SIZE
 import com.devstudioworks.ui.theme.appColors
 import com.devstudioworks.ui.theme.model.AppColor
-import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(
@@ -113,17 +113,20 @@ fun TransactionItem(
 @Composable
 private fun PaymentStatus(transaction: Transaction) {
     val paymentStatus = transaction.paymentStatus
-    Text(text = paymentStatus.lowercase().replaceFirstChar {
-           it.uppercase()
-        }, modifier = Modifier
-        .padding(1.dp)
-        .background(
-            shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS),
-            color = appColors.material.tertiaryContainer
-        )
-        .padding(
-          horizontal =   6.dp,
-        ))
+    Text(
+        text = paymentStatus.lowercase().replaceFirstChar {
+            it.uppercase()
+        }, color = appColors.material.secondary,
+        fontSize = SECONDARY_TEXT_SIZE,
+        modifier = Modifier
+            .padding(2.dp)
+            .background(
+                color = appColors.material.surfaceVariant,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .border(1.dp, appColors.material.outlineVariant, shape = RoundedCornerShape(10.dp))
+            .padding(vertical = 4.dp, horizontal = 6.dp)
+    )
 }
 
 @Composable
@@ -171,7 +174,7 @@ private fun TransactionDate(
     Text(
         text = DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
         color = appColors.material.onPrimaryContainer,
-        fontSize = 13.sp,
+        fontSize = SECONDARY_TEXT_SIZE,
         modifier = Modifier.padding(end = 5.dp)
     )
 }
@@ -182,8 +185,14 @@ private fun CategoryName(
     transaction: Transaction,
     appColors: AppColor
 ) {
+    var categoryName: String by remember {
+        mutableStateOf("")
+    }
+    transactionViewModel.getTransactionCategoryName(transaction.categoryId) {it->
+        categoryName = it
+    }
     Text(
-        text = transactionViewModel.getTransactionCategoryName(transaction.categoryId),
+        text = categoryName,
         color = appColors.material.onPrimaryContainer,
         fontSize = 16.sp
     )

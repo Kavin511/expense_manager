@@ -90,7 +90,7 @@ fun MaterialTheme(
         MaterialTheme(
             colorScheme = colors.material,
             content = content,
-            typography = ExpressWalletTypography
+            typography = ExpressWalletTypography,
         )
     }
 }

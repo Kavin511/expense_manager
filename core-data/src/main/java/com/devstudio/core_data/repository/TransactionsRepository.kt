@@ -3,6 +3,7 @@ package com.devstudio.core_data.repository
 import androidx.annotation.WorkerThread
 import com.devstudio.expensemanager.db.dao.TransactionDao
 import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.expensemanager.db.models.TransactionMode
 import com.devstudio.utils.formatters.DateFormatter
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
@@ -10,30 +11,52 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface TransactionsRepository {
-    fun transactions(): List<Transaction>
-    fun allTransactionsStream(): Flow<List<Transaction>>
+    fun allTransactionsStream(bookId: Long): Flow<List<Transaction>>
     suspend fun findTransactionById(id: Long): Transaction?
     suspend fun deleteTransactions(transaction: Transaction)
-    suspend fun getExpenseTransaction(): Flow<List<Transaction>>
-    suspend fun getIncomeTransaction(): Flow<List<Transaction>>
     suspend fun upsertTransaction(transaction: Transaction)
     suspend fun updateTransaction(oldTransactionObject: Transaction)
-    fun filterTransactionFromDateRange(dateRange: androidx.core.util.Pair<Long, Long>): Flow<List<Transaction>?>
-    fun getTransactionsForCurrentMonth(): Flow<List<Transaction>>
+    fun filterTransactionFromDateRange(
+        dateRange: Pair<Long, Long>,
+        bookId: Long
+    ): Flow<List<Transaction>>
+
     fun getTotalTransactionCount(): Int
     fun getCurrentMonthTransactionCount(): Int
-    fun getTransactionCategoryName(categoryId: String): String?
+    suspend fun getTransactionCategoryName(categoryId: String): String?
+    fun getTotalAssets(): Double
+    fun getTransactionsForCurrentMonth(selectedBookId: Long): Flow<List<Transaction>>
 }
 
 @Singleton
-class TransactionsRepositoryImpl @Inject constructor(private val transactionDao: TransactionDao) :
+class TransactionsRepositoryImpl @Inject constructor(
+    private val transactionDao: TransactionDao,
+    val userDataRepository: UserDataRepository
+) :
     TransactionsRepository {
-    override fun transactions(): List<Transaction> {
-        return transactionDao.getTransactions()
+    override fun getTotalAssets(): Double {
+        return transactionDao.getTotalAssets(TransactionMode.EXPENSE.name) + transactionDao.getTotalAssets(
+            TransactionMode.INCOME.name
+        )
     }
 
-    override fun getTransactionsForCurrentMonth(): Flow<List<Transaction>> {
+    override fun getTransactionsForCurrentMonth(selectedBookId: Long): Flow<List<Transaction>> {
         return transactionDao.getCurrentMonthTransaction(
+            formatCurrentMonth(),
+            DateFormatter.getCurrentYear(
+                Calendar.getInstance()
+            ).toString(),
+            shouldUseBookId = true,
+            selectedBookId
+        )
+    }
+
+    override fun getTotalTransactionCount(): Int {
+        return transactionDao.getTotalTransactionCount()
+    }
+
+    override fun getCurrentMonthTransactionCount(): Int {
+        return transactionDao.getCurrentMonthTransactionCount(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
                 Calendar.getInstance()
@@ -41,18 +64,7 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
         )
     }
 
-    override fun getTotalTransactionCount(): Int {
-        return  transactionDao.getTotalTransactionCount()
-    }
-
-    override fun getCurrentMonthTransactionCount(): Int {
-        return  transactionDao.getCurrentMonthTransactionCount(formatCurrentMonth(),
-            DateFormatter.getCurrentYear(
-                Calendar.getInstance()
-            ).toString())
-    }
-
-    override fun getTransactionCategoryName(categoryId: String): String? {
+    override suspend fun getTransactionCategoryName(categoryId: String): String? {
         return transactionDao.getTransactionCategoryName(categoryId)
     }
 
@@ -60,8 +72,8 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
         Calendar.getInstance()
     ) + 1).toString()).takeLast(2)
 
-    override fun allTransactionsStream(): Flow<List<Transaction>> {
-        return transactionDao.getAllTransactionsStream()
+    override fun allTransactionsStream(bookId: Long): Flow<List<Transaction>> {
+        return transactionDao.getAllTransactionsStream(shouldUseBookId = true, bookId = bookId)
     }
 
     override suspend fun findTransactionById(id: Long): Transaction? {
@@ -70,14 +82,6 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
 
     override suspend fun deleteTransactions(transaction: Transaction) {
         return transactionDao.deleteTransaction(transaction)
-    }
-
-    override suspend fun getExpenseTransaction(): Flow<List<Transaction>> {
-        return transactionDao.getExpenseTransactionStream()
-    }
-
-    override suspend fun getIncomeTransaction(): Flow<List<Transaction>> {
-        return transactionDao.getIncomeTransactionStream()
     }
 
     @WorkerThread
@@ -89,7 +93,15 @@ class TransactionsRepositoryImpl @Inject constructor(private val transactionDao:
         transactionDao.updateTransaction(oldTransactionObject)
     }
 
-    override fun filterTransactionFromDateRange(dateRange: androidx.core.util.Pair<Long, Long>): Flow<List<Transaction>?> {
-        return transactionDao.filterTransactionDateRange(dateRange.first, dateRange.second)
+    override fun filterTransactionFromDateRange(
+        dateRange: Pair<Long, Long>,
+        bookId: Long
+    ): Flow<List<Transaction>> {
+        return transactionDao.filterTransactionDateRange(
+            dateRange.first,
+            dateRange.second,
+            shouldUseBookId = true,
+            bookId = bookId
+        )
     }
 }

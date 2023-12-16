@@ -1,0 +1,4 @@
+<resources>
+    <string name="default_web_client_id">xyz</string>
+    <string name="loading">Loading...</string>
+</resources>

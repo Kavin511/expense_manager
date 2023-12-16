@@ -1,11 +1,29 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.firebase.crashlytics'
+    alias(libs.plugins.protobuf)
 }
 
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
 android {
     namespace 'com.devstudio.core.data'
     compileSdk 33
@@ -38,8 +56,12 @@ dependencies {
     implementation libs.hilt.android
     implementation project(path: ':utils')
     implementation project(path: ':core-model')
+    implementation project(path: ':core-data:model')
     implementation libs.androidx.room
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
-    implementation libs.firebaseCrashlytics
+    implementation libs.firebase.crashlytics
+    implementation(libs.androidx.dataStore.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.protobuf.kotlin.lite)
 }

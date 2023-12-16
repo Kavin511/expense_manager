@@ -33,9 +33,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
+        <receiver android:name="com.devstudio.core_data.repository.RemainderReceiver"/>
         <activity
-            android:name=".ui.home.activity.HomeActivity"
+            android:name=".presentation.mainScreen.activity.MainActivity"
             android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />

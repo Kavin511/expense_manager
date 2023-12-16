@@ -5,8 +5,27 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.protobuf)
+
 }
 
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
 android {
     namespace 'com.devstudio.expensemanager'
     compileSdk 33
@@ -65,18 +84,19 @@ dependencies {
     implementation project(path: ':core-model')
     implementation project(path: ':transactions')
     implementation project(path: ':category')
+    implementation project(path: ':profile')
+    implementation project(path: ':books')
 
     implementation libs.androidx.core
+    implementation libs.androidx.core.splashscreen
     implementation libs.androidx.appcompat
     implementation libs.material
     implementation libs.compose.material3
     implementation libs.constraintlayout
     implementation libs.livedata
     implementation libs.viewmodel
-    implementation libs.navigation.compose
-    implementation libs.firebaseCrashlytics
-    implementation libs.compose.runtime.lifecycle
-    implementation libs.firebaseAnalytics
+    implementation libs.firebase.crashlytics
+    implementation libs.firebase.analytics
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
@@ -96,5 +116,9 @@ dependencies {
     kapt libs.hilt.android.compiler
     implementation libs.androidx.work
     kapt  libs.androidx.hilt.compiler
+    implementation project(path: ':core-data:model')
+
+    implementation(libs.androidx.dataStore.core)
+    implementation(libs.protobuf.kotlin.lite)
 
 }

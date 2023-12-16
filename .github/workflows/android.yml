@@ -1,10 +1,10 @@
-name: Android CI
-
+name: automated-build-android-app-with-github-action
 on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "Development" ]
+    
 
 jobs:
   build:

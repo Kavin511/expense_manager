@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -34,7 +34,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.6"
     }
-    namespace 'com.devstudioworks.core.ui'
+    namespace 'com.devstudio.core.designsystem'
 }
 
 dependencies {
