@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.devstudio.core_data.datastore.orDefault
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.showDateRangePicker
@@ -122,22 +123,14 @@ private fun selectDateRangeAndApplyFilter(
     var dateSelectionRange: Pair<Long, Long>? = null
     if (previouslySelectedFilter is DATE_RANGE) {
         dateSelectionRange = Pair(
-            previouslySelectedFilter.additionalData.first.isNotZeroOrDefault(),
-            previouslySelectedFilter.additionalData.second.isNotZeroOrDefault()
+            previouslySelectedFilter.additionalData.first.orDefault(Calendar.getInstance().timeInMillis),
+            previouslySelectedFilter.additionalData.second.orDefault(Calendar.getInstance().timeInMillis)
         )
     }
     showDateRangePicker(
         fragmentManager = fragmentManager, dateSelectionRange = dateSelectionRange
     ) {
         function.invoke(it)
-    }
-}
-
-inline fun Long.isNotZeroOrDefault(): Long? {
-    return if (this == 0L) {
-        Calendar.getInstance().timeInMillis
-    } else {
-        this
     }
 }
 

@@ -86,9 +86,7 @@ private fun NavGraphBuilder.homeScreenGraph(navController: NavHostController) {
 private fun HomeScreenRoute(navController: NavHostController) {
     val booksViewModel = hiltViewModel<BooksViewModel>()
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
-    val transactionUiState by transactionViewModel.uiState.collectAsStateWithLifecycle(
-        TransactionUiState.Loading
-    )
+    val transactionUiState by transactionViewModel.uiState.collectAsStateWithLifecycle()
     val booksBottomSheet = rememberModalBottomSheetState()
     val transactionFilterBottomSheet = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()

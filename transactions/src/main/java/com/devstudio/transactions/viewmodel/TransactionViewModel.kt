@@ -27,25 +27,20 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     private val categoryRepository: CategoryRepository,
-    private val getTransactionBookUseCase: GetTransactionBookUseCase,
+    getTransactionBookUseCase: GetTransactionBookUseCase,
     private val userDataRepository: UserDataRepository
 ) : ViewModel() {
     val futurePaymentModeStatus = FuturePaymentStatus(isDebit = false, isCredit = false)
     var filterItemOptions: List<FilterItem>
     val transaction = MutableStateFlow<Transaction?>(null)
     var uiState: StateFlow<TransactionUiState> =
-        initTransactionBookUiState()
-
-    private fun initTransactionBookUiState(): StateFlow<TransactionUiState> {
-        return getTransactionBookUseCase().map(
-            TransactionUiState::Success,
-        ).stateIn(
+        getTransactionBookUseCase().map {
+            TransactionUiState.Success(it)
+        }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Lazily,
             initialValue = TransactionUiState.Loading,
         )
-    }
-
 
     init {
         filterItemOptions = listOf(
