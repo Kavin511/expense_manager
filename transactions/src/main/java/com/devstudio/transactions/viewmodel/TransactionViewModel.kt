@@ -38,7 +38,7 @@ class TransactionViewModel @Inject constructor(
             TransactionUiState.Success(it)
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            started = SharingStarted.Eagerly,
             initialValue = TransactionUiState.Loading,
         )
 

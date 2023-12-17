@@ -4,6 +4,7 @@ import com.devstudio.core_data.repository.BooksRepository
 import com.devstudio.core_data.repository.TransactionsRepository
 import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.data.model.TransactionFilterType
+import com.devstudio.expensemanager.db.di.DatabaseModule.Companion.DEFAULT_BOOK_NAME
 import com.devstudio.expensemanager.db.models.Books
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -37,7 +38,7 @@ class GetTransactionBookUseCase @Inject constructor(
                     transactionsRepository.getTransactionsForCurrentMonth(selectedBookId)
                 }
             }
-            val book = booksRepository.getBookById(selectedBookId) ?: Books()
+            val book = booksRepository.getBookById(selectedBookId) ?: Books(name = DEFAULT_BOOK_NAME)
             TransactionBook(
                 transactions = transactions, bookId = book.id, bookName = book.name, filterType = transactionFilterType
             )
