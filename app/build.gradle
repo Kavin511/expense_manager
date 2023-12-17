@@ -43,8 +43,8 @@ android {
         applicationId "com.devstudio.expensemanager"
         minSdk 21
         targetSdk 33
-        versionCode 18
-        versionName "1.1.3"
+        versionCode 19
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
