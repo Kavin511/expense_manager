@@ -28,7 +28,7 @@ protobuf {
 }
 android {
     namespace 'com.devstudio.expensemanager'
-    compileSdk 33
+    compileSdk 34
     buildToolsVersion "33.0.1"
     signingConfigs {
         release {
@@ -42,9 +42,9 @@ android {
     defaultConfig {
         applicationId "com.devstudio.expensemanager"
         minSdk 21
-        targetSdk 33
-        versionCode 20
-        versionName "1.1.5"
+        targetSdk 34
+        versionCode 21
+        versionName "1.1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

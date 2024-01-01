@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetTransactionBookUseCase @Inject constructor(
+class GetTransactionBook @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     private val userDataRepository: UserDataRepository,
     private val booksRepository: BooksRepository
@@ -38,9 +38,13 @@ class GetTransactionBookUseCase @Inject constructor(
                     transactionsRepository.getTransactionsForCurrentMonth(selectedBookId)
                 }
             }
-            val book = booksRepository.getBookById(selectedBookId) ?: Books(name = DEFAULT_BOOK_NAME)
+            val book =
+                booksRepository.getBookById(selectedBookId) ?: Books(name = DEFAULT_BOOK_NAME)
             TransactionBook(
-                transactions = transactions, bookId = book.id, bookName = book.name, filterType = transactionFilterType
+                transactions = transactions,
+                bookId = book.id,
+                bookName = book.name,
+                filterType = transactionFilterType
             )
 
         }
