@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DataSourceModule @Inject constructor(private val userPreferencesDataStore: DataStore<UserPreferences>) {
+    private val DEFAULT_BOOK_ID: Long = 1
     suspend fun updateSelectedBookId(id: Long) {
         userPreferencesDataStore.updateData {
             it.copy { this.selectedBookId = id }
@@ -38,7 +39,7 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
     }
 
     fun getSelectedBookId(): Flow<Long> {
-        return userPreferencesDataStore.data.map { it.selectedBookId }
+        return userPreferencesDataStore.data.map { userData -> userData.selectedBookId.orDefault(DEFAULT_BOOK_ID) }
     }
 
     suspend fun updateTransactionFilter(filterItem: TransactionFilterType) {
@@ -78,26 +79,28 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
     }
 
     val userData: Flow<UserPreferencesData>
-        get() = userPreferencesDataStore.data.map { userData ->
-            UserPreferencesData(
-                theme = when (userData.theme) {
-                    Theme_proto.LIGHT -> LIGHT
-                    Theme_proto.DARK -> DARK
-                    else -> SYSTEM_DEFAULT
-                },
-                selectedBookId = userData.selectedBookId.orDefault(1),
-                filterType = when (userData.filterType) {
-                    FilterType.ALL -> ALL
-                    FilterType.DATE_RANGE -> DATE_RANGE(
-                        additionalData = Pair(
-                            userData.filterStartDate.ifEmpty { "0" }.toLong(),
-                            userData.filterEndDate.ifEmpty { "0" }.toLong()
+        get() {
+            return userPreferencesDataStore.data.map { userData ->
+                UserPreferencesData(
+                    theme = when (userData.theme) {
+                        Theme_proto.LIGHT -> LIGHT
+                        Theme_proto.DARK -> DARK
+                        else -> SYSTEM_DEFAULT
+                    },
+                    selectedBookId = userData.selectedBookId.orDefault(DEFAULT_BOOK_ID),
+                    filterType = when (userData.filterType) {
+                        FilterType.ALL -> ALL
+                        FilterType.DATE_RANGE -> DATE_RANGE(
+                            additionalData = Pair(
+                                userData.filterStartDate.ifEmpty { "0" }.toLong(),
+                                userData.filterEndDate.ifEmpty { "0" }.toLong()
+                            )
                         )
-                    )
 
-                    else -> TransactionFilterType.CURRENT_MONTH
-                }
-            )
+                        else -> TransactionFilterType.CURRENT_MONTH
+                    }
+                )
+            }
         }
 
 }
