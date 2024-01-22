@@ -19,6 +19,7 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
+import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudioworks.ui.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
@@ -37,7 +38,7 @@ class TransactionActivity : AppCompatActivity() {
 
     private var _binding: ActivityTransactionBinding? = null
     private val transactionViewModel by viewModels<TransactionViewModel>()
-    var selectedCategoryIndexList: MutableList<Int> = mutableListOf(0, 0)
+    var selectedCategoryIndexList: MutableList<Int> = mutableListOf(0, 0, 0)
     private val binding
         get() = _binding!!
     private var categoryList = listOf<Category>()
@@ -154,14 +155,22 @@ class TransactionActivity : AppCompatActivity() {
                     DateFormatter.convertLongToDate(it.transactionDate.toLong())
                 selectedDate = it.transactionDate
                 selectedTransactionMode = it.transactionMode
-                if (selectedTransactionMode == EXPENSE) {
-                    transactionViewModel.transactionType.value = TransactionMode.EXPENSE
-                    binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
-                    transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
-                } else {
-                    transactionViewModel.transactionType.value = TransactionMode.INCOME
-                    binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
-                    transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
+                when (selectedTransactionMode) {
+                    EXPENSE -> {
+                        transactionViewModel.transactionType.value = TransactionMode.EXPENSE
+                        binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
+                        transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
+                    }
+                    INVESTMENT -> {
+                        transactionViewModel.transactionType.value = TransactionMode.INVESTMENT
+                        binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
+                        transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
+                    }
+                    else -> {
+                        transactionViewModel.transactionType.value = TransactionMode.INCOME
+                        binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
+                        transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
+                    }
                 }
                 categoryList = transactionViewModel.getCategories(selectedTransactionMode).first()
                 setSelectedCategoryIndex(categoryList.indexOfFirst { category ->
@@ -186,6 +195,11 @@ class TransactionActivity : AppCompatActivity() {
                         transactionViewModel.transactionType.value = TransactionMode.INCOME
                     }
                 }
+                R.id.investment_mode -> {
+                    if (isChecked) {
+                        transactionViewModel.transactionType.value = TransactionMode.INVESTMENT
+                    }
+                }
             }
         }
         lifecycleScope.launch {
@@ -201,6 +215,13 @@ class TransactionActivity : AppCompatActivity() {
                     binding.transactionMode.check(R.id.expense_mode)
                     binding.futurePayment.text = "Mark transaction as Debt"
                     binding.futurePayment.isChecked = transactionViewModel.futurePaymentModeStatus.isDebit
+                }
+
+                TransactionMode.INVESTMENT -> {
+                    updateCategoriesBasedOnTransactionType(TransactionMode.INVESTMENT)
+                    binding.transactionMode.check(R.id.investment_mode)
+                    binding.futurePayment.text = "Mark transaction as Credit"
+                    binding.futurePayment.isChecked = transactionViewModel.futurePaymentModeStatus.isCredit
                 }
 
                 else -> {
@@ -275,9 +296,11 @@ class TransactionActivity : AppCompatActivity() {
 
     private fun getSelectedCategoryIndex(type: String = transactionViewModel.transactionType.value.name): Int {
         return if (type == TransactionMode.EXPENSE.name) {
-            selectedCategoryIndexList[0]
+            selectedCategoryIndexList[EXPENSE_INDEX]
+        } else if (type == TransactionMode.INCOME.name) {
+            selectedCategoryIndexList[INCOME_INDEX]
         } else {
-            selectedCategoryIndexList[1]
+            selectedCategoryIndexList[INVESTMENT_INDEX]
         }
     }
 
@@ -293,10 +316,18 @@ class TransactionActivity : AppCompatActivity() {
             ).show()
             0
         }
-        if (transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
-            selectedCategoryIndexList[0] = selectedIndex
-        } else {
-            selectedCategoryIndexList[1] = selectedIndex
+        when (transactionViewModel.transactionType.value) {
+            TransactionMode.EXPENSE -> {
+                selectedCategoryIndexList[EXPENSE_INDEX] = selectedIndex
+            }
+
+            TransactionMode.INCOME -> {
+                selectedCategoryIndexList[INCOME_INDEX] = selectedIndex
+            }
+
+            else -> {
+                selectedCategoryIndexList[INVESTMENT_INDEX] = selectedIndex
+            }
         }
     }
 
@@ -338,6 +369,10 @@ class TransactionActivity : AppCompatActivity() {
         )
     }
 }
+
+val EXPENSE_INDEX = 0
+val INCOME_INDEX = 1
+val INVESTMENT_INDEX = 2
 
 enum class PaymentStatus {
     DEBT,

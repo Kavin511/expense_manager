@@ -34,7 +34,7 @@ import java.util.Calendar
 @Composable
 fun TransactionSummary(transactionBook: TransactionBook) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
-    val (income, expense) = transactionViewModel.getTransactionSummaryDetails(
+    val (income, expense,investment) = transactionViewModel.getTransactionSummaryDetails(
         transactionBook.transactions.collectAsState(
             initial = listOf()
         ).value
@@ -96,6 +96,17 @@ fun TransactionSummary(transactionBook: TransactionBook) {
                         text = "Total income : ${roundOffDecimal(income)}",
                         style = Typography().bodyMedium,
                         color = textColor
+                    )
+                }
+                Column(horizontalAlignment = (Alignment.CenterHorizontally)) {
+                    Icon(
+                        imageVector = Icons.Rounded.ImportExport,
+                        contentDescription = "Investment",
+                        tint = appColors.transactionInvestmentColor,
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding))
+                    )
+                    Text(
+                        text = "Total investment ${roundOffDecimal(investment)}", color = textColor
                     )
                 }
             }

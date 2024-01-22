@@ -28,6 +28,7 @@ import com.devstudio.category.CategoryViewModel
 import com.devstudio.utils.utils.AppConstants.Companion.ALL
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudio.utils.utils.AppConstants.Companion.INCOME
+import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudio.utils.utils.toPascalCase
 import com.devstudioworks.ui.components.Page
 import com.devstudioworks.ui.theme.appColors
@@ -109,5 +110,13 @@ fun CategoryActions(
                 categoryViewModel.categoryState.value = CategoryState.LOADING
             },
             label = { Text(text = INCOME.toPascalCase()) })
+
+        FilterChip(modifier = Modifier.padding(4.5.dp),
+            selected = selectedFilterType.value == INVESTMENT,
+            onClick = {
+                selectedFilterType.value = INVESTMENT
+                categoryViewModel.categoryState.value = CategoryState.LOADING
+            },
+            label = { Text(text = INVESTMENT.toPascalCase()) })
     }
 }

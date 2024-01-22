@@ -28,5 +28,6 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Royalty Income",
             "Other"
         )
-    )
+    ),
+    INVESTMENT(listOf("Stocks", "Mutual Funds", "Fixed Deposits", "Other")),
 }
