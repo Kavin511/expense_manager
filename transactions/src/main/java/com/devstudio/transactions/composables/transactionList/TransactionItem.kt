@@ -29,6 +29,8 @@ import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.transactions.acivity.PaymentStatus
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
+import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
+import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudioworks.ui.theme.DEFAULT_CARD_ELEVATION
 import com.devstudioworks.ui.theme.SECONDARY_TEXT_SIZE
@@ -48,10 +50,18 @@ fun TransactionItem(
         amount = 0.0
     )
 ) {
-    val blockColor = if (transaction.transactionMode != "EXPENSE") {
-        appColors.transactionIncomeColor
-    } else {
-        appColors.transactionExpenseColor
+    val blockColor = when (transaction.transactionMode) {
+        EXPENSE -> {
+            appColors.transactionExpenseColor
+        }
+
+        INVESTMENT -> {
+            appColors.transactionInvestmentColor
+        }
+
+        else -> {
+            appColors.transactionIncomeColor
+        }
     }
     val context = LocalContext.current
     val transactionViewModel: TransactionViewModel = hiltViewModel()
@@ -121,8 +131,7 @@ private fun PaymentStatus(transaction: Transaction) {
         modifier = Modifier
             .padding(2.dp)
             .background(
-                color = appColors.material.surfaceVariant,
-                shape = RoundedCornerShape(10.dp)
+                color = appColors.material.surfaceVariant, shape = RoundedCornerShape(10.dp)
             )
             .border(1.dp, appColors.material.outlineVariant, shape = RoundedCornerShape(10.dp))
             .padding(vertical = 4.dp, horizontal = 6.dp)

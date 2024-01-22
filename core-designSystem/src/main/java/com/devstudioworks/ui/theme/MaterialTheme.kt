@@ -102,6 +102,7 @@ val lightPalette =
         transactionExpenseColor = md_theme_light_transaction_expense_container,
         incomeIconTint = md_theme_light_income_icon_tint,
         expenseIconTint = md_theme_light_expense_icon_tint,
+        transactionInvestmentColor = md_theme_light_primary,
     )
 
 val darkPalette =
@@ -111,6 +112,7 @@ val darkPalette =
         transactionExpenseColor = md_theme_dark_transaction_expense_container,
         incomeIconTint = md_theme_dark_income_icon_tint,
         expenseIconTint = md_theme_dark_expense_icon_tint,
+        transactionInvestmentColor = md_theme_dark_primary,
     )
 
 private val LocalColors = staticCompositionLocalOf { lightPalette }
