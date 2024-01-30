@@ -32,7 +32,7 @@ android {
     buildToolsVersion "33.0.1"
     signingConfigs {
         release {
-            storeFile file('/Users/kavin-18660/AndroidStudioProjects/expense_manager/devstudiowork.jks')
+            storeFile file('../devstudiowork.jks')
             storePassword 'devstudioworks'
             keyAlias 'key0'
             keyPassword 'devstudioworks'
@@ -68,6 +68,9 @@ android {
     }
     lint {
         abortOnError false
+    }
+    kotlinOptions {
+        jvmTarget = '17'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
