@@ -35,7 +35,7 @@ hiltCompilerVersion = "1.0.0"
 playServicesAuth="20.5.0"
 androidxCoreSplashscreen = "1.0.0"
 protobuf = "3.23.0"
-protobufPlugin = "0.9.3"
+protobufPlugin = "0.9.4"
 androidxDataStore = "1.0.0"
 
 [libraries]
