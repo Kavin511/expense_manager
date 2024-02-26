@@ -37,7 +37,7 @@ val md_theme_light_expense_tint = Color(0XFFFCEEED)
 val md_theme_light_income_icon_tint = Color(0xFF86FF86)
 val md_theme_light_expense_icon_tint = Color(0xFFFF8A81)
 val md_theme_light_transaction_income_container = Color(0xFF52FF8F)
-val md_theme_light_transaction_expense_container =  Color(0xFFFF6251)
+val md_theme_light_transaction_expense_container = Color(0xFFFF6251)
 
 val md_theme_dark_primary = Color(0xFF77DA9C)
 val md_theme_dark_onPrimary = Color(0xFF00391E)

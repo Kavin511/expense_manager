@@ -1,9 +1,8 @@
-package com.devstudio.core_data.repository
+package com.devstudio.data.repository
 
 import com.devstudio.expensemanager.db.dao.CategoryDao
 import com.devstudio.expensemanager.db.models.Category
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 

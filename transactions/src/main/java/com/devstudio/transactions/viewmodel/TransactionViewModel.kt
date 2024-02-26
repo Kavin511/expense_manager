@@ -3,10 +3,10 @@ package com.devstudio.transactions.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devstudio.core_data.repository.CategoryRepository
-import com.devstudio.core_data.repository.TransactionsRepository
-import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.data.model.TransactionFilterType
+import com.devstudio.data.repository.CategoryRepository
+import com.devstudio.data.repository.TransactionsRepository
+import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -14,7 +14,6 @@ import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.models.FuturePaymentStatus
 import com.devstudio.transactions.models.TransactionUiState
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INCOME
 import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +30,7 @@ class TransactionViewModel @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     private val categoryRepository: CategoryRepository,
     getTransactionBook: GetTransactionBook,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
 ) : ViewModel() {
     val futurePaymentModeStatus = FuturePaymentStatus(isDebit = false, isCredit = false)
     var filterItemOptions: List<FilterItem>
@@ -51,13 +50,14 @@ class TransactionViewModel @Inject constructor(
                 id = SHOW_ALL_ID,
                 SHOW_ALL,
                 additionalData = null,
-                filterType = TransactionFilterType.ALL
-            ), FilterItem(
+                filterType = TransactionFilterType.ALL,
+            ),
+            FilterItem(
                 id = DATE_RANGE_ID,
                 DATE_RANGE,
                 additionalData = null,
-                filterType = TransactionFilterType.DATE_RANGE(Pair(0L, 0L))
-            )
+                filterType = TransactionFilterType.DateRange(Pair(0L, 0L)),
+            ),
         )
     }
 
@@ -98,7 +98,7 @@ class TransactionViewModel @Inject constructor(
         return TransactionSummary(
             totalIncome = totalIncome,
             totalExpense = totalExpense,
-            totalInvestment = totalInvestment
+            totalInvestment = totalInvestment,
         )
     }
 
@@ -125,7 +125,7 @@ class TransactionViewModel @Inject constructor(
     fun getTransactionCategoryName(categoryId: String, result: (String) -> Unit) {
         viewModelScope.launch {
             result.invoke(
-                transactionsRepository.getTransactionCategoryName(categoryId) ?: "Category Deleted"
+                transactionsRepository.getTransactionCategoryName(categoryId) ?: "Category Deleted",
             )
         }
     }
@@ -145,5 +145,5 @@ class TransactionViewModel @Inject constructor(
 data class TransactionSummary(
     val totalIncome: Double,
     val totalExpense: Double,
-    val totalInvestment: Double
+    val totalInvestment: Double,
 )

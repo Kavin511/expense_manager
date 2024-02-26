@@ -1,17 +1,17 @@
-package com.devstudio.core_data.datastore
+package com.devstudio.data.datastore
 
 import androidx.datastore.core.DataStore
-import com.devstudio.core_data.FilterType
-import com.devstudio.core_data.FilterType.CURRENT_MONTH
-import com.devstudio.core_data.Theme_proto
-import com.devstudio.core_data.UserPreferences
-import com.devstudio.core_data.copy
+import com.devstudio.core.data.FilterType
+import com.devstudio.core.data.Theme_proto
+import com.devstudio.core.data.UserPreferences
+import com.devstudio.core.data.copy
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.Theme.DARK
 import com.devstudio.data.model.Theme.LIGHT
 import com.devstudio.data.model.Theme.SYSTEM_DEFAULT
 import com.devstudio.data.model.TransactionFilterType
-import com.devstudio.data.model.TransactionFilterType.*
+import com.devstudio.data.model.TransactionFilterType.ALL
+import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.data.model.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -46,7 +46,7 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
         userPreferencesDataStore.updateData {
             it.copy {
                 this.filterType = when (filterItem) {
-                    is DATE_RANGE -> {
+                    is DateRange -> {
                         this.filterStartDate = filterItem.additionalData.first.toString()
                         this.filterEndDate = filterItem.additionalData.second.toString()
                         FilterType.DATE_RANGE
@@ -56,7 +56,7 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
                         FilterType.ALL
                     }
 
-                    else -> CURRENT_MONTH
+                    else -> FilterType.CURRENT_MONTH
                 }
             }
         }
@@ -66,14 +66,14 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
         return userPreferencesDataStore.data.distinctUntilChanged().map {
             when (it.filterType) {
                 FilterType.ALL -> ALL
-                FilterType.DATE_RANGE -> DATE_RANGE(
+                FilterType.DATE_RANGE -> DateRange(
                     Pair(
                         it.filterStartDate.toLong(),
-                        it.filterEndDate.toLong()
-                    )
+                        it.filterEndDate.toLong(),
+                    ),
                 )
 
-                else -> TransactionFilterType.CURRENT_MONTH
+                else -> TransactionFilterType.CurrentMonth
             }
         }
     }
@@ -90,23 +90,21 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
                     selectedBookId = userData.selectedBookId.orDefault(DEFAULT_BOOK_ID),
                     filterType = when (userData.filterType) {
                         FilterType.ALL -> ALL
-                        FilterType.DATE_RANGE -> DATE_RANGE(
+                        FilterType.DATE_RANGE -> DateRange(
                             additionalData = Pair(
                                 userData.filterStartDate.ifEmpty { "0" }.toLong(),
-                                userData.filterEndDate.ifEmpty { "0" }.toLong()
-                            )
+                                userData.filterEndDate.ifEmpty { "0" }.toLong(),
+                            ),
                         )
 
-                        else -> TransactionFilterType.CURRENT_MONTH
-                    }
+                        else -> TransactionFilterType.CurrentMonth
+                    },
                 )
             }
         }
-
 }
 
-
-fun Long.orDefault(default:Long): Long {
+fun Long.orDefault(default: Long): Long {
     return if (this == 0L) {
         default
     } else {

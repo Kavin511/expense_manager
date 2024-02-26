@@ -23,16 +23,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.devstudio.core_data.repository.TransactionDataBackupWorker
-import com.devstudio.core_model.models.BackupStatus
-import com.devstudio.core_model.models.ExpressWalletAppState
-import com.devstudio.core_model.models.Status.SUCCESS
+import com.devstudio.data.repository.TransactionDataBackupWorker
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
+import com.devstudio.model.models.BackupStatus
+import com.devstudio.model.models.ExpressWalletAppState
+import com.devstudio.model.models.Status.SUCCESS
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHostState) {
@@ -43,7 +42,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
     val homeActionsViewModel = hiltViewModel<HomeActionsViewModel>()
 
     val activityResultLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
+        ActivityResultContracts.RequestMultiplePermissions(),
     ) { permissions ->
         permissions.entries.forEach { it ->
             val permissionName = it.key
@@ -62,13 +61,14 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
         }
         if (permissions.entries.any { !it.value }) {
             Toast.makeText(
-                context, "Permissions required to start backup", Toast.LENGTH_SHORT
+                context,
+                "Permissions required to start backup",
+                Toast.LENGTH_SHORT,
             ).show()
             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri: Uri = Uri.fromParts("package", context.packageName, null)
             intent.data = uri
             context.startActivity(intent)
-
         }
     }
 
@@ -77,11 +77,13 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
     fun isSdk33Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
     fun isReadPermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
-        context, READ_EXTERNAL_STORAGE
+        context,
+        READ_EXTERNAL_STORAGE,
     ) == PERMISSION_GRANTED || isSdk33Up()
 
     fun isWritePermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
-        context, WRITE_EXTERNAL_STORAGE
+        context,
+        WRITE_EXTERNAL_STORAGE,
     ) == PERMISSION_GRANTED || isSdk29Up()
 
     fun checkPermissionToStartBackup(context: Context): Boolean {
@@ -118,14 +120,18 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
 }
 
 private fun backUpTransactions(
-    homeActionsViewModel: HomeActionsViewModel, snackBarHostState: SnackbarHostState, context: Context
+    homeActionsViewModel: HomeActionsViewModel,
+    snackBarHostState: SnackbarHostState,
+    context: Context,
 ) {
     homeActionsViewModel.exportTransactions(true) {
         if (it.status == SUCCESS) {
             showBackUpResultAlert(it, snackBarHostState, context)
         } else {
             Toast.makeText(
-                context, it.message ?: "", Toast.LENGTH_SHORT
+                context,
+                it.message ?: "",
+                Toast.LENGTH_SHORT,
             ).show()
         }
     }
@@ -141,7 +147,6 @@ private fun showBackUpResultAlert(backStatus: BackupStatus, snackBarHostState: S
         )
         when (snackBarResult) {
             SnackbarResult.Dismissed -> {
-
             }
 
             SnackbarResult.ActionPerformed -> {
@@ -156,11 +161,12 @@ fun createIntentToShareTransactions(context: Context) {
     intent.action = Intent.ACTION_SEND
     intent.type = HomeActionsViewModel.CSV_INTENT_TYPE
     intent.putExtra(
-        Intent.EXTRA_STREAM, FileProvider.getUriForFile(
+        Intent.EXTRA_STREAM,
+        FileProvider.getUriForFile(
             context,
             context.packageName + ".provider",
-            TransactionDataBackupWorker.getFileToStoreTransactions(context)
-        )
+            TransactionDataBackupWorker.getFileToStoreTransactions(context),
+        ),
     )
     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     intent.putExtra(Intent.EXTRA_SUBJECT, "Transactions export")

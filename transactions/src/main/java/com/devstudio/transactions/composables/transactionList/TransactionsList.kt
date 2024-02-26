@@ -15,13 +15,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.core_data.datastore.orDefault
+import com.devstudio.data.datastore.orDefault
+import com.devstudio.data.model.TransactionFilterType.ALL
+import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.showDateRangePicker
 import com.devstudio.transactions.models.DateSelectionStatus
-import com.devstudio.data.model.TransactionFilterType.ALL
-import com.devstudio.data.model.TransactionFilterType.DATE_RANGE
 import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
@@ -39,7 +39,7 @@ fun TransactionsList(transactionsStream: TransactionBook) {
                 Text(
                     text = "No transactions for current month, old transactions can be viewed through applying filter",
                     modifier = Modifier.align(alignment = Alignment.Center),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -52,7 +52,7 @@ fun TransactionsList(transactionsStream: TransactionBook) {
                 Text(
                     text = "No transactions found for the applied filter",
                     modifier = Modifier.align(alignment = Alignment.Center),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -62,14 +62,14 @@ fun TransactionsList(transactionsStream: TransactionBook) {
                 Text(
                     text = "No transactions found, Click + to add transactions",
                     modifier = Modifier.align(alignment = Alignment.Center),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
 
         else -> {
             LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 items(transactions) {
                     TransactionItem(transaction = it)
@@ -82,25 +82,25 @@ fun TransactionsList(transactionsStream: TransactionBook) {
 fun applySelectedFilter(
     it: FilterItem?,
     transactionViewModel: TransactionViewModel,
-    fragmentManager: FragmentManager
+    fragmentManager: FragmentManager,
 ) {
     when (it?.filterType) {
         ALL -> {
             transactionViewModel.updateSelectedTransactionFilter(it.filterType)
         }
 
-        is DATE_RANGE -> {
+        is DateRange -> {
             selectDateRangeAndApplyFilter(
                 it,
-                fragmentManager
+                fragmentManager,
             ) { dateSelectionStatus ->
                 when (dateSelectionStatus) {
                     is DateSelectionStatus.SELECTED -> {
-                        var dataFilter = DATE_RANGE(
+                        var dataFilter = DateRange(
                             additionalData = kotlin.Pair(
                                 dateSelectionStatus.selectedRange.first,
-                                dateSelectionStatus.selectedRange.second
-                            )
+                                dateSelectionStatus.selectedRange.second,
+                            ),
                         )
                         transactionViewModel.updateSelectedTransactionFilter(dataFilter)
                     }
@@ -117,25 +117,28 @@ fun applySelectedFilter(
 private fun selectDateRangeAndApplyFilter(
     filterItem: FilterItem,
     fragmentManager: FragmentManager,
-    function: (DateSelectionStatus) -> Unit
+    function: (DateSelectionStatus) -> Unit,
 ) {
     val previouslySelectedFilter = filterItem.filterType
     var dateSelectionRange: Pair<Long, Long>? = null
-    if (previouslySelectedFilter is DATE_RANGE) {
+    if (previouslySelectedFilter is DateRange) {
         dateSelectionRange = Pair(
             previouslySelectedFilter.additionalData.first.orDefault(Calendar.getInstance().timeInMillis),
-            previouslySelectedFilter.additionalData.second.orDefault(Calendar.getInstance().timeInMillis)
+            previouslySelectedFilter.additionalData.second.orDefault(Calendar.getInstance().timeInMillis),
         )
     }
     showDateRangePicker(
-        fragmentManager = fragmentManager, dateSelectionRange = dateSelectionRange
+        fragmentManager = fragmentManager,
+        dateSelectionRange = dateSelectionRange,
     ) {
         function.invoke(it)
     }
 }
 
 fun showTransactionLongPressOptions(
-    context: Context, it: Transaction, homeViewModel: TransactionViewModel
+    context: Context,
+    it: Transaction,
+    homeViewModel: TransactionViewModel,
 ) {
     val builder = MaterialAlertDialogBuilder(context)
     val options = arrayOf("Edit Transaction", "Delete Transaction")

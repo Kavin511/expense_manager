@@ -1,8 +1,7 @@
-package com.devstudio.core_model
+package com.devstudio.model
 
+import junit.framework.TestCase.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).

@@ -5,7 +5,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
@@ -40,15 +46,17 @@ import com.devstudioworks.ui.theme.model.AppColor
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    device = "id:Nexus One", showSystemUi = true, showBackground = true
+    device = "id:Nexus One",
+    showSystemUi = true,
+    showBackground = true,
 )
 @Composable
 fun TransactionItem(
     transaction: Transaction = Transaction(
         transactionDate = "1000",
         note = "",
-        amount = 0.0
-    )
+        amount = 0.0,
+    ),
 ) {
     val blockColor = when (transaction.transactionMode) {
         EXPENSE -> {
@@ -90,7 +98,7 @@ fun TransactionItem(
                         .padding(8.dp)
                         .size(10.dp)
                         .clip(CircleShape)
-                        .background(color = blockColor)
+                        .background(color = blockColor),
                 )
             }
             Column(
@@ -104,7 +112,6 @@ fun TransactionItem(
                         TransactionNote(appColors, transaction, this)
                     }
                 }
-
             }
             Column(
                 horizontalAlignment = Alignment.End,
@@ -117,7 +124,6 @@ fun TransactionItem(
             }
         }
     }
-
 }
 
 @Composable
@@ -126,22 +132,24 @@ private fun PaymentStatus(transaction: Transaction) {
     Text(
         text = paymentStatus.lowercase().replaceFirstChar {
             it.uppercase()
-        }, color = appColors.material.secondary,
+        },
+        color = appColors.material.secondary,
         fontSize = SECONDARY_TEXT_SIZE,
         modifier = Modifier
             .padding(2.dp)
             .background(
-                color = appColors.material.surfaceVariant, shape = RoundedCornerShape(10.dp)
+                color = appColors.material.surfaceVariant,
+                shape = RoundedCornerShape(10.dp),
             )
             .border(1.dp, appColors.material.outlineVariant, shape = RoundedCornerShape(10.dp))
-            .padding(vertical = 4.dp, horizontal = 6.dp)
+            .padding(vertical = 4.dp, horizontal = 6.dp),
     )
 }
 
 @Composable
 private fun TransactionAmount(
     transaction: Transaction,
-    appColors: AppColor
+    appColors: AppColor,
 ) {
     Text(
         text = formatAndGetTransactionAmount(transaction),
@@ -153,14 +161,14 @@ private fun TransactionAmount(
 private fun TransactionNote(
     appColors: AppColor,
     transaction: Transaction,
-    rowScope: RowScope
+    rowScope: RowScope,
 ) {
     rowScope.run {
         Box(
             modifier = Modifier
                 .size(3.dp)
                 .clip(CircleShape)
-                .background(color = appColors.material.onSurfaceVariant)
+                .background(color = appColors.material.onSurfaceVariant),
         )
         Text(
             text = transaction.note,
@@ -170,7 +178,7 @@ private fun TransactionNote(
             fontSize = 12.sp,
             modifier = Modifier
                 .padding(horizontal = 5.dp)
-                .align(alignment = Alignment.CenterVertically)
+                .align(alignment = Alignment.CenterVertically),
         )
     }
 }
@@ -178,13 +186,13 @@ private fun TransactionNote(
 @Composable
 private fun TransactionDate(
     transaction: Transaction,
-    appColors: AppColor
+    appColors: AppColor,
 ) {
     Text(
         text = DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
         color = appColors.material.onPrimaryContainer,
         fontSize = SECONDARY_TEXT_SIZE,
-        modifier = Modifier.padding(end = 5.dp)
+        modifier = Modifier.padding(end = 5.dp),
     )
 }
 
@@ -192,18 +200,18 @@ private fun TransactionDate(
 private fun CategoryName(
     transactionViewModel: TransactionViewModel,
     transaction: Transaction,
-    appColors: AppColor
+    appColors: AppColor,
 ) {
     var categoryName: String by remember {
         mutableStateOf("")
     }
-    transactionViewModel.getTransactionCategoryName(transaction.categoryId) {it->
+    transactionViewModel.getTransactionCategoryName(transaction.categoryId) { it ->
         categoryName = it
     }
     Text(
         text = categoryName,
         color = appColors.material.onPrimaryContainer,
-        fontSize = 16.sp
+        fontSize = 16.sp,
     )
 }
 

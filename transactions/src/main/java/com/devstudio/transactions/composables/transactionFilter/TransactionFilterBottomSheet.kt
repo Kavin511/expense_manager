@@ -22,7 +22,7 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel
 @Composable
 fun TransactionFilterBottomSheet(
     filterBottomSheetState: SheetState,
-    event: (FilterItem?) -> Unit
+    event: (FilterItem?) -> Unit,
 ) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
     ModalBottomSheet(onDismissRequest = {
@@ -31,14 +31,14 @@ fun TransactionFilterBottomSheet(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Text(
                 text = "Filter Range",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .padding(4.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
             LazyColumn {
                 items(transactionViewModel.filterItemOptions) { transactionFilter ->
@@ -52,14 +52,16 @@ fun TransactionFilterBottomSheet(
 @Composable
 fun TransactionFilterItem(
     filterItem: FilterItem,
-    event: (FilterItem) -> Unit
+    event: (FilterItem) -> Unit,
 ) {
-    return Text(text = filterItem.name,
+    return Text(
+        text = filterItem.name,
         style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
             .padding(vertical = 9.dp, horizontal = 4.dp)
             .fillMaxWidth()
             .clickable {
                 event.invoke(filterItem)
-            })
+            },
+    )
 }

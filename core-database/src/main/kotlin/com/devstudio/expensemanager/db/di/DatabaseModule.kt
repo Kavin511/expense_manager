@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.UUID
 
-
 @InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
@@ -59,7 +58,9 @@ class DatabaseModule {
         }
         return INSTANCE ?: synchronized(this@DatabaseModule) {
             Room.databaseBuilder(
-                applicationContext, ExpenseManagerDataBase::class.java, "expense_manager_database"
+                applicationContext,
+                ExpenseManagerDataBase::class.java,
+                "expense_manager_database",
             ).allowMainThreadQueries().addCallback(rdc)
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
                 .also { INSTANCE = it }
@@ -70,18 +71,25 @@ class DatabaseModule {
         CoroutineScope(Dispatchers.IO).launch {
             expenseManagerDataBase?.booksDao()?.insertBook(
                 Books(
-                    name = DEFAULT_BOOK_NAME, timeStamp = Calendar.getInstance().timeInMillis
-                )
+                    name = DEFAULT_BOOK_NAME,
+                    timeStamp = Calendar.getInstance().timeInMillis,
+                ),
             )
             expenseManagerDataBase?.categoryDao()?.let { categoryDao ->
                 insertCategories(
-                    categoryDao, expenseManagerDataBase, INCOME
+                    categoryDao,
+                    expenseManagerDataBase,
+                    INCOME,
                 )
                 insertCategories(
-                    categoryDao, expenseManagerDataBase, EXPENSE
+                    categoryDao,
+                    expenseManagerDataBase,
+                    EXPENSE,
                 )
                 insertCategories(
-                    categoryDao, expenseManagerDataBase, INVESTMENT
+                    categoryDao,
+                    expenseManagerDataBase,
+                    INVESTMENT,
                 )
             }
         }
@@ -90,15 +98,17 @@ class DatabaseModule {
     private fun insertCategories(
         categoryDao: CategoryDao,
         expenseManagerDataBase: ExpenseManagerDataBase,
-        income: TransactionMode
+        income: TransactionMode,
     ) {
-        categoryDao.insertCategories(income.categoryList.map {
-            Category(
-                name = it,
-                categoryType = income.name,
-                bookId = expenseManagerDataBase.booksDao().getBooks()[0].id
-            )
-        })
+        categoryDao.insertCategories(
+            income.categoryList.map {
+                Category(
+                    name = it,
+                    categoryType = income.name,
+                    bookId = expenseManagerDataBase.booksDao().getBooks()[0].id,
+                )
+            },
+        )
     }
 
     companion object {
@@ -111,15 +121,15 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN categoryId TEXT not null default ''")
         database.execSQL("CREATE TABLE CATEGORY_TABLE (id TEXT NOT NULL,\n" + "name TEXT not null,\n" + "status integer NOT NULL DEFAULT null,\n" + "timeStamp INTEGER NOT NULL default null,categoryType TEXT NOT NULL DEFAULT NULL, PRIMARY KEY (id))")
         EXPENSE.categoryList.forEachIndexed { _, it ->
-            database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','${it}',${System.currentTimeMillis()},1,'EXPENSE')")
+            database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','$it',${System.currentTimeMillis()},1,'EXPENSE')")
         }
         INCOME.categoryList.forEachIndexed { _, it ->
-            database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','${it}',${System.currentTimeMillis()},1,'INCOME')")
+            database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','$it',${System.currentTimeMillis()},1,'INCOME')")
         }
         database.execSQL("UPDATE TRANSACTIONS_TABLE   SET CATEGORYID= coalesce((SELECT id FROM CATEGORY_TABLE WHERE NAME like CATEGORY),CATEGORY)")
         database.execSQL("create table transactions_table_backup (id INTEGER NOT NULL default 0,\n" + "note TEXT not null default '',\n" + "amount REAL NOT NULL default 0.0 ,\n" + "categoryId TEXT not null default '',\n" + "isEditingOldTransaction TEXT not null default '',\n" + "transactionDate TEXT not null default '',\n" + "PRIMARY KEY (id))")
         database.execSQL(
-            "INSERT INTO TRANSACTIONS_TABLE_Backup SELECT id,\n" + "note,\n" + "amount,\n" + "categoryId,\n" + "isEditingOldTransaction,\n" + "transactionDate FROM TRANSACTIONS_TABLE"
+            "INSERT INTO TRANSACTIONS_TABLE_Backup SELECT id,\n" + "note,\n" + "amount,\n" + "categoryId,\n" + "isEditingOldTransaction,\n" + "transactionDate FROM TRANSACTIONS_TABLE",
         )
         database.execSQL("DROP TABLE TRANSACTIONS_TABLE")
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE_Backup RENAME to TRANSACTIONS_TABLE")
@@ -130,7 +140,6 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN paymentStatus TEXT not null default 'COMPLETED'")
     }
-
 }
 
 val MIGRATION_3_4 = object : Migration(3, 4) {
@@ -146,7 +155,7 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
 val MIGRATION_4_5 = object : Migration(4, 5) {
     override fun migrate(database: SupportSQLiteDatabase) {
         INVESTMENT.categoryList.forEachIndexed { _, it ->
-            database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','${it}',${System.currentTimeMillis()},1,'INVESTMENT')")
+            database.execSQL("INSERT INTO CATEGORY_TABLE (id,name,timestamp,status,CATEGORYTYPE) VALUES ('${UUID.randomUUID()}','$it',${System.currentTimeMillis()},1,'INVESTMENT')")
         }
     }
 }

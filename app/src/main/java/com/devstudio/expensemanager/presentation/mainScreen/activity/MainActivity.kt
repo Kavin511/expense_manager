@@ -19,8 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.devstudio.data.model.Theme
-import com.devstudio.expensemanager.presentation.mainScreen.NavigationHost
 import com.devstudio.expensemanager.presentation.home.composables.HomeBottomActions
+import com.devstudio.expensemanager.presentation.mainScreen.NavigationHost
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainUiState
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainViewModel
 import com.devstudioworks.ui.theme.MaterialTheme
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splash  = installSplashScreen()
+        val splash = installSplashScreen()
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -50,14 +50,14 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val darkTheme = shouldUseDarkTheme(uiState)
             AppCompatDelegate.setDefaultNightMode(
-                if (darkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                if (darkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO,
             )
             MaterialTheme(darkTheme) {
                 val navController = rememberNavController()
                 Scaffold(bottomBar = {
                     HomeBottomActions(navController)
                 }) {
-                    Box(modifier = Modifier.padding(it)){
+                    Box(modifier = Modifier.padding(it)) {
                         NavigationHost(navController)
                     }
                 }
@@ -80,5 +80,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }
