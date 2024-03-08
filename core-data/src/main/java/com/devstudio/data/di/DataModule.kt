@@ -1,20 +1,19 @@
-package com.devstudio.core_data.di
+package com.devstudio.data.di
 
-import com.devstudio.core_data.repository.BooksRepositoryImpl
-import com.devstudio.core_data.repository.CategoryRepository
-import com.devstudio.core_data.repository.CategoryRepositoryImpl
-import com.devstudio.core_data.repository.BooksRepository
-import com.devstudio.core_data.repository.RemainderRepository
-import com.devstudio.core_data.repository.RemainderRepositoryInterface
-import com.devstudio.core_data.repository.TransactionsRepository
-import com.devstudio.core_data.repository.TransactionsRepositoryImpl
-import com.devstudio.core_data.repository.UserDataRepository
-import com.devstudio.core_data.repository.UserDataRepositoryImpl
+import com.devstudio.data.repository.BooksRepository
+import com.devstudio.data.repository.BooksRepositoryImpl
+import com.devstudio.data.repository.CategoryRepository
+import com.devstudio.data.repository.CategoryRepositoryImpl
+import com.devstudio.data.repository.RemainderRepository
+import com.devstudio.data.repository.RemainderRepositoryInterface
+import com.devstudio.data.repository.TransactionsRepository
+import com.devstudio.data.repository.TransactionsRepositoryImpl
+import com.devstudio.data.repository.UserDataRepository
+import com.devstudio.data.repository.UserDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-
 
 @Module
 @InstallIn(SingletonComponent::class)

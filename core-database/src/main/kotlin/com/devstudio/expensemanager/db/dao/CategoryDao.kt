@@ -7,7 +7,6 @@ import androidx.room.Query
 import androidx.room.Update
 import com.devstudio.expensemanager.db.models.Category
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 
 @Dao
 interface CategoryDao {

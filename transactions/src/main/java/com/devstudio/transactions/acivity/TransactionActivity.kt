@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.devstudio.core_data.repository.BooksRepositoryImpl
+import com.devstudio.data.repository.BooksRepositoryImpl
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -108,7 +108,7 @@ class TransactionActivity : AppCompatActivity() {
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
             categoryId = categoryList[getSelectedCategoryIndex()].id
-            paymentStatus  = getPaymentStatus().name
+            paymentStatus = getPaymentStatus().name
             bookId = booksRepositoryImpl.getSelectedBook().first()
         }
         transactionViewModel.upsertTransaction(transaction)
@@ -173,9 +173,11 @@ class TransactionActivity : AppCompatActivity() {
                     }
                 }
                 categoryList = transactionViewModel.getCategories(selectedTransactionMode).first()
-                setSelectedCategoryIndex(categoryList.indexOfFirst { category ->
-                    category.id == it.categoryId
-                })
+                setSelectedCategoryIndex(
+                    categoryList.indexOfFirst { category ->
+                        category.id == it.categoryId
+                    },
+                )
                 binding.categoryGroup.check(getSelectedCategoryIndex())
             }
         }
@@ -266,7 +268,7 @@ class TransactionActivity : AppCompatActivity() {
         val transactionKeyboard = TransactionKeyboard(
             baseContext,
             binding.keyboard.amountText.editableText,
-            binding.keyboard
+            binding.keyboard,
         )
         transactionKeyboard.initialiseListeners()
         binding.keyboard.amountText.requestFocus()
@@ -308,11 +310,13 @@ class TransactionActivity : AppCompatActivity() {
         val selectedIndex = if (categoryList.isEmpty()) {
             categoryAdditionSnackBar()
             0
-        } else if (index >= 0) index else {
+        } else if (index >= 0) {
+            index
+        } else {
             Toast.makeText(
                 applicationContext,
                 "First category is selected as old category is not available for this transaction type",
-                Toast.LENGTH_LONG
+                Toast.LENGTH_LONG,
             ).show()
             0
         }
@@ -335,7 +339,7 @@ class TransactionActivity : AppCompatActivity() {
         Snackbar.make(
             binding.root,
             "No category available for this transaction type",
-            Snackbar.LENGTH_LONG
+            Snackbar.LENGTH_LONG,
         ).show()
     }
 
@@ -359,13 +363,15 @@ class TransactionActivity : AppCompatActivity() {
             context = this@TransactionActivity,
             title = "Are you sure to delete this transaction",
             negativeText = "No",
-            positiveText = "Delete", positiveCallback = {
+            positiveText = "Delete",
+            positiveCallback = {
                 transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
                 it.dismiss()
                 this.finish()
-            }, negativeCallback = {
+            },
+            negativeCallback = {
                 it.dismiss()
-            }
+            },
         )
     }
 }
@@ -377,5 +383,5 @@ val INVESTMENT_INDEX = 2
 enum class PaymentStatus {
     DEBT,
     CREDIT,
-    COMPLETED
+    COMPLETED,
 }

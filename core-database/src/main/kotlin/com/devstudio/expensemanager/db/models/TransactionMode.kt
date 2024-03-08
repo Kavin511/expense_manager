@@ -14,8 +14,8 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Health and personal care",
             "Entertainment",
             "Sports",
-            "Other"
-        )
+            "Other",
+        ),
     ),
     INCOME(
         listOf(
@@ -26,8 +26,8 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Rental Income",
             "Capital Gains Income",
             "Royalty Income",
-            "Other"
-        )
+            "Other",
+        ),
     ),
     INVESTMENT(listOf("Stocks", "Mutual Funds", "Fixed Deposits", "Other")),
 }

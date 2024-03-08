@@ -28,19 +28,22 @@ fun CategoryFloatingActionButton() {
     }
     if (shouldShowDialog) {
         val category = Category(categoryType = "")
-        CreateCategoryDialog(context, category, object : CategoryCallback {
-            override fun onDismiss() {
-                shouldShowDialog = false
-            }
+        CreateCategoryDialog(
+            context,
+            category,
+            object : CategoryCallback {
+                override fun onDismiss() {
+                    shouldShowDialog = false
+                }
 
-            override fun onAddCategory(category: Category) {
-                shouldShowDialog = false
-                categoryViewModel.insertCategory(category)
-            }
-        })
-
+                override fun onAddCategory(category: Category) {
+                    shouldShowDialog = false
+                    categoryViewModel.insertCategory(category)
+                }
+            },
+        )
     }
-    ExpressWalletFab(appColors, stringResource(R.string.add_category)){
+    ExpressWalletFab(appColors, stringResource(R.string.add_category)) {
         shouldShowDialog = true
     }
 }
@@ -48,7 +51,7 @@ fun CategoryFloatingActionButton() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryTopBar(
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     TopAppBar(
         title = {

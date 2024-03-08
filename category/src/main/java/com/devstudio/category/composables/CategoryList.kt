@@ -38,10 +38,10 @@ fun CategoryList(categoryStateList: List<Category>) {
                 .fillMaxHeight()
                 .background(color = appColors.material.surface),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "Tap + to create categories"
+                text = "Tap + to create categories",
             )
         }
     } else {
@@ -54,45 +54,55 @@ fun CategoryList(categoryStateList: List<Category>) {
             mutableStateOf(Category(categoryType = ""))
         }
         if (shouldShowDialog) {
-            CreateCategoryDialog(context, selectedCategory, object : CategoryCallback {
+            CreateCategoryDialog(
+                context,
+                selectedCategory,
+                object : CategoryCallback {
 
-                override fun onDismiss() {
-                    shouldShowDialog = false
-                }
+                    override fun onDismiss() {
+                        shouldShowDialog = false
+                    }
 
-                override fun onAddCategory(category: Category) {
-                    shouldShowDialog = false
-                    categoryViewModel.updateCategory(category)
-                }
-            })
+                    override fun onAddCategory(category: Category) {
+                        shouldShowDialog = false
+                        categoryViewModel.updateCategory(category)
+                    }
+                },
+            )
         }
-        LazyColumn(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+        ) {
             items(categoryStateList) {
-
-                Card(modifier = Modifier
-                    .padding(vertical = 4.dp, horizontal = 16.dp)
-                    .combinedClickable(onLongClick = {
-                        MaterialAlert(
-                            context = context,
-                            title = "Are you sure to delete this category",
-                            negativeText = "No",
-                            positiveText = "Delete", positiveCallback = { dialogInterface ->
-                                categoryViewModel.deleteTransaction(it)
-                                dialogInterface.dismiss()
-                            }, negativeCallback = {
-                                it.dismiss()
-                            }
-                        )
-                    }) {
-                        shouldShowDialog = true
-                        selectedCategory = it
-                    }) {
+                Card(
+                    modifier = Modifier
+                        .padding(vertical = 4.dp, horizontal = 16.dp)
+                        .combinedClickable(onLongClick = {
+                            MaterialAlert(
+                                context = context,
+                                title = "Are you sure to delete this category",
+                                negativeText = "No",
+                                positiveText = "Delete",
+                                positiveCallback = { dialogInterface ->
+                                    categoryViewModel.deleteTransaction(it)
+                                    dialogInterface.dismiss()
+                                },
+                                negativeCallback = {
+                                    it.dismiss()
+                                },
+                            )
+                        }) {
+                            shouldShowDialog = true
+                            selectedCategory = it
+                        },
+                ) {
                     Text(
-                        text = it.name, modifier = Modifier
+                        text = it.name,
+                        modifier = Modifier
                             .padding(16.dp)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
                     )
                 }
             }

@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -43,7 +40,7 @@ data class InputDialog(
     val hint: String = "",
     val positiveButtonText: String = "",
     val negativeButtonText: String = "",
-    val inputLeadIcon: ImageVector? = null
+    val inputLeadIcon: ImageVector? = null,
 ) {
     object Builder {
         private var heading: String = ""
@@ -82,7 +79,7 @@ data class InputDialog(
                 this.hint,
                 this.positiveButtonText,
                 this.negativeButtonText,
-                this.inputLeadIcon
+                this.inputLeadIcon,
             )
         }
     }
@@ -93,7 +90,7 @@ data class InputDialog(
 fun InputEnterDialog(
     inputDialog: InputDialog = InputDialog(),
     negativeCallback: (() -> Unit)? = null,
-    positiveCallback: ((String) -> Unit)? = null
+    positiveCallback: ((String) -> Unit)? = null,
 ) {
     Dialog(onDismissRequest = {
         negativeCallback?.invoke()
@@ -105,16 +102,17 @@ fun InputEnterDialog(
             Column(
                 modifier = Modifier
                     .background(appColors.material.surfaceVariant)
-                    .padding(LARGE_SPACING)
+                    .padding(LARGE_SPACING),
             ) {
                 Text(
                     text = inputDialog.heading,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(
-                        SMALL_SPACING
-                    )
+                        SMALL_SPACING,
+                    ),
                 )
-                OutlinedTextField(value = inputValue,
+                OutlinedTextField(
+                    value = inputValue,
                     onValueChange = {
                         inputValue = it
                     },
@@ -128,7 +126,8 @@ fun InputEnterDialog(
                         inputDialog.inputLeadIcon?.let {
                             Icon(imageVector = it, contentDescription = "")
                         }
-                    })
+                    },
+                )
                 Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                     TextButton(
                         onClick = { negativeCallback?.invoke() },
@@ -136,7 +135,7 @@ fun InputEnterDialog(
                     ) {
                         Text(
                             text = inputDialog.negativeButtonText,
-                            modifier = Modifier.padding(MEDIUM_SPACING)
+                            modifier = Modifier.padding(MEDIUM_SPACING),
                         )
                     }
                     Button(
@@ -146,13 +145,15 @@ fun InputEnterDialog(
                             } else {
                                 negativeCallback?.invoke()
                             }
-                        }, shape = RoundedCornerShape(
-                            dimensionResource(id = R.dimen.default_radius)
-                        ), modifier = Modifier.padding(SMALL_SPACING)
+                        },
+                        shape = RoundedCornerShape(
+                            dimensionResource(id = R.dimen.default_radius),
+                        ),
+                        modifier = Modifier.padding(SMALL_SPACING),
                     ) {
                         Text(
                             text = inputDialog.positiveButtonText,
-                            modifier = Modifier.padding(MEDIUM_SPACING)
+                            modifier = Modifier.padding(MEDIUM_SPACING),
                         )
                     }
                 }

@@ -2,8 +2,8 @@ package com.devstudio.feature.books
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devstudio.core_data.repository.BooksRepository
-import com.devstudio.core_data.repository.UserDataRepository
+import com.devstudio.data.repository.BooksRepository
+import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.expensemanager.db.models.Books
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
 ) : ViewModel() {
     val booksUiState = booksRepository.getBooksFlow().map { books ->
         BooksUiState.COMPLETED(books)

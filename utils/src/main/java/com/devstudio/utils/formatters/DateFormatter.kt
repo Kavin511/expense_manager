@@ -56,6 +56,6 @@ object DateFormatter {
         SEPTEMBER,
         OCTOBER,
         NOVEMBER,
-        DECEMBER
+        DECEMBER,
     )
 }

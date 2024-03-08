@@ -25,10 +25,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devstudio.category.listeners.CategoryCallback
+import com.devstudio.core.designsystem.R
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.utils.utils.AppConstants.Companion.supportedTransactionTypes
-import com.devstudio.core.designsystem.R
-
 
 @Composable
 fun CreateCategoryDialog(context: Context, category: Category, categoryCallback: CategoryCallback) {
@@ -47,7 +46,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
         Card(shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(16.dp),
             ) {
                 TextField(value = categoryName, onValueChange = {
                     if (it.isNotBlank()) {
@@ -63,17 +62,19 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
                                 onClick = {
                                     categoryType = supportedTransactionTypes[index]
                                 },
-                                modifier = Modifier.align(Alignment.CenterVertically)
+                                modifier = Modifier.align(Alignment.CenterVertically),
                             )
-                            Text(text = supportedTransactionTypes[index], modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .clickable {
-                                    categoryType = supportedTransactionTypes[index]
-                                })
+                            Text(
+                                text = supportedTransactionTypes[index],
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .clickable {
+                                        categoryType = supportedTransactionTypes[index]
+                                    },
+                            )
                         }
                     }
                 }
-
 
                 OutlinedButton(
                     onClick = {
@@ -87,7 +88,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
                             Toast.makeText(
                                 context,
                                 "Category name cannot be empty",
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_SHORT,
                             ).show()
                         }
                     },
@@ -96,7 +97,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
                         .fillMaxWidth()
                         .padding(8.dp)
                         .align(Alignment.CenterHorizontally),
-                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius)),
                 ) {
                     Text(text = if (category.name.isNotBlank()) "Update" else "Add")
                 }

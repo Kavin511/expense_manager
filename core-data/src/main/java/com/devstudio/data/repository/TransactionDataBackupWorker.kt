@@ -1,4 +1,4 @@
-package com.devstudio.core_data.repository
+package com.devstudio.data.repository
 
 import android.content.Context
 import android.os.Environment
@@ -8,9 +8,9 @@ import androidx.room.Room
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.devstudio.core_model.models.BackupStatus
-import com.devstudio.core_model.models.Status
 import com.devstudio.expensemanager.db.ExpenseManagerDataBase
+import com.devstudio.model.models.BackupStatus
+import com.devstudio.model.models.Status
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
@@ -21,8 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
 
@@ -34,7 +32,7 @@ class TransactionDataBackupWorker(
     val db = Room.databaseBuilder(
         context,
         ExpenseManagerDataBase::class.java,
-        "expense_manager_database"
+        "expense_manager_database",
     ).allowMainThreadQueries().build()
 
     override suspend fun doWork(): Result {
@@ -46,7 +44,7 @@ class TransactionDataBackupWorker(
             val backupStatus = exportTransactions()
             return@async workDataOf(
                 BACK_UP_STATUS_KEY to (backupStatus.status == Status.SUCCESS),
-                BACK_UP_STATUS_MESSAGE to backupStatus.message
+                BACK_UP_STATUS_MESSAGE to backupStatus.message,
             )
         }.await()
         return Result.success(outputData)
@@ -66,7 +64,8 @@ class TransactionDataBackupWorker(
 
     private suspend fun writeTransactionsAsCSV(csvWriter: CSVWriter) {
         csvWriter.writeNext(
-            "ID", columnNames()
+            "ID",
+            columnNames(),
         )
         val transactions = db.transactionsDao().getAllTransactionsStream().first().groupBy {
             it.bookId
@@ -74,15 +73,16 @@ class TransactionDataBackupWorker(
         transactions.forEach {
             it.value.forEach { transaction ->
                 csvWriter.writeNext(
-                    transaction.id.toString(), arrayOf(
+                    transaction.id.toString(),
+                    arrayOf(
                         it.key.toString(),
                         transaction.amount.toString(),
                         db.categoryDao().findCategoryById(transaction.categoryId)?.name
                             ?: transaction.categoryId,
                         DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
                         transaction.note,
-                        transaction.transactionMode
-                    )
+                        transaction.transactionMode,
+                    ),
                 )
             }
         }
@@ -90,7 +90,12 @@ class TransactionDataBackupWorker(
     }
 
     private fun columnNames(): Array<String?> = arrayOf(
-        "Book Name", "Amount", "Category", "Transaction Date", "Note", "Transaction Mode"
+        "Book Name",
+        "Amount",
+        "Category",
+        "Transaction Date",
+        "Note",
+        "Transaction Mode",
     )
 
     private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
@@ -98,7 +103,6 @@ class TransactionDataBackupWorker(
         file.createNewFile()
         return CSVWriter(FileWriter(file, false))
     }
-
 
     companion object {
         fun getFileToStoreTransactions(context: Context): File {
@@ -116,7 +120,7 @@ class TransactionDataBackupWorker(
                 context.filesDir.absolutePath
             } else {
                 Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOCUMENTS
+                    Environment.DIRECTORY_DOCUMENTS,
                 ).absolutePath
             }
             return "$path/${context.applicationInfo.packageName}"
@@ -124,5 +128,4 @@ class TransactionDataBackupWorker(
 
         const val BACK_UP_FILE_NAME = "transactions.csv"
     }
-
 }

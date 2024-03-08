@@ -1,4 +1,4 @@
-package com.devstudio.core_data.repository
+package com.devstudio.data.repository
 
 import com.devstudio.expensemanager.db.dao.BooksDao
 import com.devstudio.expensemanager.db.models.Books
@@ -7,8 +7,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BooksRepositoryImpl @Inject constructor(private val booksDao: BooksDao,private val userDataRepository: UserDataRepository) : BooksRepository {
-    override fun getBooksFlow():  Flow<List<Books>> {
+class BooksRepositoryImpl @Inject constructor(private val booksDao: BooksDao, private val userDataRepository: UserDataRepository) : BooksRepository {
+    override fun getBooksFlow(): Flow<List<Books>> {
         return booksDao.getBooksFlow()
     }
 
@@ -20,7 +20,7 @@ class BooksRepositoryImpl @Inject constructor(private val booksDao: BooksDao,pri
         return userDataRepository.getSelectedBookId()
     }
 
-    override fun getBookById(it: Long): Books?  = booksDao.getBookById(it)
+    override fun getBookById(it: Long): Books? = booksDao.getBookById(it)
     override fun insertBook(it: Books) = booksDao.insertBook(it)
 
     override fun createBook(book: Books) {

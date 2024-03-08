@@ -10,7 +10,7 @@ class CSVWriter @JvmOverloads constructor(
     quotechar: Char = DEFAULT_QUOTE_CHARACTER,
     escapechar: Char =
         DEFAULT_ESCAPE_CHARACTER,
-    lineEnd: String = DEFAULT_LINE_END
+    lineEnd: String = DEFAULT_LINE_END,
 ) {
     private val pw: PrintWriter
     private val separator: Char

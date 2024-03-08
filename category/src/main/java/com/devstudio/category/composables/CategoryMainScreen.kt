@@ -51,11 +51,11 @@ fun CategoryMainScreen() {
                                 .fillMaxWidth()
                                 .background(color = appColors.material.surface),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            verticalArrangement = Arrangement.Center,
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                                color = appColors.material.onSurface
+                                color = appColors.material.onSurface,
                             )
                             categoryViewModel.loadCategoriesForSelectedType(selectedFilterType.value)
                         }
@@ -79,51 +79,59 @@ fun CategoryMainScreen() {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun CategoryActions(
-    selectedFilterType: MutableState<String>
+    selectedFilterType: MutableState<String>,
 ) {
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
     LazyRow(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         item {
-            FilterChip(modifier = Modifier.padding(4.5.dp),
+            FilterChip(
+                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == "",
                 onClick = {
                     selectedFilterType.value = ""
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = ALL.toPascalCase()) })
+                label = { Text(text = ALL.toPascalCase()) },
+            )
         }
 
         item {
-            FilterChip(modifier = Modifier.padding(4.5.dp),
+            FilterChip(
+                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == EXPENSE,
                 onClick = {
                     selectedFilterType.value = EXPENSE
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = EXPENSE.toPascalCase()) })
+                label = { Text(text = EXPENSE.toPascalCase()) },
+            )
         }
         item {
-            FilterChip(modifier = Modifier.padding(4.5.dp),
+            FilterChip(
+                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == INCOME,
                 onClick = {
                     selectedFilterType.value = INCOME
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = INCOME.toPascalCase()) })
+                label = { Text(text = INCOME.toPascalCase()) },
+            )
         }
 
         item {
-            FilterChip(modifier = Modifier.padding(4.5.dp),
+            FilterChip(
+                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == INVESTMENT,
                 onClick = {
                     selectedFilterType.value = INVESTMENT
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = INVESTMENT.toPascalCase()) })
+                label = { Text(text = INVESTMENT.toPascalCase()) },
+            )
         }
     }
 }

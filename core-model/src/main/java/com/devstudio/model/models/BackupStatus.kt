@@ -1,4 +1,4 @@
-package com.devstudio.core_model.models
+package com.devstudio.model.models
 
 data class BackupStatus(val status: Status, val message: String) {
     companion object {
@@ -14,5 +14,5 @@ data class BackupStatus(val status: Status, val message: String) {
 
 enum class Status {
     SUCCESS,
-    ERROR
+    ERROR,
 }

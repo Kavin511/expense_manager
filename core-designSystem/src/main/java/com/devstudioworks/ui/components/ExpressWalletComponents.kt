@@ -10,22 +10,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.devstudioworks.ui.theme.model.AppColor
 
-
 @Composable
 fun ExpressWalletFab(
     appColors: AppColor,
     contentDescription: String,
-    function: () -> Unit
+    function: () -> Unit,
 ) {
     FloatingActionButton(
         onClick = { function.invoke() },
         modifier = Modifier.padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp),
-        containerColor = appColors.material.secondary
+        containerColor = appColors.material.secondary,
     ) {
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = contentDescription,
-            tint = appColors.material.onSecondary
+            tint = appColors.material.onSecondary,
         )
     }
 }

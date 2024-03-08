@@ -1,9 +1,9 @@
 package com.devstudio.transactions.viewmodel
 
-import com.devstudio.core_data.repository.BooksRepository
-import com.devstudio.core_data.repository.TransactionsRepository
-import com.devstudio.core_data.repository.UserDataRepository
 import com.devstudio.data.model.TransactionFilterType
+import com.devstudio.data.repository.BooksRepository
+import com.devstudio.data.repository.TransactionsRepository
+import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.expensemanager.db.di.DatabaseModule.Companion.DEFAULT_BOOK_NAME
 import com.devstudio.expensemanager.db.models.Books
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class GetTransactionBook @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     private val userDataRepository: UserDataRepository,
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
 ) {
     operator fun invoke(): Flow<TransactionBook> {
         val userData = userDataRepository.userData
@@ -27,10 +27,10 @@ class GetTransactionBook @Inject constructor(
                         .distinctUntilChanged()
                 }
 
-                is TransactionFilterType.DATE_RANGE -> {
+                is TransactionFilterType.DateRange -> {
                     transactionsRepository.filterTransactionFromDateRange(
                         transactionFilterType.additionalData,
-                        selectedBookId
+                        selectedBookId,
                     )
                 }
 
@@ -44,10 +44,8 @@ class GetTransactionBook @Inject constructor(
                 transactions = transactions,
                 bookId = book.id,
                 bookName = book.name,
-                filterType = transactionFilterType
+                filterType = transactionFilterType,
             )
-
         }
-
     }
 }
