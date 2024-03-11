@@ -2,7 +2,7 @@
 androidGradlePlugin = "8.2.2"
 coreKtx = "1.7.0"
 hilt = "2.44.2"
-hiltAndroid="2.42"
+hiltAndroid = "2.42"
 hiltNavigationCompose = '1.0.0'
 kotlin = "1.8.20"
 androidxRoom = "2.4.3"
@@ -32,11 +32,14 @@ coroutines = "1.6.4"
 workManagerVersion = "2.7.1"
 hiltWorkVersion = "1.0.0"
 hiltCompilerVersion = "1.0.0"
-playServicesAuth="20.5.0"
+playServicesAuth = "20.5.0"
 androidxCoreSplashscreen = "1.0.0"
 protobuf = "3.23.0"
 protobufPlugin = "0.9.3"
 androidxDataStore = "1.0.0"
+credentials="1.2.1"
+credentialsPlayServicesAuth="1.2.1"
+identityGoogleid="1.1.0"
 
 [libraries]
 #room
@@ -51,11 +54,11 @@ compose_ui_tooling = { module = 'androidx.compose.ui:ui-tooling', version.ref = 
 compose_foundation = { module = 'androidx.compose.foundation:foundation', version.ref = 'compose' }
 compose_material_icons = { module = 'androidx.compose.material:material-icons-core', version.ref = 'compose' }
 compose_material_icons_extended = { module = 'androidx.compose.material:material-icons-extended', version.ref = 'compose' }
-activity_compose={module = 'androidx.activity:activity-compose', version.ref = 'activityCompose' }
+activity_compose = { module = 'androidx.activity:activity-compose', version.ref = 'activityCompose' }
 core_ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
-viewmodel_compose={module =  'androidx.lifecycle:lifecycle-viewmodel-compose', version.ref = 'viewmodel' }
+viewmodel_compose = { module = 'androidx.lifecycle:lifecycle-viewmodel-compose', version.ref = 'viewmodel' }
 compose_runtime_livedata = { module = 'androidx.compose.runtime:runtime-livedata', version.ref = 'composeLivedata' }
-compose_runtime_lifecycle = {module='androidx.lifecycle:lifecycle-runtime-compose',version.ref='composeRuntime'}
+compose_runtime_lifecycle = { module = 'androidx.lifecycle:lifecycle-runtime-compose', version.ref = 'composeRuntime' }
 
 #kotlin
 kotlinx_coroutines_android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -77,23 +80,29 @@ navigation_compose = { module = 'androidx.navigation:navigation-compose', versio
 firebase_crashlytics = { module = 'com.google.firebase:firebase-crashlytics', version.ref = 'firebaseCrashlytics' }
 firebase_analytics = { module = 'com.google.firebase:firebase-analytics', version.ref = 'firebaseAnalytics' }
 #firebase_auth = {module = 'com.google.firebase:firebase-auth-ktx',version.ref='firebaseAuth' }
-play_services_auth = {module= 'com.google.android.gms:play-services-auth',version.ref="playServicesAuth" }
+play_services_auth = { module = 'com.google.android.gms:play-services-auth', version.ref = "playServicesAuth" }
 androidx_work = { module = 'androidx.work:work-runtime-ktx', version.ref = 'workManagerVersion' }
 #androidx_hilt_work = { module = "androidx.hilt:hilt-work", version.ref = "hiltWorkVersion" }
 androidx_hilt_compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompilerVersion" }
+
+#credentials
+credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+identity-googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "identityGoogleid" }
 
 #hilt
 hilt_android = { module = 'com.google.dagger:hilt-android', version.ref = "hilt" }
 hilt_android_compiler = { module = 'com.google.dagger:hilt-android-compiler', version.ref = "hilt" }
 hilt_navigation_compose = { module = 'androidx.hilt:hilt-navigation-compose', version.ref = "hiltNavigationCompose" }
 
+
 #test
 junit = { module = 'junit:junit', version.ref = "junit" }
 androidx_test_junit = { module = 'androidx.test.ext:junit', version.ref = "androidxTestJunit" }
 androidx_test_espresso = { module = 'androidx.test.espresso:espresso-core', version.ref = "androidxRestEspresso" }
-google_truth= { module="com.google.truth:truth", version.ref="googleTruth" }
-androidx_compose_ui_test_junit4= { module='androidx.compose.ui:ui-test-junit4', version.ref="androidxComposeUiTestJunit4" }
-androidx_room_room_testing= { module="androidx.room:room-testing", version.ref="androidxRoomTesting" }
+google_truth = { module = "com.google.truth:truth", version.ref = "googleTruth" }
+androidx_compose_ui_test_junit4 = { module = 'androidx.compose.ui:ui-test-junit4', version.ref = "androidxComposeUiTestJunit4" }
+androidx_room_room_testing = { module = "androidx.room:room-testing", version.ref = "androidxRoomTesting" }
 
 
 [plugins]
@@ -107,7 +116,7 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 [bundles]
-compose=["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose","viewmodel_compose","compose_runtime_livedata","navigation_compose","compose_runtime_lifecycle"]
-hilt=["hilt_android","hilt_android_compiler","hilt_navigation_compose"]
+compose = ["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose", "viewmodel_compose", "compose_runtime_livedata", "navigation_compose", "compose_runtime_lifecycle"]
+hilt = ["hilt_android", "hilt_android_compiler", "hilt_navigation_compose"]
 
 

@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "98988400529-754gstj4b9a8l3hljfaqf9gc3isnisbs.apps.googleusercontent.com",
+          "client_id": "98988400529-q219c7gjqmp2n557ulcpq6pdur50qibo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -36,14 +36,22 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:98988400529:android:c058428de46e5d2ae34430",
+        "mobilesdk_app_id": "1:98988400529:android:89324f82cdb8f60ee34430",
         "android_client_info": {
           "package_name": "com.devstudio.expensemanager.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "98988400529-754gstj4b9a8l3hljfaqf9gc3isnisbs.apps.googleusercontent.com",
+          "client_id": "98988400529-0uhrlokf2u7qajhjjo76fhr18ijdth88.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devstudio.expensemanager.debug",
+            "certificate_hash": "7c6c61119ae7c6238efd96e293ebc30343e55b93"
+          }
+        },
+        {
+          "client_id": "98988400529-q219c7gjqmp2n557ulcpq6pdur50qibo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

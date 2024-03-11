@@ -9,16 +9,24 @@ import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backup
 import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,7 +36,9 @@ import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewM
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.ExpressWalletAppState
-import com.devstudio.model.models.Status.SUCCESS
+import com.devstudio.model.models.Status
+import com.devstudioworks.registration.OneTapSignInWithGoogle
+import com.devstudioworks.registration.rememberOneTapSignInState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +54,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
     val activityResultLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { permissions ->
-        permissions.entries.forEach { it ->
+        permissions.entries.forEach {
             val permissionName = it.key
             val isGranted = it.value
             if (isGranted) {
@@ -117,6 +127,7 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
     }) {
         Icon(Icons.Rounded.Category, "Category")
     }
+    User()
 }
 
 private fun backUpTransactions(
@@ -125,19 +136,23 @@ private fun backUpTransactions(
     context: Context,
 ) {
     homeActionsViewModel.exportTransactions(true) {
-        if (it.status == SUCCESS) {
+        if (it.status == Status.SUCCESS) {
             showBackUpResultAlert(it, snackBarHostState, context)
         } else {
             Toast.makeText(
                 context,
-                it.message ?: "",
+                it.message,
                 Toast.LENGTH_SHORT,
             ).show()
         }
     }
 }
 
-private fun showBackUpResultAlert(backStatus: BackupStatus, snackBarHostState: SnackbarHostState, context: Context) {
+private fun showBackUpResultAlert(
+    backStatus: BackupStatus,
+    snackBarHostState: SnackbarHostState,
+    context: Context
+) {
     CoroutineScope(Dispatchers.Main).launch {
         val snackBarResult = snackBarHostState.showSnackbar(
             actionLabel = SHARE,
@@ -174,3 +189,24 @@ fun createIntentToShareTransactions(context: Context) {
 }
 
 const val BACKUP = "Backup"
+
+
+@Composable
+fun User() {
+    val context = LocalContext.current as AppCompatActivity
+    val oneTapSignInWithGoogle = rememberOneTapSignInState()
+    OneTapSignInWithGoogle(state = oneTapSignInWithGoogle, clientId = context.getString(com.devstudioworks.registration.R.string.client_id), onTokenIdReceived ={
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    } ) {
+        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    }
+    Row(modifier = Modifier.clickable {
+        oneTapSignInWithGoogle.open()
+    }) {
+        Image(
+            imageVector = Icons.Rounded.Person,
+            contentDescription = "User Image",
+            modifier = Modifier.size(50.dp)
+        )
+    }
+}
