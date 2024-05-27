@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.2.2"
+androidGradlePlugin = "8.3.0"
 coreKtx = "1.7.0"
 firebaseCrashlyticsGradle = "2.9.9"
 googleServices = "4.4.1"
