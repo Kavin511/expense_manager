@@ -1,6 +1,6 @@
 plugins {
-	id 'java-library'
-	id 'org.jetbrains.kotlin.jvm'
+	`java-library`
+	kotlin("jvm")
 }
 
 java {
@@ -9,6 +9,7 @@ java {
 }
 
 dependencies {
-	testImplementation libs.junit
-	testImplementation libs.google.truth
+	testImplementation(libs.junit)
+	testImplementation(libs.google.truth)
 }
+
