@@ -1,5 +1,5 @@
 plugins {
-	id("com.android.application")
+	alias(libs.plugins.androidApplication)
 	id("org.jetbrains.kotlin.android")
 	id("org.jetbrains.kotlin.kapt")
 	id("com.google.gms.google-services")
