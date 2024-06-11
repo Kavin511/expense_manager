@@ -10,8 +10,9 @@ buildscript {
 plugins {
     id("com.android.application") version "8.2.2" apply false
     id("com.android.library") version "8.2.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.8.20" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.8.20" apply false
+    alias(libs.plugins.kotlin.android).apply(false)
+    alias(libs.plugins.org.jetbrains.kotlin.jvm).apply(false)
+    alias(libs.plugins.compose.compiler).apply(false)
     id("com.google.dagger.hilt.android") version "2.42" apply false
     id("com.android.dynamic-feature") version "8.2.2" apply false
     id("com.diffplug.spotless") version "6.19.0" apply false
