@@ -6,6 +6,7 @@ plugins {
 	id("com.google.firebase.crashlytics")
 	id("dagger.hilt.android.plugin")
 	alias(libs.plugins.protobuf)
+	alias(libs.plugins.compose.compiler)
 }
 
 protobuf {

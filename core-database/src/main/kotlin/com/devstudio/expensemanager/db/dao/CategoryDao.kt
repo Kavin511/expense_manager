@@ -2,7 +2,7 @@ package com.devstudio.expensemanager.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.IGNORE
+import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
 import androidx.room.Update
 import com.devstudio.expensemanager.db.models.Category

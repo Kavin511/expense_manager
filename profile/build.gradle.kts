@@ -3,6 +3,7 @@ plugins {
 	alias(libs.plugins.kotlin.android)
 	id("org.jetbrains.kotlin.kapt")
 	id("dagger.hilt.android.plugin")
+	alias(libs.plugins.compose.compiler)
 	alias(libs.plugins.protobuf)
 }
 
