@@ -1,10 +1,10 @@
 package com.devstudio.data.datastore
 
-import androidx.datastore.core.DataStore
-import com.devstudio.core.data.FilterType
-import com.devstudio.core.data.Theme_proto
-import com.devstudio.core.data.UserPreferences
-import com.devstudio.core.data.copy
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.Theme.DARK
 import com.devstudio.data.model.Theme.LIGHT
@@ -13,63 +13,89 @@ import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.data.model.UserPreferencesData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class DataSourceModule @Inject constructor(private val userPreferencesDataStore: DataStore<UserPreferences>) {
+private const val USER_PREFERENCES_NAME = "user_preferences"
+
+private val Context.userPreferencesDataStore by preferencesDataStore(
+    name = USER_PREFERENCES_NAME
+)
+const val SELECTED_BOOK_ID = "selectedBookId"
+const val THEME = "theme"
+const val FILTER_TYPE = "filterType"
+const val FILTER_START_DATE = "filterStartDate"
+const val FILTER_END_DATE = "filterEndDate"
+
+
+val selectedBookId = intPreferencesKey(SELECTED_BOOK_ID)
+val themePreference = stringPreferencesKey(THEME)
+val filterType = stringPreferencesKey(FILTER_TYPE)
+val filterStartDate = stringPreferencesKey(FILTER_START_DATE)
+val filterEndDate = stringPreferencesKey(FILTER_END_DATE)
+
+
+class DataSourceModule @Inject constructor(@ApplicationContext val context: Context) {
     private val DEFAULT_BOOK_ID: Long = 1
+
     suspend fun updateSelectedBookId(id: Long) {
-        userPreferencesDataStore.updateData {
-            it.copy { this.selectedBookId = id }
+        context.userPreferencesDataStore.edit {
+            it[selectedBookId] = id.toInt()
         }
     }
 
     suspend fun updateTheme(theme: Theme) {
-        userPreferencesDataStore.updateData {
-            it.copy {
-                this.theme = when (theme) {
-                    LIGHT -> Theme_proto.LIGHT
-                    DARK -> Theme_proto.DARK
-                    SYSTEM_DEFAULT -> Theme_proto.SYSTEM_DEFAULT
-                }
+        context.userPreferencesDataStore.edit {
+            it[themePreference] = when (theme) {
+                LIGHT -> ThemeProto.LIGHT.name
+                DARK -> ThemeProto.DARK.name
+                SYSTEM_DEFAULT -> ThemeProto.SYSTEM_DEFAULT.name
             }
         }
     }
 
     fun getSelectedBookId(): Flow<Long> {
-        return userPreferencesDataStore.data.map { userData -> userData.selectedBookId.orDefault(DEFAULT_BOOK_ID) }
+        return context.userPreferencesDataStore.data.map { userData ->
+            userData[selectedBookId]?.toLong() ?: DEFAULT_BOOK_ID
+        }
     }
 
     suspend fun updateTransactionFilter(filterItem: TransactionFilterType) {
-        userPreferencesDataStore.updateData {
-            it.copy {
-                this.filterType = when (filterItem) {
-                    is DateRange -> {
-                        this.filterStartDate = filterItem.additionalData.first.toString()
-                        this.filterEndDate = filterItem.additionalData.second.toString()
-                        FilterType.DATE_RANGE
-                    }
-
-                    is ALL -> {
-                        FilterType.ALL
-                    }
-
-                    else -> FilterType.CURRENT_MONTH
+        context.userPreferencesDataStore.edit {
+            var updatedFilterStartDate: String = it[filterStartDate] ?: ""
+            var updatedFilterEndDate: String = it[filterEndDate] ?: ""
+            val updatedFilterType = when (filterItem) {
+                is DateRange -> {
+                    updatedFilterStartDate = filterItem.additionalData.first.toString()
+                    updatedFilterEndDate = filterItem.additionalData.second.toString()
+                    FilterType.DATE_RANGE
                 }
-            }
+
+                is ALL -> {
+                    FilterType.ALL
+                }
+
+                else -> FilterType.CURRENT_MONTH
+            }.name
+
+            it[filterType] = updatedFilterType
+            it[filterStartDate] = updatedFilterStartDate
+            it[filterEndDate] = updatedFilterEndDate
+
         }
     }
 
     fun getCurrentTransactionFilter(): Flow<TransactionFilterType> {
-        return userPreferencesDataStore.data.distinctUntilChanged().map {
-            when (it.filterType) {
-                FilterType.ALL -> ALL
-                FilterType.DATE_RANGE -> DateRange(
+        return context.userPreferencesDataStore.data.distinctUntilChanged().map {
+            when (it[filterType]) {
+                FilterType.ALL.name -> ALL
+                FilterType.DATE_RANGE.name -> DateRange(
                     Pair(
-                        it.filterStartDate.toLong(),
-                        it.filterEndDate.toLong(),
+                        it[filterStartDate]?.toLong() ?: 0,
+                        it[filterEndDate]?.toLong() ?: 0,
                     ),
                 )
 
@@ -78,29 +104,28 @@ class DataSourceModule @Inject constructor(private val userPreferencesDataStore:
         }
     }
 
-    val userData: Flow<UserPreferencesData>
-        get() {
-            return userPreferencesDataStore.data.map { userData ->
-                UserPreferencesData(
-                    theme = when (userData.theme) {
-                        Theme_proto.LIGHT -> LIGHT
-                        Theme_proto.DARK -> DARK
-                        else -> SYSTEM_DEFAULT
-                    },
-                    selectedBookId = userData.selectedBookId.orDefault(DEFAULT_BOOK_ID),
-                    filterType = when (userData.filterType) {
-                        FilterType.ALL -> ALL
-                        FilterType.DATE_RANGE -> DateRange(
-                            additionalData = Pair(
-                                userData.filterStartDate.ifEmpty { "0" }.toLong(),
-                                userData.filterEndDate.ifEmpty { "0" }.toLong(),
-                            ),
-                        )
+    fun userData(): Flow<UserPreferencesData> =
+        context.userPreferencesDataStore.data.map { userData ->
+            val currentSelectedBookId = userData[selectedBookId] ?: DEFAULT_BOOK_ID
+            UserPreferencesData(
+                theme = when (userData[themePreference]) {
+                    LIGHT.name -> LIGHT
+                    DARK.name -> DARK
+                    else -> SYSTEM_DEFAULT
+                },
+                selectedBookId = currentSelectedBookId.toLong(),
+                filterType = when (userData[filterType]) {
+                    FilterType.ALL.name -> ALL
+                    FilterType.DATE_RANGE.name -> DateRange(
+                        additionalData = Pair(
+                            userData[filterStartDate]?.ifEmpty { "0" }?.toLong() ?: 0,
+                            userData[filterEndDate]?.ifEmpty { "0" }?.toLong() ?: 0,
+                        ),
+                    )
 
-                        else -> TransactionFilterType.CurrentMonth
-                    },
-                )
-            }
+                    else -> TransactionFilterType.CurrentMonth
+                },
+            )
         }
 }
 

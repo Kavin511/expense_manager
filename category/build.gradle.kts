@@ -1,14 +1,14 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.ksp)
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.devstudio.category"
-    compileSdk = 33
+    compileSdk= 34
 
     defaultConfig {
         minSdk = 21
@@ -44,10 +44,10 @@ android {
 dependencies {
     implementation(project(":core-designSystem"))
     implementation(project(":core-database"))
-    implementation(project(":core-data"))
+    api(project(":core-data"))
     implementation(project(":utils"))
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.bundles.compose)
     implementation(libs.livedata)

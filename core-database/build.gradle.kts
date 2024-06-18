@@ -1,17 +1,17 @@
 plugins {
 	alias(libs.plugins.androidLibrary)
 	alias(libs.plugins.kotlin.android)
-	id("org.jetbrains.kotlin.kapt")
+	alias(libs.plugins.ksp)
 }
 
 android {
 	namespace = "com.devstudio.core.database"
-	compileSdk = 33
+	compileSdk= 34
 	buildToolsVersion = "33.0.1"
 
 	defaultConfig {
 		minSdk = 21
-		targetSdk = 33
+		targetSdk= 34
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles("consumer-rules.pro")
 	}
@@ -38,7 +38,7 @@ android {
 
 dependencies {
 	implementation(libs.androidx.room)
-	kapt(libs.androidx.room.compiler)
+	ksp(libs.androidx.room.compiler)
 	implementation(libs.hilt.android)
-	kapt(libs.hilt.android.compiler)
+	ksp(libs.hilt.android.compiler)
 }

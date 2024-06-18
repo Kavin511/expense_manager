@@ -1,35 +1,17 @@
+
 plugins {
 	alias(libs.plugins.android.application)
 	id("org.jetbrains.kotlin.android")
-	id("org.jetbrains.kotlin.kapt")
+	alias(libs.plugins.ksp)
 	id("com.google.gms.google-services")
 	id("com.google.firebase.crashlytics")
 	id("dagger.hilt.android.plugin")
-	alias(libs.plugins.protobuf)
 	alias(libs.plugins.compose.compiler)
-}
-
-protobuf {
-	protoc {
-		artifact = libs.protobuf.protoc.get().toString()
-	}
-	generateProtoTasks {
-		all().forEach { task ->
-			task.builtins {
-				register("java") {
-					option("lite")
-				}
-				register("kotlin") {
-					option("lite")
-				}
-			}
-		}
-	}
 }
 
 android {
 	namespace = "com.devstudio.expensemanager"
-	compileSdk = 34
+    compileSdk = 34
 	buildToolsVersion = "33.0.1"
 	signingConfigs {
 		create("release") {
@@ -84,7 +66,6 @@ dependencies {
 	implementation(project(":utils"))
 	implementation(project(":core-designSystem"))
 	implementation(project(":core-database"))
-	implementation(project(":core-data"))
 	implementation(project(":core-model"))
 	implementation(project(":transactions"))
 	implementation(project(":category"))
@@ -113,15 +94,12 @@ dependencies {
 
 	//    room
 	implementation(libs.androidx.room)
-	kapt(libs.androidx.room.compiler)
+	ksp(libs.androidx.room.compiler)
 
 	implementation(libs.hilt.android)
 	implementation(libs.hilt.navigation.compose)
-	kapt(libs.hilt.android.compiler)
+	ksp(libs.hilt.android.compiler)
 	implementation(libs.androidx.work)
-	kapt(libs.androidx.hilt.compiler)
+	ksp(libs.androidx.hilt.compiler)
 	implementation(project(":core-data:model"))
-
-	implementation(libs.androidx.dataStore.core)
-	implementation(libs.protobuf.kotlin.lite)
 }

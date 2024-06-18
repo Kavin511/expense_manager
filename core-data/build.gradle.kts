@@ -1,38 +1,19 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.ksp)
     id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
-    alias(libs.plugins.protobuf)
-}
-
-protobuf {
-    protoc {
-        artifact = libs.protobuf.protoc.get().toString()
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                create("java") {
-                    option("lite")
-                }
-                create("kotlin") {
-                    option("lite")
-                }
-            }
-        }
-    }
 }
 
 android {
 	namespace ="com.devstudio.core.data"
-    compileSdk = 33
+    compileSdk= 34
     buildToolsVersion = "33.0.1"
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk= 34
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -40,10 +21,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    kapt {
-        correctErrorTypes=true
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -58,10 +35,9 @@ dependencies {
     implementation(project(":core-model"))
     implementation(project(":core-data:model"))
     implementation(libs.androidx.room)
-    kapt(libs.hilt.android.compiler)
+    api(libs.androidx.datastore.preferences)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.work)
     implementation(libs.firebase.crashlytics)
-    implementation(libs.androidx.dataStore.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.protobuf.kotlin.lite)
 }

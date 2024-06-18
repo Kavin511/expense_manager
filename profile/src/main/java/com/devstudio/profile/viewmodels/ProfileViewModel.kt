@@ -58,12 +58,6 @@ class ProfileViewModel @Inject constructor(
             .build()
     }
 
-    suspend fun getTheme() {
-        return userPreferencesDataStore.userData.collectLatest {
-            it.theme
-        }
-    }
-
     fun setRemainders(remainder: List<Remainder>, context: Context) {
         remainderRepository.setRemainders(remainder, context)
     }

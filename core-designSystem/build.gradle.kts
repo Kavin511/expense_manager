@@ -6,7 +6,7 @@ plugins {
 
 android {
 	namespace ="com.devstudio.core.designsystem"
-    compileSdk = 33
+    compileSdk= 34
     buildToolsVersion = "33.0.1"
 
     buildTypes {
