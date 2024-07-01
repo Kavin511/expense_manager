@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 
 @Preview(name = "")
 @Composable

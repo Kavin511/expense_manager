@@ -27,6 +27,7 @@ import com.devstudio.profile.composables.ProfileMainScreen
 import com.devstudio.profile.composables.RemainderScreen
 import com.devstudio.transactions.composables.transactionList.applySelectedFilter
 import com.devstudio.transactions.viewmodel.TransactionViewModel
+import com.example.sharedmodule.ImportTransactions
 import kotlinx.coroutines.launch
 
 @Composable
@@ -63,6 +64,10 @@ fun NavigationHost(
                 ),
             ) {
                 CategoryMainScreen()
+            }
+
+            composable(route = ExpressWalletAppState.ImportScreen.route) {
+                ImportTransactions()
             }
 
             composable(route = ExpressWalletAppState.HomeScreen.AccountScreen.route) {

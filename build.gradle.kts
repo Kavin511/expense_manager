@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.jvm).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.ksp).apply(false)
+    alias(libs.plugins.multiplatform).apply(false)
     id("com.google.dagger.hilt.android") version "2.42" apply false
     id("com.android.dynamic-feature") version "8.2.2" apply false
     id("com.diffplug.spotless") version "6.19.0" apply false

@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backup
 import androidx.compose.material.icons.rounded.Category
+import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarDuration
@@ -102,7 +103,13 @@ fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHos
             true
         }
     }
-
+    IconButton(onClick = {
+        navController.navigate(ExpressWalletAppState.ImportScreen.route) {
+            launchSingleTop = true
+        }
+    }) {
+        Icon(Icons.Rounded.Upload, "Import")
+    }
     IconButton(onClick = {
         if (checkPermissionToStartBackup(context)) {
             backUpTransactions(homeActionsViewModel, snackBarHostState, context)

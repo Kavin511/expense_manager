@@ -28,7 +28,7 @@ import com.devstudio.expensemanager.db.models.Books
 import com.devstudioworks.ui.components.InputDialog
 import com.devstudioworks.ui.components.InputEnterDialog
 import com.devstudioworks.ui.icons.EMAppIcons
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

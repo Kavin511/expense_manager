@@ -35,7 +35,7 @@ import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
 import com.devstudioworks.ui.icons.EMAppIcons
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 
 @Composable
 fun ProfileMainScreen(navController: NavHostController) {

@@ -9,7 +9,7 @@ sealed class ExpressWalletAppState(val route: String) {
         object EditCategoryScreen : ExpressWalletAppState("/editCategory")
         object AccountScreen : ExpressWalletAppState("/account")
     }
-
+    object ImportScreen : ExpressWalletAppState("/import")
     object ThemeScreen : ExpressWalletAppState("/theme")
     object BudgetScreen : ExpressWalletAppState("/budget")
     object RemainderScreen : ExpressWalletAppState("/remainder")

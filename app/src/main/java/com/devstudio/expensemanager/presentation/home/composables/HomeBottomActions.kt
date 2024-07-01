@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devstudio.expensemanager.R
 import com.devstudio.model.models.ExpressWalletAppState
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 
 /**
  * @Author: Kavin

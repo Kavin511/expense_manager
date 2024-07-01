@@ -36,7 +36,7 @@ import com.devstudio.transactions.models.DateSelectionStatus
 import com.devstudio.transactions.models.TransactionOptionsEvent
 import com.devstudio.transactions.models.TransactionUiState
 import com.devstudio.transactions.viewmodel.TransactionViewModel
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 import com.google.android.material.datepicker.MaterialDatePicker
 
 @Composable

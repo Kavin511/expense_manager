@@ -24,7 +24,7 @@ import androidx.navigation.NavHostController
 import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.profile.composables.Label
 import com.devstudio.utils.formatters.DateFormatter
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 import java.util.Calendar
 
 @Composable

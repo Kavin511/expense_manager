@@ -91,6 +91,7 @@ dependencies {
 	androidTestImplementation(libs.androidx.room.room.testing)
 
 	implementation(libs.bundles.compose)
+	implementation(project.project(":sharedModule"))
 
 	//    room
 	implementation(libs.androidx.room)

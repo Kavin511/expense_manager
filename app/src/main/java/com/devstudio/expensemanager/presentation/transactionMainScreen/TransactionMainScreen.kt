@@ -34,7 +34,7 @@ import com.devstudio.transactions.models.TransactionUiState
 import com.devstudioworks.ui.components.DefaultLoader
 import com.devstudioworks.ui.components.ExpressWalletFab
 import com.devstudioworks.ui.icons.EMAppIcons
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 
 /**
  * @Author: Kavin

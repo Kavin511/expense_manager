@@ -27,7 +27,7 @@ import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.theme.appColors
 import java.util.Calendar
 
 @OptIn(ExperimentalLayoutApi::class)

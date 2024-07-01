@@ -23,7 +23,7 @@ import com.devstudio.expensemanager.presentation.home.composables.HomeBottomActi
 import com.devstudio.expensemanager.presentation.mainScreen.NavigationHost
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainUiState
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainViewModel
-import com.devstudioworks.ui.theme.MaterialTheme
+import com.devstudio.theme.AppMaterialTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(
                 if (darkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO,
             )
-            MaterialTheme(darkTheme) {
+            AppMaterialTheme(darkTheme) {
                 val navController = rememberNavController()
                 Scaffold(bottomBar = {
                     HomeBottomActions(navController)
