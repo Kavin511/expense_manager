@@ -47,6 +47,7 @@ dependencies {
     api(project(":core-data"))
     implementation(project(":utils"))
     implementation(libs.hilt.android)
+    api(project(":theme"))
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.bundles.compose)

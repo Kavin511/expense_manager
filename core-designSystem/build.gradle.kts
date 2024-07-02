@@ -96,5 +96,5 @@ android {
     }
 }
 dependencies {
-    api(project(":core-designSystem:theme"))
+    api(project(":theme"))
 }

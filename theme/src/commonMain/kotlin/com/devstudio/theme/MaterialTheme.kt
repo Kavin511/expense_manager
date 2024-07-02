@@ -144,7 +144,8 @@ private val DarkColors = darkColorScheme(
 fun AppMaterialTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content:
-    @Composable () -> Unit,
+    @Composable()
+    () -> Unit,
 ) {
     val colors = if (!useDarkTheme) {
         lightPalette

@@ -28,11 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.devstudio.theme.Greeting
 import com.devstudio.theme.appColors
 
 @Composable
 fun ImportTransactions() {
     var skipFirstRow by remember { mutableStateOf(false) }
+    Greeting()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = appColors.material.surface
