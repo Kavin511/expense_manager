@@ -88,19 +88,13 @@ dependencies {
 	androidTestImplementation(libs.androidx.test.espresso)
 	testImplementation(libs.google.truth)
 	androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-	androidTestImplementation(libs.androidx.room.room.testing)
 
 	implementation(libs.bundles.compose)
 	implementation(project.project(":sharedModule"))
-
-	//    room
-	implementation(libs.androidx.room)
-	ksp(libs.androidx.room.compiler)
 
 	implementation(libs.hilt.android)
 	implementation(libs.hilt.navigation.compose)
 	ksp(libs.hilt.android.compiler)
 	implementation(libs.androidx.work)
-	ksp(libs.androidx.hilt.compiler)
 	implementation(project(":core-data:model"))
 }

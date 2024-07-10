@@ -1,44 +1,81 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-	alias(libs.plugins.androidLibrary)
-	alias(libs.plugins.kotlin.android)
-	alias(libs.plugins.ksp)
+    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
+}
+
+kotlin {
+    androidTarget {
+        compilations.all {
+            compileTaskProvider {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_1_8)
+                    freeCompilerArgs.add("-Xjdk-release=${JavaVersion.VERSION_1_8}")
+                }
+            }
+        }
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api(libs.room.runtime)
+//            api(libs.koin.android)
+//            api(libs.koin.core)
+//            api(libs.koin.compose)
+//            api(libs.koin.compose.viewmodel)
+        }
+
+        commonTest.dependencies {
+        }
+
+        androidMain.dependencies {
+
+//            api(libs.koin.androidx.compose)
+        }
+
+        iosMain.dependencies {
+        }
+
+    }
 }
 
 android {
-	namespace = "com.devstudio.core.database"
-	compileSdk= 34
-	buildToolsVersion = "33.0.1"
+    namespace = "com.devstudio.core.database"
+    compileSdk = 34
 
-	defaultConfig {
-		minSdk = 21
-		targetSdk= 34
-		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-		consumerProguardFiles("consumer-rules.pro")
-	}
+    defaultConfig {
+        minSdk = 21
+        targetSdk = 34
 
-	buildTypes {
-		getByName("release") {
-			isMinifyEnabled = true
-			proguardFiles(
-				getDefaultProguardFile("proguard-android-optimize.txt"),
-				"proguard-rules.pro"
-			)
-		}
-	}
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    sourceSets["main"].apply {
+        manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        res.srcDirs("src/androidMain/res")
+    }
 
-	kotlinOptions {
-		jvmTarget = "17"
-	}
-
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_17
-		targetCompatibility = JavaVersion.VERSION_17
-	}
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 }
-
 dependencies {
-	implementation(libs.androidx.room)
-	ksp(libs.androidx.room.compiler)
-	implementation(libs.hilt.android)
-	ksp(libs.hilt.android.compiler)
+    ksp(libs.room.compiler)
+}
+room {
+    schemaDirectory("$projectDir/schemas")
 }

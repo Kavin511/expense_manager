@@ -34,7 +34,6 @@ dependencies {
     implementation(project(":utils"))
     implementation(project(":core-model"))
     implementation(project(":core-data:model"))
-    implementation(libs.androidx.room)
     api(libs.androidx.datastore.preferences)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.work)

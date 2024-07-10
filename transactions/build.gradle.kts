@@ -43,12 +43,11 @@ android {
 dependencies {
 	implementation(project(":utils"))
 	implementation(project(":core-designSystem"))
-	implementation(project(":core-database"))
 	api(project(":core-data"))
+	implementation(project.project(":core-database"))
 	implementation(project(":core-data:model"))
 	implementation(project(":core-model"))
 	implementation(libs.hilt.android)
-	implementation(libs.androidx.room)
 	ksp(libs.hilt.android.compiler)
 	implementation(libs.hilt.navigation.compose)
 	implementation(libs.bundles.compose)

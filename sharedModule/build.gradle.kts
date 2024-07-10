@@ -33,12 +33,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-//            implementation(compose.runtime)
-//            implementation(compose.foundation)
-//            implementation(compose.material3)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
             implementation(project(":core-designSystem"))
-//            implementation(compose.components.resources)
-//            implementation(compose.components.uiToolingPreview)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             api(project(":theme"))
         }
 
@@ -48,6 +48,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.uiTooling)
             implementation(libs.activity.compose)
+            implementation(project(":core-data"))
+            implementation(project(":core-database"))
             implementation(project(":core-designSystem"))
         }
 
