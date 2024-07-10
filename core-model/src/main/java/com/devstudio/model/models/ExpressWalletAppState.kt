@@ -1,6 +1,6 @@
 package com.devstudio.model.models
 
-sealed class ExpressWalletAppState(val route: String) {
+sealed class ExpressWalletAppState(public val route: String) {
     object HomeScreen : ExpressWalletAppState("/home") {
         object TransactionsScreen : ExpressWalletAppState("/transactions") {
             object BooksMainScreen : ExpressWalletAppState("/books")

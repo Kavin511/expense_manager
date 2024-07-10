@@ -82,6 +82,7 @@ dependencies {
 	implementation(libs.viewmodel)
 	implementation(libs.firebase.crashlytics)
 	implementation(libs.firebase.analytics)
+	implementation(libs.androidx.constraintlayout.compose)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.test.junit)

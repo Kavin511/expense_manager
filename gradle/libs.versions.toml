@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "8.2.2"
+constraintlayoutCompose = "1.0.1"
 coreKtx = "1.7.0"
 firebaseCrashlyticsGradle = "2.9.9"
 googleServices = "4.4.1"
@@ -44,6 +45,7 @@ koinComposeMultiplatform = "1.2.0-Beta4"
 roomKtx = "2.6.1"
 
 [libraries]
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastoreCoreAndroidVersion" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }

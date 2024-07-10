@@ -1,5 +1,6 @@
 package com.devstudio.expensemanager.presentation.home.composables
 
+import HomeActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
@@ -12,9 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import com.devstudio.expensemanager.presentation.transactionMainScreen.TransactionMainScreen
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.BookEvent
+import com.devstudio.expensemanager.presentation.transactionMainScreen.model.HomeScreenState
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
 import com.devstudio.feature.books.BooksMainScreen
 import com.devstudio.transactions.composables.transactionFilter.TransactionFilterBottomSheet
+import com.devstudio.transactions.models.BottomSheetEvent
 import com.devstudio.transactions.models.TransactionOptionsEvent
 import com.devstudio.transactions.models.TransactionUiState
 
@@ -23,12 +26,14 @@ import com.devstudio.transactions.models.TransactionUiState
 fun HomeScreen(
     navController: NavHostController,
     uiState: TransactionUiState,
-    booksBottomSheet: SheetState = rememberModalBottomSheetState(),
-    transactionFilterBottomSheet: SheetState = rememberModalBottomSheetState(),
+    homeScreenState: HomeScreenState,
     transactionEvents: TransactionEvents,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val topAppBarState = rememberTopAppBarState()
+    val booksBottomSheet = homeScreenState.booksBottomSheet
+    val transactionFilterBottomSheet = homeScreenState.transactionFilterBottomSheet
+    val moreOptionsBottomSheet = homeScreenState.moreOptionsBottomSheet
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
     if (booksBottomSheet.currentValue.equals(SheetValue.Expanded)) {
         BooksMainScreen(booksBottomSheet) {
@@ -38,6 +43,11 @@ fun HomeScreen(
     if (transactionFilterBottomSheet.currentValue.equals(SheetValue.Expanded)) {
         TransactionFilterBottomSheet(transactionFilterBottomSheet) {
             transactionEvents.filterEvent.invoke(TransactionOptionsEvent(false, it))
+        }
+    }
+    if (moreOptionsBottomSheet.currentValue.equals(SheetValue.Expanded)) {
+        HomeActions(navController, snackBarHostState) {
+            transactionEvents.moreOptionsEvent.invoke(BottomSheetEvent(false, it))
         }
     }
     TransactionMainScreen(

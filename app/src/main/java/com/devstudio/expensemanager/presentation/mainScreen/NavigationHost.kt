@@ -18,6 +18,7 @@ import androidx.navigation.navigation
 import com.devstudio.category.composables.CategoryMainScreen
 import com.devstudio.expensemanager.presentation.home.composables.HomeScreen
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.BookEvent
+import com.devstudio.expensemanager.presentation.transactionMainScreen.model.HomeScreenState
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
 import com.devstudio.feature.books.BooksViewModel
 import com.devstudio.model.models.ExpressWalletAppState
@@ -97,10 +98,11 @@ private fun HomeScreenRoute(navController: NavHostController) {
     val transactionUiState by transactionViewModel.uiState.collectAsStateWithLifecycle()
     val booksBottomSheet = rememberModalBottomSheetState()
     val transactionFilterBottomSheet = rememberModalBottomSheetState()
+    val moreOptionBottomSheet = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     val fragmentManager = (LocalContext.current as AppCompatActivity).supportFragmentManager
     val booksEventCallback: (BookEvent) -> Unit = { bookEvent ->
-        if (bookEvent.showBookSelection) {
+        if (bookEvent.showBottomSheet) {
             coroutineScope.launch {
                 booksBottomSheet.show()
             }
@@ -109,17 +111,16 @@ private fun HomeScreenRoute(navController: NavHostController) {
                 booksBottomSheet.hide()
             }
         }
-        bookEvent.bookId?.let {
+        bookEvent.selectedItem?.let {
             booksViewModel.saveSelectedBook(it)
         }
     }
     HomeScreen(
         navController,
         transactionUiState,
-        booksBottomSheet,
-        transactionFilterBottomSheet,
+        HomeScreenState(booksBottomSheet, transactionFilterBottomSheet, moreOptionBottomSheet),
         TransactionEvents(booksEventCallback = booksEventCallback, filterEvent = {
-            if (it.shouldBookSelection) {
+            if (it.showBottomSheet) {
                 coroutineScope.launch {
                     transactionFilterBottomSheet.show()
                 }
@@ -127,8 +128,21 @@ private fun HomeScreenRoute(navController: NavHostController) {
                 coroutineScope.launch {
                     transactionFilterBottomSheet.hide()
                 }
-                applySelectedFilter(it.filterItem, transactionViewModel, fragmentManager)
+                applySelectedFilter(it.selectedItem, transactionViewModel, fragmentManager)
             }
-        }),
+        }, {
+            coroutineScope.launch {
+                if (it.showBottomSheet) {
+                    moreOptionBottomSheet.show()
+                } else {
+                    it.selectedItem?.let {
+                        navController.navigate(it.route) {
+                            launchSingleTop = true
+                        }
+                    }
+                    moreOptionBottomSheet.hide()
+                }
+            }
+        })
     )
 }
