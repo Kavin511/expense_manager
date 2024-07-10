@@ -34,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+
 @Composable
 fun HomeActions(navController: NavHostController, snackBarHostState: SnackbarHostState) {
     val context = LocalContext.current
@@ -161,6 +162,18 @@ private fun showBackUpResultAlert(backStatus: BackupStatus, snackBarHostState: S
             }
         }
     }
+}
+
+fun openFileLocation(context: Context) {
+    val uri = FileProvider.getUriForFile(
+        context,
+        context.packageName + ".provider",
+        TransactionDataBackupWorker.getFileToStoreTransactions(context),
+    )
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.setDataAndType(uri, "*/*")
+    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    context.startActivity(intent)
 }
 
 fun createIntentToShareTransactions(context: Context) {

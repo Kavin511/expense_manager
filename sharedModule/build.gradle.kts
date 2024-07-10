@@ -59,7 +59,7 @@ kotlin {
 }
 
 android {
-    namespace = "org.company.app"
+    namespace = "com.devstudio.sharedModule"
     compileSdk = 34
 
     defaultConfig {
@@ -91,12 +91,4 @@ android {
         //enables a Compose tooling support in the AndroidStudio
         compose = true
     }
-}
-dependencies {
-    implementation(project(":core-designSystem"))
-    implementation(project(":core-designSystem"))
-    implementation(project(":core-designSystem"))
-    implementation(project(":core-designSystem"))
-    implementation(project(":core-designSystem"))
-    commonMainImplementation(project(":core-designSystem"))
 }

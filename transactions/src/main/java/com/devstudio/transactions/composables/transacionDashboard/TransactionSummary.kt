@@ -53,8 +53,8 @@ fun TransactionSummary(transactionBook: TransactionBook) {
                 is DateRange -> {
                     val selectedDate = transactionFilterType.additionalData
                     "Summary from ${
-                        DateFormatter.convertLongToDate(selectedDate.first) + " to " + DateFormatter.convertLongToDate(
-                            selectedDate.second,
+                        DateFormatter.convertLongToDate(selectedDate.first.toString()) + " to " + DateFormatter.convertLongToDate(
+                            selectedDate.second.toString(),
                         )
                     }"
                 }

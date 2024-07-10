@@ -152,7 +152,7 @@ class TransactionActivity : AppCompatActivity() {
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
                 binding.transactionDate.text =
-                    DateFormatter.convertLongToDate(it.transactionDate.toLong())
+                    DateFormatter.convertLongToDate(it.transactionDate)
                 selectedDate = it.transactionDate
                 selectedTransactionMode = it.transactionMode
                 when (selectedTransactionMode) {
@@ -280,7 +280,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun initialiseTransactionDateClickListener() {
-        binding.transactionDate.text = DateFormatter.convertLongToDate(selectedDate.toLong())
+        binding.transactionDate.text = DateFormatter.convertLongToDate(selectedDate)
         binding.transactionDate.setOnClickListener {
             val calendarConstraintsBuilder = CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now())
@@ -289,7 +289,7 @@ class TransactionActivity : AppCompatActivity() {
             datePickerBuilder.setSelection(selectedDate.toLong())
             val datePicker = datePickerBuilder.build()
             datePicker.addOnPositiveButtonClickListener {
-                binding.transactionDate.text = DateFormatter.convertLongToDate(it)
+                binding.transactionDate.text = DateFormatter.convertLongToDate(it.toString())
                 selectedDate = it.toString()
             }
             datePicker.show(supportFragmentManager, "")

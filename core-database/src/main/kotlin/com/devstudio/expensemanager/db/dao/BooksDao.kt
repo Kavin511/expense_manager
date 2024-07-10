@@ -24,4 +24,6 @@ interface BooksDao {
 
     @Query("SELECT * FROM BOOKS_TABLE WHERE ID=:id")
     fun getBookById(id: Long): Books?
+    @Query("SELECT * FROM BOOKS_TABLE WHERE name=:bookName")
+    fun findBookByName(bookName: String): Books?
 }

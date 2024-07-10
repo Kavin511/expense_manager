@@ -27,7 +27,7 @@ import com.devstudio.profile.composables.ProfileMainScreen
 import com.devstudio.profile.composables.RemainderScreen
 import com.devstudio.transactions.composables.transactionList.applySelectedFilter
 import com.devstudio.transactions.viewmodel.TransactionViewModel
-import com.example.sharedmodule.ImportTransactions
+import com.devstudio.sharedmodule.ImportTransactions
 import kotlinx.coroutines.launch
 
 @Composable

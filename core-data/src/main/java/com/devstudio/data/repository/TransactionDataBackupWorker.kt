@@ -2,6 +2,7 @@ package com.devstudio.data.repository
 
 import android.content.Context
 import android.os.Environment
+import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
 import androidx.core.os.BuildCompat
 import androidx.room.Room
@@ -79,7 +80,7 @@ class TransactionDataBackupWorker(
                         transaction.amount.toString(),
                         db.categoryDao().findCategoryById(transaction.categoryId)?.name
                             ?: transaction.categoryId,
-                        DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
+                        DateFormatter.convertLongToDate(transaction.transactionDate),
                         transaction.note,
                         transaction.transactionMode,
                     ),
@@ -114,7 +115,6 @@ class TransactionDataBackupWorker(
             return File(folder.absolutePath, BACK_UP_FILE_NAME)
         }
 
-        @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
         fun backupPath(context: Context): String {
             val path = if (BuildCompat.isAtLeastT()) {
                 context.filesDir.absolutePath

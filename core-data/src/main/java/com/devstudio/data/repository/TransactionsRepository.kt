@@ -1,12 +1,15 @@
 package com.devstudio.data.repository
 
+import android.content.Context
 import androidx.annotation.WorkerThread
 import com.devstudio.expensemanager.db.dao.TransactionDao
+import com.devstudio.expensemanager.db.di.DatabaseModule
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudio.utils.utils.AppConstants.Companion.INCOME
 import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 import javax.inject.Inject
@@ -32,9 +35,11 @@ interface TransactionsRepository {
 
 @Singleton
 class TransactionsRepositoryImpl @Inject constructor(
-    private val transactionDao: TransactionDao,
+    @ApplicationContext context: Context,
     val userDataRepository: UserDataRepository,
 ) : TransactionsRepository {
+    val databaseModule = DatabaseModule()
+    private val transactionDao: TransactionDao = databaseModule.providesTransactionDao(databaseModule.providesExpenseManagerDatabase(context))
     override fun getTotalAssets(): Double {
         return transactionDao.getTotalAssets(
             EXPENSE,

@@ -30,4 +30,7 @@ interface CategoryDao {
 
     @Query("SELECT * FROM CATEGORY_TABLE ORDER BY timeStamp asc")
     fun getAllCategories(): Flow<List<Category>>
+
+    @Query("SELECT * FROM CATEGORY_TABLE WHERE name like :name")
+    fun getCategoryByName(name: String): Category?
 }

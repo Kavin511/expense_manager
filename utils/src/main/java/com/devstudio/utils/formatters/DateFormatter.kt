@@ -3,15 +3,19 @@ package com.devstudio.utils.formatters
 import java.util.Calendar
 
 object DateFormatter {
-    fun convertLongToDate(time: Long, format: String = DATE_MONTH_YEAR): String {
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = time
-        return String.format(
-            format,
-            monthNames[getCurrentMonth(cal)],
-            getCurrentDay(cal),
-            getCurrentYear(cal),
-        )
+    fun convertLongToDate(time: String, format: String = DATE_MONTH_YEAR): String {
+        try {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = time.toLong()
+            return String.format(
+                format,
+                monthNames[getCurrentMonth(cal)],
+                getCurrentDay(cal),
+                getCurrentYear(cal),
+            )
+        } catch (e: Exception) {
+            return time
+        }
     }
 
     fun getCurrentDay(cal: Calendar) = cal[Calendar.DAY_OF_MONTH]

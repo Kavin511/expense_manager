@@ -1,11 +1,10 @@
-package com.example.sharedmodule
+package com.devstudio.sharedmodule
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,12 +30,13 @@ import androidx.compose.ui.unit.dp
 import com.devstudio.theme.Greeting
 import com.devstudio.theme.appColors
 
+
 @Composable
 fun ImportTransactions() {
     var skipFirstRow by remember { mutableStateOf(false) }
     Greeting()
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         color = appColors.material.surface
     ) {
         LazyColumn(
@@ -100,6 +100,24 @@ fun CheckboxItem(text: String) {
 
 @Composable
 fun ExcelFileUpload() {
+    var showFilePicker by remember { mutableStateOf(false) }
+    val fileType = arrayOf(
+        "text/csv",
+        "text/comma-separated-values",
+        "application/csv",
+        "application/excel",
+        "application/vnd.ms-excel",
+        "application/vnd.msexcel",
+        "text/anytext",
+        "application/octet-stream"
+    )
+    FilePicker(show = showFilePicker, fileExtensions = fileType) { platformFile ->
+        if (platformFile != null) {
+            saveTransactions(platformFile)
+        }
+        showFilePicker = false
+    }
+
     Column {
         Text(
             text = "Excel File Upload",
@@ -109,7 +127,9 @@ fun ExcelFileUpload() {
         Spacer(modifier = Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
-                onClick = { /* Handle browse */ },
+                onClick = {
+                    showFilePicker = true
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)) // Deep blue
             ) {
                 Text("Browse...")

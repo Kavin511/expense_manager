@@ -189,7 +189,7 @@ private fun TransactionDate(
     appColors: AppColor,
 ) {
     Text(
-        text = DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
+        text = DateFormatter.convertLongToDate(transaction.transactionDate),
         color = appColors.material.onPrimaryContainer,
         fontSize = SECONDARY_TEXT_SIZE,
         modifier = Modifier.padding(end = 5.dp),
