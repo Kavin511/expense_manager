@@ -22,7 +22,7 @@ interface CategoryRepository {
 class CategoryRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
     CategoryRepository {
     val databaseModule = DatabaseModule()
-    private val categoryDao = databaseModule.providesCategoryDao(databaseModule.providesExpenseManagerDatabase(context))
+    private val categoryDao = databaseModule.providesCategoryDao(context)
 
     override fun insertCategory(category: Category) {
         return categoryDao.insertCategory(category)

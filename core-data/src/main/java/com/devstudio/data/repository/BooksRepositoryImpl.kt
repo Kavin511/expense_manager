@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class BooksRepositoryImpl @Inject constructor(@ApplicationContext context: Context, private val userDataRepository: UserDataRepository) : BooksRepository {
     val databaseModule = DatabaseModule()
-    private val booksDao: BooksDao = databaseModule.providesBooksDao(databaseModule.providesExpenseManagerDatabase(context))
+    private val booksDao: BooksDao = databaseModule.providesBooksDao(context)
 
     override fun getBooksFlow(): Flow<List<Books>> {
         return booksDao.getBooksFlow()

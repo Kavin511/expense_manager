@@ -39,7 +39,7 @@ class TransactionsRepositoryImpl @Inject constructor(
     val userDataRepository: UserDataRepository,
 ) : TransactionsRepository {
     val databaseModule = DatabaseModule()
-    private val transactionDao: TransactionDao = databaseModule.providesTransactionDao(databaseModule.providesExpenseManagerDatabase(context))
+    private val transactionDao: TransactionDao = databaseModule.providesTransactionDao(context)
     override fun getTotalAssets(): Double {
         return transactionDao.getTotalAssets(
             EXPENSE,

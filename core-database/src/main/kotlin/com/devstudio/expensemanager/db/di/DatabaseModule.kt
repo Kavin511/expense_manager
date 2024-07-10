@@ -16,37 +16,35 @@ import com.devstudio.expensemanager.db.models.TransactionMode
 import com.devstudio.expensemanager.db.models.TransactionMode.EXPENSE
 import com.devstudio.expensemanager.db.models.TransactionMode.INCOME
 import com.devstudio.expensemanager.db.models.TransactionMode.INVESTMENT
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.UUID
 
-@InstallIn(SingletonComponent::class)
-@Module
 class DatabaseModule {
-    @Provides
-    fun providesTransactionDao(expenseManagerDataBase: ExpenseManagerDataBase): TransactionDao {
+    fun providesTransactionDao(
+        context: Context,
+        expenseManagerDataBase: ExpenseManagerDataBase = providesExpenseManagerDatabase(context)
+    ): TransactionDao {
         return expenseManagerDataBase.transactionsDao()
     }
 
-    @Provides
-    fun providesCategoryDao(expenseManagerDataBase: ExpenseManagerDataBase): CategoryDao {
+    fun providesCategoryDao(
+        context: Context,
+        expenseManagerDataBase: ExpenseManagerDataBase = providesExpenseManagerDatabase(context)
+    ): CategoryDao {
         return expenseManagerDataBase.categoryDao()
     }
 
-    @Provides
-    fun providesBooksDao(expenseManagerDataBase: ExpenseManagerDataBase): BooksDao {
+    fun providesBooksDao(
+        context: Context,
+        expenseManagerDataBase: ExpenseManagerDataBase = providesExpenseManagerDatabase(context)
+    ): BooksDao {
         return expenseManagerDataBase.booksDao()
     }
 
-    @Provides
-    fun providesExpenseManagerDatabase(@ApplicationContext applicationContext: Context): ExpenseManagerDataBase {
+    fun providesExpenseManagerDatabase(applicationContext: Context): ExpenseManagerDataBase {
         var INSTANCE: ExpenseManagerDataBase? = null
         val rdc = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
