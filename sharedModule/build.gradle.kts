@@ -33,13 +33,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(project(":core-designSystem"))
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             api(project(":theme"))
+            api(project(":core-database"))
         }
 
         commonTest.dependencies {

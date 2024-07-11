@@ -20,7 +20,7 @@ import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.sharedmodule.domain.useCase.csvToTransaction.CsvToTransactionMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -143,17 +143,18 @@ fun convert(file: InputStream?): MutableList<List<String>> {
 //    } catch (e: Exception) {
 //        e.printStackTrace()
 //    }
-actual fun saveTransactions(transactions: List<List<String>>) {
+actual suspend fun saveTransactions(transactions: List<List<String>>) {
     val context = AppContext.get()!!
     val transactionsRepositoryImpl = TransactionsRepositoryImpl(
         context, UserDataRepositoryImpl(DataSourceModule(context))
     )
-    CoroutineScope(Dispatchers.IO).launch {
-        val transactionList = CsvToTransactionMapper(transactions).invoke(context)
-        transactionList.forEach {
+     CoroutineScope(Dispatchers.IO).async {
+        val transactionMapResult = CsvToTransactionMapper(transactions).invoke(context)
+        transactionMapResult.transactions.forEach {
             transactionsRepositoryImpl.upsertTransaction(it)
         }
-    }
+        return@async transactionMapResult
+    }.await()
 }
 
 

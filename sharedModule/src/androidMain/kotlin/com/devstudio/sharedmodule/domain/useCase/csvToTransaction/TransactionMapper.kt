@@ -7,6 +7,7 @@ import com.devstudio.data.repository.CategoryRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.sharedmodule.domain.model.TransactionMapResult
 import com.devstudio.sharedmodule.domain.useCase.util.contains
 import com.devstudio.sharedmodule.domain.useCase.util.getCategoryMapping
 import com.devstudio.sharedmodule.domain.useCase.util.parseDateToTimestamp
@@ -50,26 +51,48 @@ abstract class TransactionMapper(open val transactions: List<List<String>>) {
         return parseDateToTimestamp(row[transactionDateIndex]).toString()
     }
 
-    suspend fun invoke(context: Context): List<Transaction> {
+    suspend fun invoke(context: Context): TransactionMapResult {
         val result = mutableListOf<Transaction>()
+        val conflictResult = mutableListOf<Transaction>()
         if (transactions.isEmpty()) {
-            return result
+            return TransactionMapResult(emptyList(), emptyList())
         }
         transactions.subList(1, transactions.size).forEach { row ->
-            try {
-                Transaction().apply {
-                    this.bookId = getBookId(context, row)
-                    this.note = getNote(row)
-                    this.amount = getAmount(row)
-                    this.categoryId = categoryId(context, row)
-                    this.transactionMode = transactionMode(row)
-                    this.transactionDate = transactionDate(row)
-                }.also { result.add(it) }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            var hasConflict = false
+            val transaction = Transaction()
+            transaction.apply {
+                this.bookId = safeGet<Long> { getBookId(context, row) } ?: 0
+                this.amount = safeGet<Double> { getAmount(row) } ?: run {
+                    hasConflict = true
+                    0.0
+                }
+                this.transactionMode = safeGet<String> { transactionMode(row) } ?: run {
+                    hasConflict = true
+                    ""
+                }
+                this.categoryId = safeGet<String> { categoryId(context, row) } ?: ""
+                this.note = safeGet<String> { getNote(row) } ?: ""
+                this.transactionDate = safeGet<String> { transactionDate(row) } ?: run {
+                    hasConflict = true
+                    ""
+                }
+            }.also {
+                if (hasConflict) {
+                    conflictResult.add(it)
+                } else {
+                    result.add(it)
+                }
             }
         }
-        return result
+        return TransactionMapResult(result, conflictResult)
+    }
+
+    inline fun <reified T> safeGet(getData: () -> T): T? {
+        return try {
+            getData.invoke()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private suspend fun getBookId(context: Context, row: List<String>): Long {

@@ -1,8 +1,8 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
-
-expect fun saveTransactions(transactions: List<List<String>>)
+import com.devstudio.theme.Greeting
+import com.devstudio.theme.model.AppColor
 
 @Composable
 expect fun FilePicker(
@@ -23,3 +23,6 @@ object SharedModule {
         val commonContext = config.appContext
     }
 }
+
+expect suspend fun saveTransactions(transactions: List<List<String>>)
+

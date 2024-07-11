@@ -2,7 +2,7 @@ package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
 
-actual fun saveTransactions (transactions: List<List<String>>){
+actual suspend fun saveTransactions (transactions: List<List<String>>){
 
 }
 @Composable

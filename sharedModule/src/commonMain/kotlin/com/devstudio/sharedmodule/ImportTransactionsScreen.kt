@@ -29,7 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.devstudio.theme.Greeting
 import com.devstudio.theme.appColors
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun ImportTransactions() {
@@ -112,10 +114,12 @@ fun ExcelFileUpload() {
         "application/octet-stream"
     )
     FilePicker(show = showFilePicker, fileExtensions = fileType) { platformFile ->
-        if (platformFile != null) {
-            saveTransactions(platformFile)
+        CoroutineScope(Dispatchers.Main).launch {
+            if (platformFile != null) {
+                saveTransactions(platformFile)
+            }
+            showFilePicker = false
         }
-        showFilePicker = false
     }
 
     Column {

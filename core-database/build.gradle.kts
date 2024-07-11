@@ -33,28 +33,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.room.runtime)
-//            api(libs.koin.android)
-//            api(libs.koin.core)
-//            api(libs.koin.compose)
-//            api(libs.koin.compose.viewmodel)
         }
-
-        commonTest.dependencies {
-        }
-
-        androidMain.dependencies {
-
-//            api(libs.koin.androidx.compose)
-        }
-
-        iosMain.dependencies {
-        }
-
     }
 }
 
 android {
-    namespace = "com.devstudio.core.database"
+    namespace = "om.devstudio.expensemanager.db"
     compileSdk = 34
 
     defaultConfig {
