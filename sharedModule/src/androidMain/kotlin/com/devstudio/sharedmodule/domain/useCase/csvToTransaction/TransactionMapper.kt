@@ -5,8 +5,8 @@ import com.devstudio.data.datastore.DataSourceModule
 import com.devstudio.data.repository.BooksRepositoryImpl
 import com.devstudio.data.repository.CategoryRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
-import com.devstudio.expensemanager.db.models.Category
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.models.Category
+import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.domain.model.TransactionMapResult
 import com.devstudio.sharedmodule.domain.useCase.util.contains
 import com.devstudio.sharedmodule.domain.useCase.util.getCategoryMapping

@@ -43,7 +43,7 @@ android {
 
 dependencies {
     implementation(project(":core-designSystem"))
-    implementation(project(":core-database"))
+    implementation(project(":database"))
     api(project(":core-data"))
     implementation(project(":utils"))
     implementation(libs.hilt.android)

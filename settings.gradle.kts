@@ -18,7 +18,6 @@ dependencyResolutionManagement {
 rootProject.name = "ExpenseManager"
 include(":app")
 include(":core-designSystem")
-include(":core-database")
 include(":utils")
 include(":core-data")
 include(":transactions")
@@ -29,3 +28,4 @@ include(":books")
 include(":core-data:model")
 include(":sharedModule")
 include(":theme")
+include(":database")

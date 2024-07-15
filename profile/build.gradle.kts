@@ -45,7 +45,7 @@ dependencies {
 	implementation(project(":core-designSystem"))
 	api(project(":core-data"))
 	implementation(project(":core-model"))
-	implementation(project(":core-database"))
+	implementation(project(":database"))
 	implementation(project(":utils"))
 	implementation(libs.play.services.auth)
 	implementation(libs.hilt.android)

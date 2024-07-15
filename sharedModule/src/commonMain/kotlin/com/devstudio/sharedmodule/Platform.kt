@@ -13,16 +13,6 @@ expect fun FilePicker(
     onFileSelected: (List<List<String>>?) -> Unit,
 )
 
-expect object AppContext
-class SharedModuleConfig(
-    val appContext: AppContext,
-)
-
-object SharedModule {
-    fun initialize(config: SharedModuleConfig) {
-        val commonContext = config.appContext
-    }
-}
 
 expect suspend fun saveTransactions(transactions: List<List<String>>)
 

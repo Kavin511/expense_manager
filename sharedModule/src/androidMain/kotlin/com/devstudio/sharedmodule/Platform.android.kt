@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.devstudio.data.datastore.DataSourceModule
 import com.devstudio.data.repository.TransactionsRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
+import com.devstudio.database.AppContext
 import com.devstudio.sharedmodule.domain.useCase.csvToTransaction.CsvToTransactionMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -155,19 +156,4 @@ actual suspend fun saveTransactions(transactions: List<List<String>>) {
         }
         return@async transactionMapResult
     }.await()
-}
-
-
-actual object AppContext {
-
-    private var value: WeakReference<Context?>? = null
-
-    fun set(context: Context) {
-        value = WeakReference(context)
-    }
-
-    internal fun get(): Context? {
-        return value?.get()
-    }
-
 }

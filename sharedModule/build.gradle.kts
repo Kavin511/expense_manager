@@ -37,7 +37,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             api(project(":theme"))
-            api(project(":core-database"))
+            implementation(project(":database"))
         }
 
         commonTest.dependencies {
@@ -47,7 +47,6 @@ kotlin {
             implementation(compose.uiTooling)
             implementation(libs.activity.compose)
             implementation(project(":core-data"))
-            implementation(project(":core-database"))
             implementation(project(":core-designSystem"))
         }
 

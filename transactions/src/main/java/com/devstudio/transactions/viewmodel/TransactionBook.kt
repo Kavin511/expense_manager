@@ -1,7 +1,7 @@
 package com.devstudio.transactions.viewmodel
 
 import com.devstudio.data.model.TransactionFilterType
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.models.Transaction
 import kotlinx.coroutines.flow.Flow
 
 data class TransactionBook(

@@ -1,7 +1,7 @@
 package com.devstudio.sharedmodule.domain.useCase.csvToTransaction
 
 import android.content.Context
-import com.devstudio.expensemanager.db.models.TransactionMode
+import com.devstudio.database.models.TransactionMode
 import com.devstudio.sharedmodule.domain.useCase.util.parseDateToTimestamp
 
 class CsvToTransactionMapper(override val transactions: List<List<String>>) :

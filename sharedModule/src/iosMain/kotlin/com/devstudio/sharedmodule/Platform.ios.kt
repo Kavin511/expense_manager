@@ -15,5 +15,3 @@ public actual fun FilePicker(
 ) {
    
 }
-
-actual object AppContext

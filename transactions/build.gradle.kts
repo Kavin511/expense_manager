@@ -44,7 +44,7 @@ dependencies {
 	implementation(project(":utils"))
 	implementation(project(":core-designSystem"))
 	api(project(":core-data"))
-	implementation(project.project(":core-database"))
+	implementation(project.project(":database"))
 	implementation(project(":core-data:model"))
 	implementation(project(":core-model"))
 	implementation(libs.hilt.android)

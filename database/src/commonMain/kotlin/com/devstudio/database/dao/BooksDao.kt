@@ -1,10 +1,10 @@
-package com.devstudio.expensemanager.db.dao
+package com.devstudio.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.IGNORE
 import androidx.room.Query
-import com.devstudio.expensemanager.db.models.Books
+import com.devstudio.database.models.Books
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -1,8 +1,8 @@
 package com.devstudio.data.repository
 
 import android.content.Context
-import com.devstudio.expensemanager.db.di.DatabaseModule
-import com.devstudio.expensemanager.db.models.Category
+import com.devstudio.database.ApplicationModule
+import com.devstudio.database.models.Category
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -21,8 +21,9 @@ interface CategoryRepository {
 @Singleton
 class CategoryRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
     CategoryRepository {
-    val databaseModule = DatabaseModule()
-    private val categoryDao = databaseModule.providesCategoryDao(context)
+
+    val db = ApplicationModule.config.factory.getRoomInstance()
+    private val categoryDao = db.categoryDao()
 
     override fun insertCategory(category: Category) {
         return categoryDao.insertCategory(category)

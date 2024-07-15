@@ -9,9 +9,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.devstudio.data.repository.BooksRepositoryImpl
-import com.devstudio.expensemanager.db.models.Category
-import com.devstudio.expensemanager.db.models.Transaction
-import com.devstudio.expensemanager.db.models.TransactionMode
+import com.devstudio.database.models.Category
+import com.devstudio.database.models.Transaction
+import com.devstudio.database.models.TransactionMode
 import com.devstudio.transactions.R
 import com.devstudio.transactions.databinding.ActivityTransactionBinding
 import com.devstudio.transactions.uicomponents.TransactionKeyboard

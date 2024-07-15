@@ -3,11 +3,13 @@ androidGradlePlugin = "8.2.2"
 constraintlayoutCompose = "1.0.1"
 coreKtx = "1.7.0"
 firebaseCrashlyticsGradle = "2.9.9"
+foundation = "1.6.8"
 googleServices = "4.4.1"
 gradle = "8.2.2"
 hilt = "2.51.1"
 hiltNavigationCompose = '1.2.0'
 kotlin = "2.0.0"
+sqlite = "2.5.0-SNAPSHOT"
 materialVersion = "1.2.1"
 androidxCoreVersion = "1.12.0"
 androidxAppcompat = "1.5.1"
@@ -47,10 +49,10 @@ roomKtx = "2.6.1"
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastoreCoreAndroidVersion" }
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-foundation-v168 = { module = "androidx.compose.foundation:foundation-android", version.ref = "foundation" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinComposeMultiplatform" }
@@ -94,6 +96,7 @@ androidx_hilt_compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 hilt_android = { module = 'com.google.dagger:hilt-android', version.ref = "hilt" }
 hilt_android_compiler = { module = 'com.google.dagger:hilt-android-compiler', version.ref = "hilt" }
 hilt_navigation_compose = { module = 'androidx.hilt:hilt-navigation-compose', version.ref = "hiltNavigationCompose" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 #test
 junit = { module = 'junit:junit', version.ref = "junit" }

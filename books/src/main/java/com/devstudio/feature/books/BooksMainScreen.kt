@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devstudio.expensemanager.db.models.Books
+import com.devstudio.database.models.Books
 import com.devstudioworks.ui.components.InputDialog
 import com.devstudioworks.ui.components.InputEnterDialog
 import com.devstudioworks.ui.icons.EMAppIcons

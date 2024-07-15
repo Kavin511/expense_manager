@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.db.models
+package com.devstudio.database.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

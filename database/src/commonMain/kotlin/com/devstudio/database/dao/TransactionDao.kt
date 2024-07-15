@@ -1,4 +1,4 @@
-package com.devstudio.expensemanager.db.dao
+package com.devstudio.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.models.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-database"))
+    implementation(project(":database"))
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.hilt.android)
     implementation(project(":utils"))

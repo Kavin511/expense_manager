@@ -7,9 +7,9 @@ import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.repository.CategoryRepository
 import com.devstudio.data.repository.TransactionsRepository
 import com.devstudio.data.repository.UserDataRepository
-import com.devstudio.expensemanager.db.models.Category
-import com.devstudio.expensemanager.db.models.Transaction
-import com.devstudio.expensemanager.db.models.TransactionMode
+import com.devstudio.database.models.Category
+import com.devstudio.database.models.Transaction
+import com.devstudio.database.models.TransactionMode
 import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.models.FuturePaymentStatus
 import com.devstudio.transactions.models.TransactionUiState

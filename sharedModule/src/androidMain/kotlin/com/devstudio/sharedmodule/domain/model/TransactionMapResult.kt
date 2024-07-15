@@ -1,6 +1,6 @@
 package com.devstudio.sharedmodule.domain.model
 
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.models.Transaction
 
 data class TransactionMapResult(
     val transactions: List<Transaction>,

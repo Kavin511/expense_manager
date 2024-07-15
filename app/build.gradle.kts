@@ -65,12 +65,13 @@ android {
 dependencies {
 	implementation(project(":utils"))
 	implementation(project(":core-designSystem"))
-	implementation(project(":core-database"))
+	implementation(project(":database"))
 	implementation(project(":core-model"))
 	implementation(project(":transactions"))
 	implementation(project(":category"))
 	implementation(project(":profile"))
 	implementation(project(":books"))
+	implementation(project(":database"))
 
 	implementation(libs.androidx.core)
 	implementation(libs.androidx.core.splashscreen)
@@ -83,8 +84,9 @@ dependencies {
 	implementation(libs.firebase.crashlytics)
 	implementation(libs.firebase.analytics)
 	implementation(libs.androidx.constraintlayout.compose)
+	implementation(libs.androidx.foundation.v168)
 
-	testImplementation(libs.junit)
+    testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.test.junit)
 	androidTestImplementation(libs.androidx.test.espresso)
 	testImplementation(libs.google.truth)

@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryViewModel
 import com.devstudio.category.listeners.CategoryCallback
-import com.devstudio.expensemanager.db.models.Category
+import com.devstudio.database.models.Category
 import com.devstudioworks.ui.components.MaterialAlert
 import com.devstudio.theme.appColors
 

@@ -1,5 +1,6 @@
 package com.devstudio.expensemanager.presentation.mainScreen
 
+import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState

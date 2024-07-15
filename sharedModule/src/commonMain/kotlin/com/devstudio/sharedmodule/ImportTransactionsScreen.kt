@@ -27,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.room.Dao
+import androidx.room.Insert
 import com.devstudio.theme.Greeting
 import com.devstudio.theme.appColors
 import kotlinx.coroutines.CoroutineScope

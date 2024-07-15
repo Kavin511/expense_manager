@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.core.designsystem.R
-import com.devstudio.expensemanager.db.models.Category
+import com.devstudio.database.models.Category
 import com.devstudio.utils.utils.AppConstants.Companion.supportedTransactionTypes
 
 @Composable

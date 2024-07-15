@@ -1,18 +1,20 @@
 package com.devstudio.data.repository
 
 import android.content.Context
-import com.devstudio.expensemanager.db.dao.BooksDao
-import com.devstudio.expensemanager.db.di.DatabaseModule
-import com.devstudio.expensemanager.db.models.Books
+import com.devstudio.database.ApplicationModule
+import com.devstudio.database.models.Books
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BooksRepositoryImpl @Inject constructor(@ApplicationContext context: Context, private val userDataRepository: UserDataRepository) : BooksRepository {
-    val databaseModule = DatabaseModule()
-    private val booksDao: BooksDao = databaseModule.providesBooksDao(context)
+class BooksRepositoryImpl @Inject constructor(
+    @ApplicationContext context: Context,
+    private val userDataRepository: UserDataRepository
+) : BooksRepository {
+    val db = ApplicationModule.config.factory.getRoomInstance()
+    private val booksDao = db.booksDao()
 
     override fun getBooksFlow(): Flow<List<Books>> {
         return booksDao.getBooksFlow()
