@@ -1,8 +1,7 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
-import com.devstudio.theme.Greeting
-import com.devstudio.theme.model.AppColor
+import com.devstudio.sharedmodule.model.TransactionMapResult
 
 @Composable
 expect fun FilePicker(
@@ -14,5 +13,5 @@ expect fun FilePicker(
 )
 
 
-expect suspend fun saveTransactions(transactions: List<List<String>>)
+expect suspend fun saveTransactions(transactions: List<List<String>>) : TransactionMapResult
 

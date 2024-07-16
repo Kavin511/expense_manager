@@ -27,9 +27,9 @@ import com.devstudio.profile.BudgetScreen
 import com.devstudio.profile.ThemeSelectionScreen
 import com.devstudio.profile.composables.ProfileMainScreen
 import com.devstudio.profile.composables.RemainderScreen
+import com.devstudio.sharedmodule.ExcelFileUpload
 import com.devstudio.transactions.composables.transactionList.applySelectedFilter
 import com.devstudio.transactions.viewmodel.TransactionViewModel
-import com.devstudio.sharedmodule.ImportTransactions
 import kotlinx.coroutines.launch
 
 @Composable
@@ -69,7 +69,7 @@ fun NavigationHost(
             }
 
             composable(route = ExpressWalletAppState.ImportScreen.route) {
-                ImportTransactions()
+                ExcelFileUpload()
             }
 
             composable(route = ExpressWalletAppState.HomeScreen.AccountScreen.route) {

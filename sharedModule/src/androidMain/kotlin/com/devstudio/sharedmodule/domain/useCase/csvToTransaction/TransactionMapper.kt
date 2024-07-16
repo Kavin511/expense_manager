@@ -7,10 +7,11 @@ import com.devstudio.data.repository.CategoryRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.database.models.Category
 import com.devstudio.database.models.Transaction
-import com.devstudio.sharedmodule.domain.model.TransactionMapResult
 import com.devstudio.sharedmodule.domain.useCase.util.contains
 import com.devstudio.sharedmodule.domain.useCase.util.getCategoryMapping
 import com.devstudio.sharedmodule.domain.useCase.util.parseDateToTimestamp
+import com.devstudio.sharedmodule.model.TransactionMapResult
+import com.devstudio.sharedmodule.model.TransactionWithIndex
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 
@@ -52,12 +53,12 @@ abstract class TransactionMapper(open val transactions: List<List<String>>) {
     }
 
     suspend fun invoke(context: Context): TransactionMapResult {
-        val result = mutableListOf<Transaction>()
-        val conflictResult = mutableListOf<Transaction>()
+        val result = mutableListOf<TransactionWithIndex>()
+        val conflictResult = mutableListOf<TransactionWithIndex>()
         if (transactions.isEmpty()) {
             return TransactionMapResult(emptyList(), emptyList())
         }
-        transactions.subList(1, transactions.size).forEach { row ->
+        transactions.subList(1, transactions.size).forEachIndexed { index, row ->
             var hasConflict = false
             val transaction = Transaction()
             transaction.apply {
@@ -78,9 +79,9 @@ abstract class TransactionMapper(open val transactions: List<List<String>>) {
                 }
             }.also {
                 if (hasConflict) {
-                    conflictResult.add(it)
+                    conflictResult.add(TransactionWithIndex(index = index, transaction = it))
                 } else {
-                    result.add(it)
+                    result.add(TransactionWithIndex(index = index, transaction = it))
                 }
             }
         }

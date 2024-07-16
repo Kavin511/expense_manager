@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.database.models.Transaction
+import com.devstudio.sharedmodule.utils.getTransactionBlockColor
 import com.devstudio.transactions.acivity.PaymentStatus
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
@@ -58,19 +59,6 @@ fun TransactionItem(
         amount = 0.0,
     ),
 ) {
-    val blockColor = when (transaction.transactionMode) {
-        EXPENSE -> {
-            appColors.transactionExpenseColor
-        }
-
-        INVESTMENT -> {
-            appColors.transactionInvestmentColor
-        }
-
-        else -> {
-            appColors.transactionIncomeColor
-        }
-    }
     val context = LocalContext.current
     val transactionViewModel: TransactionViewModel = hiltViewModel()
     ElevatedCard(
@@ -98,7 +86,7 @@ fun TransactionItem(
                         .padding(8.dp)
                         .size(10.dp)
                         .clip(CircleShape)
-                        .background(color = blockColor),
+                        .background(color = getTransactionBlockColor(transaction)),
                 )
             }
             Column(

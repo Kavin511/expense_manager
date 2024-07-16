@@ -1,10 +1,12 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
+import com.devstudio.sharedmodule.model.TransactionMapResult
 
-actual suspend fun saveTransactions (transactions: List<List<String>>){
-
+actual suspend fun saveTransactions(transactions: List<List<String>>): TransactionMapResult {
+    return TransactionMapResult(emptyList(), emptyList())
 }
+
 @Composable
 public actual fun FilePicker(
     show: Boolean,
@@ -13,5 +15,5 @@ public actual fun FilePicker(
     title: String?,
     onFileSelected: @Composable (List<List<String>>?) -> Unit,
 ) {
-   
+
 }
