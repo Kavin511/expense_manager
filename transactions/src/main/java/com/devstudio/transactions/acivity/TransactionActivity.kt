@@ -30,9 +30,32 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.Serializable
 import java.util.Calendar
 import javax.inject.Inject
+const val MappedTransaction = "MappedTransaction"
+data class TransactionUiModel(
+    var id: Long,
+    var bookId: Long,
+    var note: String,
+    var amount: Double,
+    var categoryId: String,
+    var transactionMode: String,
+    var transactionDate: String,
+    var paymentStatus: String
+) : Serializable {
 
+    constructor(transaction: Transaction) : this(
+        id = transaction.id,
+        bookId = transaction.bookId,
+        note = transaction.note,
+        amount = transaction.amount,
+        categoryId = transaction.categoryId,
+        transactionMode = transaction.transactionMode,
+        transactionDate = transaction.transactionDate,
+        paymentStatus = transaction.paymentStatus
+    )
+}
 @AndroidEntryPoint
 class TransactionActivity : AppCompatActivity() {
 
@@ -133,8 +156,14 @@ class TransactionActivity : AppCompatActivity() {
 
     private fun fetchAndUpdateTransactionToBeEdited() {
         lifecycleScope.launch {
-            val id = intent.getLongExtra("id", 0)
-            transactionViewModel.getAndUpdateTransactionById(id)
+            val transactionUiModel =
+                intent.getSerializableExtra(MappedTransaction) as TransactionUiModel?
+            if (transactionUiModel != null) {
+                mapToTransactionAndUpdateViewModel(transactionUiModel)
+            } else {
+                val id = intent.getLongExtra("id", 0)
+                transactionViewModel.getAndUpdateTransactionById(id)
+            }
             mapSelectedTransactionDetails()
         }
         transactionViewModel.isEditingOldTransaction.observe(this) {
@@ -143,6 +172,20 @@ class TransactionActivity : AppCompatActivity() {
                     getString(com.devstudio.core.designsystem.R.string.update_transaction)
             }
         }
+    }
+
+    private fun mapToTransactionAndUpdateViewModel(transactionUiModel: TransactionUiModel) {
+        val transaction = Transaction(
+            id = transactionUiModel.id,
+            bookId = transactionUiModel.bookId,
+            note = transactionUiModel.note,
+            amount = transactionUiModel.amount,
+            categoryId = transactionUiModel.categoryId,
+            transactionMode = transactionUiModel.transactionMode,
+            transactionDate = transactionUiModel.transactionDate,
+            paymentStatus = transactionUiModel.paymentStatus,
+        )
+        transactionViewModel.transaction.value = transaction
     }
 
     private suspend fun mapSelectedTransactionDetails() {

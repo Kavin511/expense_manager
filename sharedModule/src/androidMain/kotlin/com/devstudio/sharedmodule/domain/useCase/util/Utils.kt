@@ -23,9 +23,7 @@ fun parseDateToTimestamp(dateStr: String): Long? {
             val sdf = SimpleDateFormat(format, Locale.getDefault())
             parsedDate = sdf.parse(dateStr)
             if (parsedDate != null) break
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
+        } catch (_: ParseException) {}
     }
     return parsedDate?.time
 }

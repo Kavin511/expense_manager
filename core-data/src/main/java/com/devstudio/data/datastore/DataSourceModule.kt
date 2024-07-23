@@ -13,6 +13,10 @@ import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.data.model.UserPreferencesData
+import com.devstudio.data.repository.BooksRepositoryImpl
+import com.devstudio.data.repository.UserDataRepositoryImpl
+import com.devstudio.database.DEFAULT_BOOK_NAME
+import com.devstudio.database.models.Books
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -58,8 +62,16 @@ class DataSourceModule @Inject constructor(@ApplicationContext val context: Cont
     }
 
     fun getSelectedBookId(): Flow<Long> {
+        insertDefaultBookIfNotPresent()
         return context.userPreferencesDataStore.data.map { userData ->
             userData[selectedBookId]?.toLong() ?: DEFAULT_BOOK_ID
+        }
+    }
+
+    private fun insertDefaultBookIfNotPresent() {
+        val booksRepository = BooksRepositoryImpl(context, UserDataRepositoryImpl(this))
+        if (booksRepository.getBooks().isEmpty()) {
+            booksRepository.insertBook(Books(DEFAULT_BOOK_ID, DEFAULT_BOOK_NAME))
         }
     }
 

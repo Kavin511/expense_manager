@@ -13,12 +13,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backup
@@ -26,7 +23,6 @@ import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -38,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -51,12 +46,10 @@ import com.devstudio.data.repository.TransactionDataBackupWorker
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
 import com.devstudio.model.models.BackupStatus
-import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.model.models.Status.SUCCESS
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.vectorResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +57,7 @@ import org.jetbrains.compose.resources.vectorResource
 fun HomeActions(
     navController: NavHostController,
     snackBarHostState: SnackbarHostState,
-    event: (ExpressWalletAppState?) -> Unit
+    event: (String) -> Unit
 ) {
     val context = LocalContext.current
     var readPermissionGranted = false
@@ -135,7 +128,7 @@ fun HomeActions(
     }
     ModalBottomSheet(
         onDismissRequest = {
-            event.invoke(null)
+            event.invoke("")
         }, modifier = Modifier
             .navigationBarsPadding()
             .padding(bottom = 32.dp)
@@ -143,11 +136,11 @@ fun HomeActions(
         Column(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
         ) {
-            RowWithImage(RowWithImageData("Import", Icons.Rounded.Upload), onClick = {
-                event.invoke(ExpressWalletAppState.ImportScreen)
+            RowWithImage(RowWithImageData(IMPORT_CSV, Icons.Rounded.Upload), onClick = {
+                event.invoke(IMPORT_CSV)
             })
             RowWithImage(RowWithImageData(BACKUP, Icons.Rounded.Backup), onClick = {
-                event.invoke(null)
+                event.invoke(BACKUP)
                 if (checkPermissionToStartBackup(context)) {
                     backUpTransactions(homeActionsViewModel, snackBarHostState, context)
                 }
@@ -225,6 +218,7 @@ fun createIntentToShareTransactions(context: Context) {
 }
 
 const val BACKUP = "Backup"
+const val IMPORT_CSV = "Import CSV"
 
 data class RowWithImageData(val text: String, val iconResource: ImageVector)
 

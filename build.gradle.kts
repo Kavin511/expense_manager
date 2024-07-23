@@ -5,6 +5,7 @@ buildscript {
         classpath(libs.firebase.crashlytics.gradle)
         classpath(libs.hilt.android.gradle.plugin)
         classpath(libs.ksp.gradlePlugin)
+        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     }
 }
 

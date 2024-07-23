@@ -26,6 +26,7 @@ import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.Serializable
 import java.util.Calendar
 
 @Composable

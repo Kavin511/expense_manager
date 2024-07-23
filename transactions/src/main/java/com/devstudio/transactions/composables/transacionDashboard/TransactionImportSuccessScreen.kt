@@ -1,4 +1,4 @@
-package com.devstudio.sharedmodule
+package com.devstudio.transactions.composables.transacionDashboard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,9 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.model.TransactionMapResult
 import com.devstudio.sharedmodule.model.TransactionWithIndex
 import com.devstudio.theme.appColors
+import com.devstudio.theme.model.AppColor
 
 /**
  * @Author: Kavin
@@ -95,14 +99,18 @@ fun getSampleMap(): TransactionMapResult {
     )
 }
 
+@Preview(device = "id:resizable")
 @Composable
 fun TransactionImportSuccessScreen(
     transactionMapResult: TransactionMapResult = getSampleMap(),
-    onModifyTransaction: (TransactionWithIndex) -> Result<Unit>
+    onDone: () -> Unit = {},
+    onModifyTransaction: (Transaction) -> Unit = {}
 ) {
 
     Column(
-        modifier = Modifier.background(appColors.material.onPrimary).padding(),
+        modifier = Modifier
+            .background(appColors.material.onPrimary)
+            .padding(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SuccessHeader()
@@ -117,7 +125,7 @@ fun TransactionImportSuccessScreen(
 private fun Content(
     transactionMapResult: TransactionMapResult,
     modifier: Modifier = Modifier,
-    onModifyTransaction: (TransactionWithIndex) -> Result<Unit>
+    onModifyTransaction: (Transaction) -> Unit
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
         val failedCount = transactionMapResult.conflictTransactions.size
@@ -157,8 +165,7 @@ private fun ImportSummary(
 
 @Composable
 private fun UnImportedTransactionList(
-    transactionMapResult: TransactionMapResult,
-    onModifyTransaction: (TransactionWithIndex) -> Result<Unit>
+    transactionMapResult: TransactionMapResult, onModifyTransaction: (Transaction) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -169,9 +176,11 @@ private fun UnImportedTransactionList(
         if (failedCount > 0) {
             Row(verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().clickable {
-                    showUnimportedList = !showUnimportedList
-                }) {
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        showUnimportedList = !showUnimportedList
+                    }) {
                 SubHeading("Conflict Transactions")
                 Icon(Icons.Outlined.KeyboardArrowDown, "", modifier = Modifier.padding(0.dp))
             }
@@ -210,8 +219,11 @@ private fun LabelAndValueRow(
 @Composable
 private fun ColumnScope.SuccessHeader() {
     Column(
-        modifier = Modifier.background(appColors.material.onPrimary).fillMaxWidth()
-            .padding(16.dp).align(Alignment.CenterHorizontally),
+        modifier = Modifier
+            .background(appColors.material.surfaceBright)
+            .fillMaxWidth()
+            .padding(16.dp)
+            .align(Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Image(
@@ -230,16 +242,20 @@ private fun ColumnScope.SuccessHeader() {
 
 @Composable
 fun TransactionItem(
-    transaction: TransactionWithIndex, onModifyTransaction: (TransactionWithIndex) -> Result<Unit>
+    transaction: TransactionWithIndex, onModifyTransaction: (Transaction) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.padding(top = 8.dp).clickable {
-            onModifyTransaction.invoke(transaction)
-        }.background(appColors.material.errorContainer).padding(8.dp)) {
+        Column(modifier = Modifier
+            .padding(top = 8.dp)
+            .clickable {
+                onModifyTransaction.invoke(transaction.transaction)
+            }
+            .background(appColors.material.errorContainer)
+            .padding(8.dp)) {
             LabelAndValueRow("Sheet Row No: " + transaction.index,
                 "Date: " + transaction.transaction.transactionDate.ifBlank { "-" })
             LabelAndValueRow("Mode: " + transaction.transaction.transactionMode.ifBlank { "-" },

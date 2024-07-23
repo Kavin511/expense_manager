@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 kotlin {
@@ -35,6 +36,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.androidx.room.runtime)
+            api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
         }
         commonTest.dependencies {
         }
