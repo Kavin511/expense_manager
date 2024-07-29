@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devstudio.data.repository.Remainder
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudioworks.ui.components.Page
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.components.Page
+import com.devstudio.designSystem.appColors
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat

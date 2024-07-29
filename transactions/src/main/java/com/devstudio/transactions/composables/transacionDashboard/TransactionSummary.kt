@@ -20,14 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.core.designsystem.R
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
+import com.devstudio.designSystem.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.appColors
 import java.util.Calendar
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -83,7 +83,7 @@ fun TransactionSummary(transactionBook: TransactionBook) {
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Expenses",
                         tint = appColors.transactionExpenseColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding)),
+                        modifier = Modifier.padding(DEFAULT_CARD_CORNER_RADIUS),
                     )
                     Text(
                         text = "Total expense ${roundOffDecimal(expense)}",
@@ -95,7 +95,7 @@ fun TransactionSummary(transactionBook: TransactionBook) {
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Income",
                         tint = appColors.transactionIncomeColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding)),
+                        modifier = Modifier.padding(DEFAULT_CARD_CORNER_RADIUS),
                     )
                     Text(
                         text = "Total income : ${roundOffDecimal(income)}",
@@ -108,7 +108,7 @@ fun TransactionSummary(transactionBook: TransactionBook) {
                         imageVector = Icons.Rounded.ImportExport,
                         contentDescription = "Investment",
                         tint = appColors.transactionInvestmentColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding)),
+                        modifier = Modifier.padding(DEFAULT_CARD_CORNER_RADIUS),
                     )
                     Text(
                         text = "Total investment ${roundOffDecimal(investment)}",

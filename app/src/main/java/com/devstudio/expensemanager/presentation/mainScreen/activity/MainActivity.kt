@@ -14,7 +14,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -24,7 +23,7 @@ import com.devstudio.expensemanager.presentation.home.composables.HomeBottomActi
 import com.devstudio.expensemanager.presentation.mainScreen.NavigationHost
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainUiState
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainViewModel
-import com.devstudio.theme.AppMaterialTheme
+import com.devstudio.designSystem.AppMaterialTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach

@@ -28,8 +28,8 @@ import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudio.utils.utils.AppConstants.Companion.INCOME
 import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudio.utils.utils.toPascalCase
-import com.devstudioworks.ui.components.Page
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.components.Page
+import com.devstudio.designSystem.appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +24,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.database.models.Books
-import com.devstudio.theme.appColors
-import com.devstudioworks.ui.components.InputDialog
-import com.devstudioworks.ui.components.InputEnterDialog
-import com.devstudioworks.ui.icons.EMAppIcons
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.components.BottomSheet
+import com.devstudio.designSystem.components.InputDialog
+import com.devstudio.designSystem.components.InputEnterDialog
+import com.devstudio.designSystem.icons.EMAppIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +41,7 @@ fun BooksMainScreen(
     var shouldShowBookCreationDialog by remember {
         mutableStateOf(false)
     }
-    ModalBottomSheet(onDismissRequest = {
+    BottomSheet(onDismissRequest = {
         hideBottomSheet.invoke(null)
     }, sheetState = sheetState) {
         when (booksUiState) {

@@ -51,7 +51,8 @@ dependencies {
 	implementation(libs.hilt.android)
 	implementation(project(":core-model"))
 	implementation(project(":core-data:model"))
-	ksp(libs.hilt.android.compiler)
+    implementation(project(":theme"))
+    ksp(libs.hilt.android.compiler)
 	implementation(libs.hilt.navigation.compose)
 }
 

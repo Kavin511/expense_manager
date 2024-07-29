@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.model.TransactionMapResult
 import com.devstudio.sharedmodule.model.TransactionWithIndex
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.appColors
 
 /**
  * @Author: Kavin

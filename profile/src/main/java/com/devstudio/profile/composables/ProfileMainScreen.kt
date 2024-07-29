@@ -33,9 +33,9 @@ import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.profile.viewmodels.EditableSettings
 import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudioworks.ui.components.Page
-import com.devstudioworks.ui.icons.EMAppIcons
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.components.Page
+import com.devstudio.designSystem.icons.EMAppIcons
+import com.devstudio.designSystem.appColors
 
 @Composable
 fun ProfileMainScreen(navController: NavHostController) {

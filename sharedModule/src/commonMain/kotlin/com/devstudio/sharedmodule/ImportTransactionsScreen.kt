@@ -1,21 +1,14 @@
 package com.devstudio.sharedmodule
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.devstudio.sharedmodule.model.TransactionMapResult
 import com.devstudio.sharedmodule.model.TransactionWithIndex
-import com.devstudio.sharedmodule.utils.shimmerEffect
+import com.devstudio.designSystem.components.BottomSheet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,7 +47,7 @@ fun ExcelFileUpload(
         }
     }
     if (showConflictResolvingScreen) {
-        ModalBottomSheet(
+        BottomSheet(
             onDismissRequest = {
                 showConflictResolvingScreen = false
                 onClose.invoke()

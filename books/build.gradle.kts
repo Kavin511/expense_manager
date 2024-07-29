@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":transactions"))
     implementation(project(":utils"))
     implementation(libs.hilt.android)
+    implementation(project(":theme"))
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.bundles.compose)

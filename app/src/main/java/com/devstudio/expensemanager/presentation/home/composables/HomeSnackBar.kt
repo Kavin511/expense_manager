@@ -11,7 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.DEFAULT_CARD_CORNER_RADIUS
+import com.devstudio.designSystem.appColors
 
 @Preview(name = "")
 @Composable
@@ -19,7 +20,7 @@ fun HomeSnackBar(
     snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     Snackbar(
-        modifier = Modifier.padding(dimensionResource(id = com.devstudio.core.designsystem.R.dimen.default_padding)).fillMaxWidth().wrapContentSize(),
+        modifier = Modifier.padding(DEFAULT_CARD_CORNER_RADIUS).fillMaxWidth().wrapContentSize(),
         action = {
             TextButton(onClick = {
                 snackBarHostState.currentSnackbarData?.performAction()

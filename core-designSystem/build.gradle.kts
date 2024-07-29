@@ -1,6 +1,3 @@
-import com.android.build.api.dsl.ManagedVirtualDevice
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.androidLibrary)
@@ -11,25 +8,19 @@ plugins {
 kotlin {
     androidTarget {
         compilations.all {
-            compileTaskProvider {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_1_8)
-                    freeCompilerArgs.add("-Xjdk-release=${JavaVersion.VERSION_1_8}")
-                }
+            kotlinOptions {
+                jvmTarget = "1.8"
             }
         }
     }
-
-    jvm()
-
-
+    
     listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "theme"
             isStatic = true
         }
     }
@@ -39,8 +30,12 @@ kotlin {
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)
-            api(compose.components.resources)
             api(compose.components.uiToolingPreview)
+            api(compose.components.resources)
+            implementation(libs.navigation.compose)
+            api(compose.components.uiToolingPreview)
+            implementation(libs.material.icons.extended)
+            implementation(project(":theme"))
         }
 
         commonTest.dependencies {
@@ -59,42 +54,17 @@ kotlin {
         }
 
     }
+
 }
 
 android {
-    namespace = "com.devstudio.core.designsystem"
+    namespace = "com.devstudio.designSystem"
     compileSdk = 34
-
     defaultConfig {
         minSdk = 21
-        targetSdk = 34
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    sourceSets["main"].apply {
-        manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        res.srcDirs("src/androidMain/res")
-    }
-    //https://developer.android.com/studio/test/gradle-managed-devices
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        managedDevices.devices {
-            maybeCreate<ManagedVirtualDevice>("pixel5").apply {
-                device = "Pixel 5"
-                apiLevel = 34
-                systemImageSource = "aosp"
-            }
-        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildFeatures {
-        //enables a Compose tooling support in the AndroidStudio
-        compose = true
-    }
-}
-dependencies {
-    api(project(":theme"))
 }

@@ -20,11 +20,12 @@ import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
-import com.devstudioworks.ui.components.MaterialAlert
+import com.devstudio.designSystem.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -169,7 +170,7 @@ class TransactionActivity : AppCompatActivity() {
         transactionViewModel.isEditingOldTransaction.observe(this) {
             if (it) {
                 binding.keyboard.saveTransaction.text =
-                    getString(com.devstudio.core.designsystem.R.string.update_transaction)
+                    getString(R.string.update_transaction)
             }
         }
     }
@@ -402,20 +403,17 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun deleteTransactionAlert() {
-        MaterialAlert(
-            context = this@TransactionActivity,
-            title = "Are you sure to delete this transaction",
-            negativeText = "No",
-            positiveText = "Delete",
-            positiveCallback = {
-                transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
-                it.dismiss()
-                this.finish()
-            },
-            negativeCallback = {
-                it.dismiss()
-            },
-        )
+        val materialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
+        materialAlertDialogBuilder.setTitle(
+            "Are you sure to delete this transaction",
+        ).setPositiveButton("Delete") { dialog, _ ->
+            transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
+            dialog.dismiss()
+            this.finish()
+        }.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        materialAlertDialogBuilder.show()
     }
 }
 

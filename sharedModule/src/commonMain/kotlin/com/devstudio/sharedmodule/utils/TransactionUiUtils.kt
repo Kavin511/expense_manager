@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.devstudio.database.models.Transaction
 import com.devstudio.database.models.TransactionMode
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.appColors
 
 /**
  * @Author: Kavin

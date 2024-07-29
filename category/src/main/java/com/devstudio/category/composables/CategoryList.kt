@@ -25,8 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryViewModel
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.database.models.Category
-import com.devstudioworks.ui.components.MaterialAlert
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.components.MaterialAlert
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -70,6 +70,24 @@ fun CategoryList(categoryStateList: List<Category>) {
                 },
             )
         }
+
+        val shouldShowDeleteDialog = remember {
+            mutableStateOf(false)
+        }
+        if (shouldShowDeleteDialog.value) {
+            MaterialAlert(
+                content  = "Are you sure to delete this category",
+                positiveText = "Delete",
+                negativeText = "No",
+                positiveCallback = {
+                    categoryViewModel.deleteTransaction(selectedCategory)
+                    shouldShowDeleteDialog.value = false
+                },
+                negativeCallback = {
+                    shouldShowDeleteDialog.value = false
+                },
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,19 +98,7 @@ fun CategoryList(categoryStateList: List<Category>) {
                     modifier = Modifier
                         .padding(vertical = 4.dp, horizontal = 16.dp)
                         .combinedClickable(onLongClick = {
-                            MaterialAlert(
-                                context = context,
-                                title = "Are you sure to delete this category",
-                                negativeText = "No",
-                                positiveText = "Delete",
-                                positiveCallback = { dialogInterface ->
-                                    categoryViewModel.deleteTransaction(it)
-                                    dialogInterface.dismiss()
-                                },
-                                negativeCallback = {
-                                    it.dismiss()
-                                },
-                            )
+                            shouldShowDeleteDialog.value = true
                         }) {
                             shouldShowDialog = true
                             selectedCategory = it

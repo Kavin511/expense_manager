@@ -16,8 +16,8 @@ import com.devstudio.category.CategoryViewModel
 import com.devstudio.category.R
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.database.models.Category
-import com.devstudioworks.ui.components.ExpressWalletFab
-import com.devstudio.theme.appColors
+import com.devstudio.designSystem.components.ExpressWalletFab
+import com.devstudio.designSystem.appColors
 
 @Composable
 fun CategoryFloatingActionButton() {

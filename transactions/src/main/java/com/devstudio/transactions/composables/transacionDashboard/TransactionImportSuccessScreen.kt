@@ -15,11 +15,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,8 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.model.TransactionMapResult
 import com.devstudio.sharedmodule.model.TransactionWithIndex
-import com.devstudio.theme.appColors
-import com.devstudio.theme.model.AppColor
+import com.devstudio.designSystem.appColors
 
 /**
  * @Author: Kavin

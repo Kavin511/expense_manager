@@ -38,6 +38,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             api(project(":theme"))
             implementation(project(":database"))
+            implementation(project(":core-designSystem"))
         }
 
         commonTest.dependencies {

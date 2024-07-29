@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudio.theme.DEFAULT_CARD_CORNER_RADIUS
-import com.devstudio.theme.model.AppColor
+import com.devstudio.designSystem.DEFAULT_CARD_CORNER_RADIUS
+import com.devstudio.designSystem.model.AppColor
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)

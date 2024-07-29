@@ -19,8 +19,9 @@ import androidx.navigation.NavHostController
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.UserPreferencesData
+import com.devstudio.designSystem.MEDIUM_SPACING
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudioworks.ui.components.Page
+import com.devstudio.designSystem.components.Page
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,7 +66,7 @@ fun ThemeSelectionScreen(navController: NavHostController) {
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .padding(
-                                start = dimensionResource(id = com.devstudio.core.designsystem.R.dimen.spacing_medium),
+                                start = MEDIUM_SPACING,
                             ),
                     )
                 }

@@ -14,7 +14,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -23,7 +22,6 @@ import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -47,6 +45,7 @@ import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewM
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.Status.SUCCESS
+import com.devstudio.designSystem.components.BottomSheet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -126,12 +125,10 @@ fun HomeActions(
             true
         }
     }
-    ModalBottomSheet(
+    BottomSheet(
         onDismissRequest = {
             event.invoke("")
-        }, modifier = Modifier
-            .navigationBarsPadding()
-            .padding(bottom = 32.dp)
+        }
     ) {
         Column(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),

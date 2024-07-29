@@ -36,13 +36,11 @@ import com.devstudio.sharedmodule.utils.getTransactionBlockColor
 import com.devstudio.transactions.acivity.PaymentStatus
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
-import com.devstudio.theme.DEFAULT_CARD_CORNER_RADIUS
-import com.devstudio.theme.DEFAULT_CARD_ELEVATION
-import com.devstudio.theme.SECONDARY_TEXT_SIZE
-import com.devstudio.theme.appColors
-import com.devstudio.theme.model.AppColor
+import com.devstudio.designSystem.DEFAULT_CARD_CORNER_RADIUS
+import com.devstudio.designSystem.DEFAULT_CARD_ELEVATION
+import com.devstudio.designSystem.SECONDARY_TEXT_SIZE
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.model.AppColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(
