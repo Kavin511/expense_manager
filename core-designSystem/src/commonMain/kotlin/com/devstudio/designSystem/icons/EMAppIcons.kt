@@ -5,6 +5,8 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.LightMode
 
@@ -15,4 +17,5 @@ object EMAppIcons {
     val DropDown = Icons.Rounded.KeyboardArrowDown
     val RoundedAddCircleOutline = Icons.Rounded.AddCircleOutline
     val Book = Icons.Rounded.Book
+    val Delete = Icons.Rounded.Delete
 }

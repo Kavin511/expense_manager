@@ -20,13 +20,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryViewModel
+import com.devstudio.category.R
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.database.models.Category
 import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.components.MaterialAlert
+import com.devstudio.designSystem.icons.EMAppIcons
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -76,7 +79,9 @@ fun CategoryList(categoryStateList: List<Category>) {
         }
         if (shouldShowDeleteDialog.value) {
             MaterialAlert(
-                content  = "Are you sure to delete this category",
+                title = stringResource(R.string.delete_category),
+                icon = EMAppIcons.Delete,
+                content = stringResource(R.string.category_once_deleted_can_t_be_recovered_transactions_for_the_corresponding_category_won_t_be_deleted),
                 positiveText = "Delete",
                 negativeText = "No",
                 positiveCallback = {
