@@ -12,9 +12,11 @@ data class TransactionEvents(
     val moreOptionsEvent: (BottomSheetEvent<String>) -> Unit,
 )
 
-data class HomeScreenState @OptIn(ExperimentalMaterial3Api::class) constructor(
+data class HomeScreenState
+@OptIn(ExperimentalMaterial3Api::class)
+constructor(
     val booksBottomSheet: SheetState,
     val transactionFilterBottomSheet: SheetState,
     val moreOptionsBottomSheet: SheetState,
-    val fileImport: MutableState<Boolean>
+    val fileImport: MutableState<Boolean>,
 )

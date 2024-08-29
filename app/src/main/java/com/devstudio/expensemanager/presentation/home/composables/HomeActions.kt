@@ -41,22 +41,21 @@ import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devstudio.data.repository.TransactionDataBackupWorker
+import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.Status.SUCCESS
-import com.devstudio.designSystem.components.BottomSheet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeActions(
     navController: NavHostController,
     snackBarHostState: SnackbarHostState,
-    event: (String) -> Unit
+    event: (String) -> Unit,
 ) {
     val context = LocalContext.current
     var readPermissionGranted = false
@@ -128,7 +127,7 @@ fun HomeActions(
     BottomSheet(
         onDismissRequest = {
             event.invoke("")
-        }
+        },
     ) {
         Column(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
@@ -165,7 +164,9 @@ private fun backUpTransactions(
 }
 
 private fun showBackUpResultAlert(
-    backStatus: BackupStatus, snackBarHostState: SnackbarHostState, context: Context
+    backStatus: BackupStatus,
+    snackBarHostState: SnackbarHostState,
+    context: Context,
 ) {
     CoroutineScope(Dispatchers.Main).launch {
         val snackBarResult = snackBarHostState.showSnackbar(
@@ -215,28 +216,36 @@ fun createIntentToShareTransactions(context: Context) {
 }
 
 const val BACKUP = "Backup"
-const val IMPORT_CSV = "Import CSV"
+const val IMPORT_CSV = "Import CSV (Beta)"
 
 data class RowWithImageData(val text: String, val iconResource: ImageVector)
 
 @Composable
 fun RowWithImage(data: RowWithImageData, onClick: () -> Unit) {
-    ConstraintLayout(modifier = Modifier
-        .fillMaxWidth()
-        .clickable(interactionSource = remember {
-            MutableInteractionSource()
-        }, indication = rememberRipple()) {
-            onClick()
-        }
-        .padding(
-            vertical = 12.dp, horizontal = 16.dp
-        )) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = rememberRipple(),
+            ) {
+                onClick()
+            }
+            .padding(
+                vertical = 12.dp,
+                horizontal = 16.dp,
+            ),
+    ) {
         val (selectedFilterTextView) = createRefs()
-        Row(modifier = Modifier.constrainAs(selectedFilterTextView) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-        }) {
+        Row(
+            modifier = Modifier.constrainAs(selectedFilterTextView) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+            },
+        ) {
             val icon = data.iconResource
             Icon(
                 modifier = Modifier
@@ -244,7 +253,7 @@ fun RowWithImage(data: RowWithImageData, onClick: () -> Unit) {
                     .width(20.dp)
                     .align(Alignment.CenterVertically),
                 imageVector = icon,
-                contentDescription = null
+                contentDescription = null,
             )
             Text(
                 text = data.text,

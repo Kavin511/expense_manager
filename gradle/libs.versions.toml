@@ -10,6 +10,7 @@ hilt = "2.51.1"
 hiltNavigationCompose = '1.2.0'
 jetbrainsNavigationCompose = "2.7.0-alpha07"
 kotlin = "2.0.0"
+kotlinxSerializationJson = "1.7.1"
 materialIconsExtendedVersion = "1.6.10"
 sqlite = "2.5.0-SNAPSHOT"
 materialVersion = "1.2.1"
@@ -48,6 +49,7 @@ koin = "3.6.0-Beta4"
 koinComposeMultiplatform = "1.2.0-Beta4"
 roomKtx = "2.6.1"
 navigationComposeVersion = "2.7.7"
+uiToolingPreviewAndroid = "1.6.8"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
@@ -74,6 +76,7 @@ firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlyti
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtendedVersion" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrainsNavigationCompose" }
 viewmodel_compose={module =  'androidx.lifecycle:lifecycle-viewmodel-compose', version.ref = 'viewmodel' }
@@ -112,6 +115,7 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
+androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 
 
 [plugins]

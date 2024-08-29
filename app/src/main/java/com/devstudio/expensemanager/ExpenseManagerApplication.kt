@@ -2,8 +2,8 @@ package com.devstudio.expensemanager
 
 import android.app.Application
 import com.devstudio.database.AppContext
-import com.devstudio.database.ApplicationModule
 import com.devstudio.database.ApplicationContainer
+import com.devstudio.database.ApplicationModule
 import com.devstudio.database.Factory
 import dagger.hilt.android.HiltAndroidApp
 
@@ -14,8 +14,8 @@ class ExpenseManagerApplication : Application() {
         ApplicationModule.initialize(
             ApplicationContainer(
                 appContext = AppContext.apply { set(applicationContext) },
-                factory = Factory(this)
-            )
+                factory = Factory(this),
+            ),
         )
     }
 }

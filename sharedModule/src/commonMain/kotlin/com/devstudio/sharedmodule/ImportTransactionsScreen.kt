@@ -36,7 +36,7 @@ fun ExcelFileUpload(
             )
         )
     }
-    var showConflictResolvingScreen by remember { mutableStateOf(false) }
+    var showConflictResolvingScreen by remember { mutableStateOf(true) }
     FilePicker(show = showFilePicker, fileExtensions = fileType) { platformFile ->
         CoroutineScope(Dispatchers.Main).launch {
             if (platformFile != null) {

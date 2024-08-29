@@ -140,6 +140,6 @@ private fun HomeScreenRoute(navController: NavHostController) {
                     moreOptionBottomSheet.hide()
                 }
             }
-        })
+        }),
     )
 }

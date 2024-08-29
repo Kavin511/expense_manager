@@ -5,7 +5,7 @@ buildscript {
         classpath(libs.firebase.crashlytics.gradle)
         classpath(libs.hilt.android.gradle.plugin)
         classpath(libs.ksp.gradlePlugin)
-        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+        classpath(libs.kotlinx.serialization.json)
     }
 }
 
@@ -27,10 +27,10 @@ subprojects {
     configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         kotlin {
             target("**/*.kt")
+            target("**/*.java")
             targetExclude("$buildDir/**/*.kt")
 
-            ktlint()
-            // licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
+//            ktlint("1.0.1")
         }
 
         groovyGradle {
