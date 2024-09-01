@@ -3,7 +3,6 @@ plugins {
 	id 'org.jetbrains.kotlin.android'
 	id 'org.jetbrains.kotlin.kapt'
 	id 'com.google.gms.google-services'
-	id 'com.google.firebase.crashlytics'
 	id 'dagger.hilt.android.plugin'
 	alias(libs.plugins.protobuf)
 }
@@ -98,7 +97,7 @@ dependencies {
 	implementation libs.constraintlayout
 	implementation libs.livedata
 	implementation libs.viewmodel
-	implementation libs.firebase.crashlytics
+	implementation platform(libs.firebase.bom)
 	implementation libs.firebase.analytics
 
 	testImplementation libs.junit
