@@ -26,12 +26,12 @@ protobuf {
 }
 android {
 	namespace 'com.devstudio.core.data'
-	compileSdk 33
+	compileSdk 34
 	buildToolsVersion "33.0.1"
 
 	defaultConfig {
 		minSdk 21
-		targetSdk 33
+		targetSdk 34
 
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 		consumerProguardFiles "consumer-rules.pro"
