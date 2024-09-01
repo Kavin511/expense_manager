@@ -17,7 +17,6 @@ import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
 import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
 import com.devstudio.utils.utils.CSVWriter
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -57,8 +56,6 @@ class TransactionDataBackupWorker(
             writeTransactionsAsCSV(csvWriter)
             BackupStatus.success("Transactions backed up to documents folder successfully")
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance()
-                .recordException(Throwable(e.message ?: "Failure in transactions backup"))
             BackupStatus.failure(e.message.toString())
         }
     }
