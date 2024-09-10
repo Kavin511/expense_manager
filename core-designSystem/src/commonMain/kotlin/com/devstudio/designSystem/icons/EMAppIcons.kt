@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.LightMode
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 object EMAppIcons {
     val Back = Icons.AutoMirrored.Rounded.ArrowBack
@@ -18,4 +19,5 @@ object EMAppIcons {
     val RoundedAddCircleOutline = Icons.Rounded.AddCircleOutline
     val Book = Icons.Rounded.Book
     val Delete = Icons.Rounded.Delete
+    val success = Success
 }

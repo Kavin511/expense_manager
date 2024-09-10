@@ -26,30 +26,32 @@ import com.devstudio.designSystem.icons.EMAppIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-inline fun Page(
-    title: String,
+fun Page(
+    title: String = "",
     navController: NavController = rememberNavController(),
     shouldNavigateUp: Boolean = false,
-    crossinline action: @Composable () -> Unit = {},
-    crossinline fab: @Composable () -> Unit = {},
-    crossinline content: @Composable () -> Unit,
+    action: @Composable () -> Unit = {},
+    fab: @Composable () -> Unit = {},
+    content: @Composable () -> Unit,
 ) {
     val topAppBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
     Scaffold(topBar = {
-        TopAppBar(title = {
-            Text(text = title)
-        }, actions = {
-            action()
-        }, scrollBehavior = scrollBehavior, navigationIcon = {
-            if (shouldNavigateUp) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(imageVector = EMAppIcons.Back, contentDescription = "Navigate Up")
+        if (title.isNotEmpty()) {
+            TopAppBar(title = {
+                Text(text = title)
+            }, actions = {
+                action()
+            }, scrollBehavior = scrollBehavior, navigationIcon = {
+                if (shouldNavigateUp) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(imageVector = EMAppIcons.Back, contentDescription = "Navigate Up")
+                    }
                 }
-            }
-        })
+            })
+        }
     }, floatingActionButton = {
         fab()
     }) {
@@ -58,13 +60,9 @@ inline fun Page(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Surface(
-                modifier = Modifier
-                    .padding(it)
-                    .safeContentPadding()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .widthIn(max = 640.dp)
-                    .waterfallPadding()
-                    .align(alignment = Alignment.CenterHorizontally),
+                modifier = Modifier.padding(it).safeContentPadding()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection).widthIn(max = 640.dp)
+                    .waterfallPadding().align(alignment = Alignment.CenterHorizontally),
             ) {
                 content()
             }

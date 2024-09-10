@@ -1,10 +1,9 @@
 package com.devstudio.data.repository
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
-import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
-import androidx.core.os.BuildCompat
 import androidx.room.Room
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -29,7 +28,7 @@ class TransactionDataBackupWorker(
     workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {
 
-    val db = Room.databaseBuilder(
+    private val db = Room.databaseBuilder(
         context,
         ExpenseManagerDataBase::class.java,
         "expense_manager_database",
@@ -112,8 +111,8 @@ class TransactionDataBackupWorker(
             return File(folder.absolutePath, BACK_UP_FILE_NAME)
         }
 
-        fun backupPath(context: Context): String {
-            val path = if (BuildCompat.isAtLeastT()) {
+        private fun backupPath(context: Context): String {
+            val path = if (Build.VERSION.SDK_INT >= 33) {
                 context.filesDir.absolutePath
             } else {
                 Environment.getExternalStoragePublicDirectory(
@@ -123,6 +122,6 @@ class TransactionDataBackupWorker(
             return "$path/${context.applicationInfo.packageName}"
         }
 
-        const val BACK_UP_FILE_NAME = "transactions.csv"
+        private const val BACK_UP_FILE_NAME = "transactions.csv"
     }
 }
