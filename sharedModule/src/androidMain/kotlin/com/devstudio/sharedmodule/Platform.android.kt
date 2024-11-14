@@ -38,29 +38,23 @@ actual fun FilePicker(
     onFileSelected: (List<List<String>>?) -> Unit
 ) {
     val context = LocalContext.current
-    var fileSelected by remember {
-        mutableStateOf(false)
-    }
     val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                if (result.data?.data != null) {
-                    onFileSelected(parseCsvFromUri(
-                        context, result.data?.data!!
-                    ))
-                } else {
-                    fileSelected = false
-                }
+        simpleActivityForResultLauncher(intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+        }) { _, intent ->
+            intent?.data?.also {
+                onFileSelected(
+                    parseCsvFromUri(
+                        context, it
+                    )
+                )
             }
         }
 
     LaunchedEffect(show) {
         if (show) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.setType("text/comma-separated-values");
-            Intent.createChooser(intent, "Open CSV")
-            launcher.launch(intent)
+            launcher.launch(Unit)
         }
     }
 }
