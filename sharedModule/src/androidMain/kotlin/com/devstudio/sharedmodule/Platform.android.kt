@@ -1,32 +1,34 @@
 package com.devstudio.sharedmodule
 
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.MediaStore
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.devstudio.data.datastore.DataSourceModule
 import com.devstudio.data.repository.TransactionsRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.database.AppContext
 import com.devstudio.sharedmodule.domain.useCase.csvToTransaction.CsvToTransactionMapper
+import com.devstudio.sharedmodule.domain.useCase.readFile
+import com.devstudio.sharedmodule.model.CSVRow
 import com.devstudio.sharedmodule.model.TransactionMapResult
+import com.opencsv.CSVReaderBuilder
+import com.opencsv.validators.LineValidator
+import com.opencsv.validators.RowValidator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import org.apache.commons.lang3.CharSet
 import java.io.BufferedReader
+import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.StringReader
+import java.nio.charset.Charset
+import kotlin.text.Charsets.UTF_8
 
 
 @Composable
@@ -35,7 +37,7 @@ actual fun FilePicker(
     initialDirectory: String?,
     fileExtensions: Array<String>,
     title: String?,
-    onFileSelected: (List<List<String>>?) -> Unit
+    onFileSelected: (List<CSVRow>?) -> Unit,
 ) {
     val context = LocalContext.current
     val launcher =
@@ -45,8 +47,8 @@ actual fun FilePicker(
         }) { _, intent ->
             intent?.data?.also {
                 onFileSelected(
-                    parseCsvFromUri(
-                        context, it
+                    processFile(
+                        context, it, UTF_8
                     )
                 )
             }
@@ -59,91 +61,59 @@ actual fun FilePicker(
     }
 }
 
-fun parseCsvFromUri(context: Context, uri: Uri): List<List<String>> {
-    val contentResolver = context.contentResolver
-    context.contentResolver.query(
-        uri, arrayOf(
-            MediaStore.MediaColumns.DATA,
-            MediaStore.MediaColumns.SIZE,
-            MediaStore.MediaColumns.MIME_TYPE
-        ), null, null, null
-    )
 
-    val inputStream = contentResolver.openInputStream(uri)
-    return convert(inputStream)
+fun processFile(context: Context, uri: Uri, charset: Charset): List<CSVRow>? {
+    return try {
+        val fileContent: String? = readFile(context, uri, charset = Charsets.UTF_8)
+        var parsedCsvList = parseCSV(fileContent!!, normalizeCSV = false)
+        if (parsedCsvList.size < 3) {
+            parsedCsvList = parseCSV(fileContent, normalizeCSV = true)
+        }
+        parsedCsvList
+    } catch (e: Exception) {
+        if (charset != Charsets.UTF_16) {
+            return processFile(context, uri, Charsets.UTF_16)
+        }
+        return null
+    }
 }
 
-@Throws(IOException::class)
-fun convert(file: InputStream?): MutableList<List<String>> {
-    file?.let {
-        BufferedReader(InputStreamReader(it)).use { reader ->
-            val lines = reader.readLines()
-            val parsedCsv: MutableList<List<String>> = ArrayList()
-
-            val regex = """"(.*?)"|([^,]+)""".toRegex()
-
-            lines.forEach { line ->
-                val matches = regex.findAll(line)
-                val parsedLine = matches.map { matchResult ->
-                    matchResult.groups[1]?.value ?: matchResult.groups[2]?.value ?: ""
-                }.toList()
-                parsedCsv.add(parsedLine)
+private fun parseCSV(csv: String, normalizeCSV: Boolean): List<CSVRow> {
+    val finalCSV = if (normalizeCSV) {
+        csv.replace(",", " ")
+            .replace(";", ",")
+    } else {
+        csv
+    }
+    val csvReader = CSVReaderBuilder(StringReader(finalCSV))
+        .withLineValidator(object : LineValidator {
+            override fun isValid(line: String?): Boolean {
+                return true
             }
 
-            return parsedCsv
-        }
-    } ?: return mutableListOf()
-}
-//    val wbs = WorkbookSettings();
-//    wbs.gcDisabled = true;
-//    val workbook = Workbook.getWorkbook(inputStream, wbs)
-//    val posFile = POIFSFileSystem(file, true)
-//    if (file.name.endsWith("xlsx")) {
-//        val info = EncryptionInfo(posFile)
-//        val d = Decryptor.getInstance((info))
-//        if (!d.verifyPassword(password)) {
-//            excelExceptionListData.postValue("Wrong password! ")
-//            return@launch
-//        }
-//        workbook = XSSFWorkbook(d.getDataStream(posFile))
-//    } else {
-//        org.apache.poi.hssf.record.crypto.Biff8EncryptionKey.setCurrentUserPassword(
-//            password
-//        )
-//        workbook = HSSFWorkbook(posFile.root, true)
-//    }
-//    val csvLines = mutableListOf<List<String>>()
-//    for (i in 0 until workbook.getSheet(0).rows) {
-//        val row = workbook.getSheet(0).getRow(i)
-//        val subList = mutableListOf<String>()
-//        for (element in row) {
-//            subList.add(element.contents)
-//            csvLines.add(subList)
-//        }
-//    }
+            override fun validate(line: String?) {
+            }
+        })
+        .withRowValidator(object : RowValidator {
+            override fun isValid(row: Array<out String>?): Boolean {
+                return true
+            }
 
-//    try {
-//        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-//        val workbook = WorkbookFactory.create(inputStream)
-//        val sheet = workbook.getSheetAt(0)
-//
-//        for (row in sheet) {
-//            val subList = mutableListOf<String>()
-//            for (cell in row) {
-//                subList.add(cell.toString())
-//            }
-//            csvLines.add(subList)
-//        }
-//        inputStream?.close()
-//    } catch (e: Exception) {
-//        e.printStackTrace()
-//    }
+            override fun validate(row: Array<out String>?) {
+            }
+        })
+        .build()
+
+    return csvReader.readAll()
+        .map { CSVRow(it.toList()) }
+}
+
 actual suspend fun saveTransactions(transactions: List<List<String>>): TransactionMapResult {
     val context = AppContext.get()!!
     val transactionsRepositoryImpl = TransactionsRepositoryImpl(
         context, UserDataRepositoryImpl(DataSourceModule(context))
     )
-     return CoroutineScope(Dispatchers.IO).async {
+    return CoroutineScope(Dispatchers.IO).async {
         val transactionMapResult = CsvToTransactionMapper(transactions).invoke(context)
         transactionMapResult.transactions.forEach {
             transactionsRepositoryImpl.upsertTransaction(it.transaction)

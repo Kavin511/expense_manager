@@ -1,6 +1,7 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
+import com.devstudio.sharedmodule.model.CSVRow
 import com.devstudio.sharedmodule.model.TransactionMapResult
 
 @Composable
@@ -9,7 +10,7 @@ expect fun FilePicker(
     initialDirectory: String? = null,
     fileExtensions: Array<String> = emptyArray(),
     title: String? = null,
-    onFileSelected: (List<List<String>>?) -> Unit,
+    onFileSelected: (List<CSVRow>?) -> Unit,
 )
 
 

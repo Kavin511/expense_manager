@@ -1,6 +1,7 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
+import com.devstudio.sharedmodule.model.CSVRow
 import com.devstudio.sharedmodule.model.TransactionMapResult
 
 actual suspend fun saveTransactions(transactions: List<List<String>>): TransactionMapResult {
@@ -13,7 +14,7 @@ public actual fun FilePicker(
     initialDirectory: String?,
     fileExtensions: Array<String>,
     title: String?,
-    onFileSelected: @Composable (List<List<String>>?) -> Unit,
+    onFileSelected: @Composable (List<CSVRow>?) -> Unit,
 ) {
 
 }
