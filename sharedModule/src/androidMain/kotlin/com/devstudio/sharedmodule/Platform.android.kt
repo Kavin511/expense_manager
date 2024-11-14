@@ -34,9 +34,6 @@ import kotlin.text.Charsets.UTF_8
 @Composable
 actual fun FilePicker(
     show: Boolean,
-    initialDirectory: String?,
-    fileExtensions: Array<String>,
-    title: String?,
     onFileSelected: (List<CSVRow>?) -> Unit,
 ) {
     val context = LocalContext.current
