@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.database.models.Books
 import com.devstudio.designSystem.appColors
@@ -36,7 +37,7 @@ fun BooksMainScreen(
     sheetState: SheetState,
     hideBottomSheet: (Long?) -> Unit,
 ) {
-    val booksViewModel: BooksViewModel = viewModel()
+    val booksViewModel: BooksViewModel = hiltViewModel()
     val booksUiState by booksViewModel.booksUiState.collectAsState()
     var shouldShowBookCreationDialog by remember {
         mutableStateOf(false)

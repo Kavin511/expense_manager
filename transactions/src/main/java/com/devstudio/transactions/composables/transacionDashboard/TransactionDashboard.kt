@@ -37,10 +37,11 @@ import com.devstudio.transactions.models.TransactionOptionsEvent
 import com.devstudio.transactions.models.TransactionUiState
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.designSystem.appColors
+import com.devstudio.model.models.OnEvent
 import com.google.android.material.datepicker.MaterialDatePicker
 
 @Composable
-fun TransactionDashBoard(uiState: TransactionUiState.Success, filterEvent: (TransactionOptionsEvent) -> Unit) {
+fun TransactionDashBoard(uiState: TransactionUiState.Success, onEvent: OnEvent) {
     Surface(
         modifier = Modifier
             .widthIn(max = 640.dp),
@@ -50,7 +51,7 @@ fun TransactionDashBoard(uiState: TransactionUiState.Success, filterEvent: (Tran
             modifier = Modifier.padding(PaddingValues(6.dp)),
         ) {
             TransactionSummary(uiState.data)
-            TransactionOptions(uiState.data.filterType, filterEvent)
+            TransactionOptions(uiState.data.filterType, onEvent)
             TransactionsList(uiState.data)
         }
     }
@@ -73,16 +74,16 @@ fun showDateRangePicker(
 }
 
 @Composable
-fun TransactionOptions(filterType: TransactionFilterType, filterEvent: (TransactionOptionsEvent) -> Unit) {
+fun TransactionOptions(filterType: TransactionFilterType, onEvent: OnEvent) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
-    TransactionOptionsRow(filterType, transactionViewModel, filterEvent)
+    TransactionOptionsRow(filterType, transactionViewModel, onEvent)
 }
 
 @Composable
 private fun TransactionOptionsRow(
     filterType: TransactionFilterType,
     transactionViewModel: TransactionViewModel,
-    filterEvent: (TransactionOptionsEvent) -> Unit,
+    onEvent: OnEvent,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -127,7 +128,7 @@ private fun TransactionOptionsRow(
                 ButtonDefaults.outlinedButtonColors()
             },
             onClick = {
-                filterEvent.invoke(TransactionOptionsEvent(true))
+                onEvent.invoke(TransactionOptionsEvent(true))
             },
             border = BorderStroke(width = 1.dp, color = appColors.material.onPrimaryContainer),
             modifier = Modifier.align(alignment = Alignment.CenterVertically),

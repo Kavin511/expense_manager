@@ -20,16 +20,19 @@ import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.devstudio.designSystem.appColors
 import com.devstudio.expensemanager.R
-import com.devstudio.model.models.ExpressWalletAppState
+import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.AccountScreen
+import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.CategoryScreen
+import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.TransactionsScreen
 
 /**
  * @Author: Kavin
@@ -37,9 +40,9 @@ import com.devstudio.model.models.ExpressWalletAppState
  */
 
 @Composable
-fun HomeBottomActions(navController: NavHostController) {
+fun HomeScreenBottomBar(navController: NavHostController) {
     val selectedIndex = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     val bottomNavigationList = getBottomNavigationItems()
     BottomAppBar(
@@ -61,16 +64,20 @@ fun HomeBottomActions(navController: NavHostController) {
                     Box(
                         modifier = Modifier
                             .clickable {
-                                selectedIndex.value = index
+                                selectedIndex.intValue = index
                                 navController.navigate(it.navigationRoute) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
                                     launchSingleTop = true
+                                    restoreState = true
                                 }
                             }
                             .fillMaxHeight()
                             .fillParentMaxSize(0.33f),
                     ) {
                         Icon(
-                            if (selectedIndex.value == index) it.selectedIcon else it.unselectedIcon,
+                            if (selectedIndex.intValue == index) it.selectedIcon else it.unselectedIcon,
                             contentDescription = it.name,
                             modifier = Modifier
                                 .fillParentMaxSize(0.5f)
@@ -91,19 +98,19 @@ private fun getBottomNavigationItems(): List<BottomNavigationItem> {
             name = stringResource(id = R.string.transaction),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
-            navigationRoute = ExpressWalletAppState.HomeScreen.route,
+            navigationRoute = TransactionsScreen.route,
         ),
         BottomNavigationItem(
             name = stringResource(id = R.string.category),
             selectedIcon = Icons.Rounded.Category,
             unselectedIcon = Icons.Outlined.Category,
-            navigationRoute = ExpressWalletAppState.HomeScreen.CategoryScreen.route,
+            navigationRoute = CategoryScreen.route,
         ),
         BottomNavigationItem(
             name = stringResource(id = R.string.profile),
             selectedIcon = Icons.Rounded.AccountCircle,
             unselectedIcon = Icons.Outlined.AccountCircle,
-            navigationRoute = ExpressWalletAppState.HomeScreen.AccountScreen.route,
+            navigationRoute = AccountScreen.route,
         ),
     )
 }

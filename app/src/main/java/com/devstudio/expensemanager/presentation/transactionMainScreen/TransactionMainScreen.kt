@@ -26,19 +26,19 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
-import com.devstudio.expensemanager.presentation.home.composables.HomeSnackBar
-import com.devstudio.expensemanager.presentation.transactionMainScreen.model.BookEvent
-import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
-import com.devstudio.transactions.acivity.TransactionActivity
-import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
-import com.devstudio.transactions.models.TransactionUiState
+import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.components.DefaultLoader
 import com.devstudio.designSystem.components.ExpressWalletFab
 import com.devstudio.designSystem.icons.EMAppIcons
-import com.devstudio.designSystem.appColors
 import com.devstudio.expensemanager.R
+import com.devstudio.expensemanager.presentation.home.composables.HomeSnackBar
+import com.devstudio.expensemanager.presentation.transactionMainScreen.model.BookEvent
+import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
+import com.devstudio.model.models.OnEvent
+import com.devstudio.transactions.acivity.TransactionActivity
+import com.devstudio.transactions.composables.transacionDashboard.TransactionDashBoard
 import com.devstudio.transactions.models.BottomSheetEvent
+import com.devstudio.transactions.models.TransactionUiState
 
 /**
  * @Author: Kavin
@@ -49,12 +49,10 @@ import com.devstudio.transactions.models.BottomSheetEvent
 @Composable
 fun TransactionMainScreen(
     snackBarHostState: SnackbarHostState,
-    navController: NavHostController,
     scrollBehavior: TopAppBarScrollBehavior,
-    transactionEvents: TransactionEvents,
+    booksEvent: OnEvent,
     uiState: TransactionUiState,
 ) {
-    val booksEvent = transactionEvents.booksEventCallback
     when (uiState) {
         is TransactionUiState.Loading -> {
             DefaultLoader()
@@ -77,7 +75,7 @@ fun TransactionMainScreen(
                         }
                     }, actions = {
                         IconButton(onClick = {
-                            transactionEvents.moreOptionsEvent.invoke(BottomSheetEvent(true, null))
+                            booksEvent.invoke(BottomSheetEvent(true, null))
                         }) {
                             Icon(Icons.Rounded.MoreVert, "More")
                         }
@@ -91,7 +89,7 @@ fun TransactionMainScreen(
                         .fillMaxSize()
                         .padding(it),
                 ) {
-                    TransactionDashBoard(uiState, transactionEvents.filterEvent)
+                    TransactionDashBoard(uiState, booksEvent)
                 }
             }
         }

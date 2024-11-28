@@ -36,7 +36,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.androidx.room.runtime)
-            api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+            api(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
         }

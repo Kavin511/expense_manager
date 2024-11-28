@@ -35,6 +35,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(libs.lifecycle.viewmodel.compose)
             implementation(compose.components.uiToolingPreview)
             api(project(":theme"))
             implementation(project(":database"))
@@ -49,6 +50,8 @@ kotlin {
             implementation(libs.activity.compose)
             implementation(project(":core-data"))
             implementation(project(":core-designSystem"))
+            implementation(libs.opencsv.csv)
+            implementation(libs.opencsv.apache.commons)
         }
 
         iosMain.dependencies {

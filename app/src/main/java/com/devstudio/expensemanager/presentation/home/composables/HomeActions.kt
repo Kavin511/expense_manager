@@ -39,13 +39,16 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.devstudio.data.repository.TransactionDataBackupWorker
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
+import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
 import com.devstudio.model.models.BackupStatus
+import com.devstudio.model.models.ExpressWalletAppState
+import com.devstudio.model.models.OnEvent
 import com.devstudio.model.models.Status.SUCCESS
+import com.devstudio.transactions.models.BottomSheetEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,9 +56,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeActions(
-    navController: NavHostController,
     snackBarHostState: SnackbarHostState,
-    event: (String) -> Unit,
+    onEvent: OnEvent,
 ) {
     val context = LocalContext.current
     var readPermissionGranted = false
@@ -126,17 +128,17 @@ fun HomeActions(
     }
     BottomSheet(
         onDismissRequest = {
-            event.invoke("")
+            onEvent.invoke(BottomSheetEvent(false, ""))
         },
     ) {
         Column(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
         ) {
             RowWithImage(RowWithImageData(IMPORT_CSV, Icons.Rounded.Upload), onClick = {
-                event.invoke(IMPORT_CSV)
+                onEvent.invoke(ExpressWalletAppState.ImportCsv)
             })
             RowWithImage(RowWithImageData(BACKUP, Icons.Rounded.Backup), onClick = {
-                event.invoke(BACKUP)
+                onEvent.invoke(BottomSheetEvent(false, BACKUP))
                 if (checkPermissionToStartBackup(context)) {
                     backUpTransactions(homeActionsViewModel, snackBarHostState, context)
                 }
@@ -156,7 +158,7 @@ private fun backUpTransactions(
         } else {
             Toast.makeText(
                 context,
-                it.message ?: "",
+                it.message,
                 Toast.LENGTH_SHORT,
             ).show()
         }

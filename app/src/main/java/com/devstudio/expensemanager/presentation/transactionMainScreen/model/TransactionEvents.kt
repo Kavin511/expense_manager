@@ -2,14 +2,10 @@ package com.devstudio.expensemanager.presentation.transactionMainScreen.model
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
-import androidx.compose.runtime.MutableState
-import com.devstudio.transactions.models.BottomSheetEvent
-import com.devstudio.transactions.models.TransactionOptionsEvent
+import com.devstudio.model.models.OnEvent
 
 data class TransactionEvents(
-    val booksEventCallback: (BookEvent) -> Unit,
-    val filterEvent: (TransactionOptionsEvent) -> Unit,
-    val moreOptionsEvent: (BottomSheetEvent<String>) -> Unit,
+    val onEvent : OnEvent
 )
 
 data class HomeScreenState
@@ -18,5 +14,4 @@ constructor(
     val booksBottomSheet: SheetState,
     val transactionFilterBottomSheet: SheetState,
     val moreOptionsBottomSheet: SheetState,
-    val fileImport: MutableState<Boolean>,
 )

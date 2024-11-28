@@ -14,9 +14,7 @@ fun String.contains(vararg values: String): Boolean {
 }
 
 fun parseDateToTimestamp(dateStr: String): Long? {
-    val dateFormats = listOf(
-        "yyyy-MM-dd", "dd/MM/yyyy", "dd,MM,yyyy", "MM/dd/yyyy", "yyyy.MM.dd", "MMMM dd, yyyy"
-    )
+    val dateFormats = getDateFormats()
     var parsedDate: Date? = null
     for (format in dateFormats) {
         try {
@@ -27,6 +25,60 @@ fun parseDateToTimestamp(dateStr: String): Long? {
     }
     return parsedDate?.time
 }
+
+private fun getDateFormats() = listOf(
+    "dd-MM-yyyy",
+    "dd/MM/yyyy",
+    "dd.MM.yyyy",
+    "dd MM yyyy",
+    "dd-MM-yy",
+    "MMMM dd, yyyy",
+    "dd/MM/yy",
+    "dd.MM.yy",
+    "d.MM.yy",
+    "d-M-yy",
+    "dd,MM,yyyy",
+    "d/M/yy",
+    "d.M.yy",
+    "d.M.yy.",
+    "d-M-yyyy",
+    "d/M/yyyy",
+    "d.M.yyyy",
+    "d. M. yyyy.",
+    "d. M. yyyy",
+    "d MMM, yyyy",
+    "dd MMM, yyyy",
+    "d. MMMM yyyy",
+    "dd.MM.yyyy.",
+    "dd.MM.yy.",
+    "yyyy-MM-dd",
+    "yyyy/MM/dd",
+    "yyyy.MM.dd",
+    "yyyy MM dd",
+    "yy/MM/dd",
+    "yy-MM-dd",
+    "yy.M.d",
+    "yy-M-d",
+    "yy. M. d",
+    "yyyy/M/d",
+    "yyyy年MM月dd日",
+    "yy年M月d日",
+    "yyyy.MM.dd.",
+    "yyyy. MM. dd",
+    "MM-dd-yyyy",
+    "MM/dd/yyyy",
+    "MM.dd.yyyy",
+    "MM dd yyyy",
+    "MM-dd-yy",
+    "MM/dd/yy",
+    "M/dd/yy",
+    "MMM-dd-yyyy",
+    "MMM dd, yyyy",
+    "MMM d, yyyy",
+    "MMMM d, yyyy",
+    "yyyy.dd.MM",
+    "yy.d.M"
+)
 
 fun getCategoryMapping() = mapOf(
     "Food" to listOf(
