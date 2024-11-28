@@ -1,3 +1,5 @@
+import HomeActions.BACKUP
+import HomeActions.IMPORT_CSV
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Context
@@ -43,9 +45,7 @@ import com.devstudio.data.repository.TransactionDataBackupWorker
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
-import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
 import com.devstudio.model.models.BackupStatus
-import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.model.models.OnEvent
 import com.devstudio.model.models.Status.SUCCESS
 import com.devstudio.transactions.models.BottomSheetEvent
@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeActions(
+fun HomeActionsBottomSheet(
     snackBarHostState: SnackbarHostState,
     onEvent: OnEvent,
 ) {
@@ -134,10 +134,10 @@ fun HomeActions(
         Column(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
         ) {
-            RowWithImage(RowWithImageData(IMPORT_CSV, Icons.Rounded.Upload), onClick = {
-                onEvent.invoke(ExpressWalletAppState.ImportCsv)
+            RowWithImage(RowWithImageData(IMPORT_CSV.getActionName(), Icons.Rounded.Upload), onClick = {
+                onEvent.invoke(BottomSheetEvent(false, IMPORT_CSV))
             })
-            RowWithImage(RowWithImageData(BACKUP, Icons.Rounded.Backup), onClick = {
+            RowWithImage(RowWithImageData(BACKUP.getActionName(), Icons.Rounded.Backup), onClick = {
                 onEvent.invoke(BottomSheetEvent(false, BACKUP))
                 if (checkPermissionToStartBackup(context)) {
                     backUpTransactions(homeActionsViewModel, snackBarHostState, context)
@@ -216,9 +216,6 @@ fun createIntentToShareTransactions(context: Context) {
     intent.putExtra(Intent.EXTRA_SUBJECT, "Transactions export")
     context.startActivity(Intent.createChooser(intent, "Share Transactions"))
 }
-
-const val BACKUP = "Backup"
-const val IMPORT_CSV = "Import CSV (Beta)"
 
 data class RowWithImageData(val text: String, val iconResource: ImageVector)
 

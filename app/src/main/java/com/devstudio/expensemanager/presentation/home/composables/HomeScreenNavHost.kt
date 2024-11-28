@@ -1,10 +1,9 @@
 package com.devstudio.expensemanager.presentation.home.composables
 
-import HomeActions
+import HomeActionsBottomSheet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -17,7 +16,6 @@ import com.devstudio.category.composables.CategoryMainScreen
 import com.devstudio.expensemanager.presentation.transactionMainScreen.TransactionMainScreen
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.BookEvent
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.HomeScreenState
-import com.devstudio.expensemanager.presentation.transactionMainScreen.model.TransactionEvents
 import com.devstudio.feature.books.BooksMainScreen
 import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.AccountScreen
 import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.CategoryScreen
@@ -53,7 +51,7 @@ fun HomeScreenNavHost(
                 }
             }
             if (moreOptionsBottomSheet.currentValue.equals(SheetValue.Expanded)) {
-                HomeActions(snackBarHostState, onEvent)
+                HomeActionsBottomSheet(snackBarHostState, onEvent)
             }
             TransactionMainScreen(
                 snackBarHostState,

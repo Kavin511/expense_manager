@@ -1,5 +1,6 @@
 package com.devstudio.expensemanager.presentation.mainScreen
 
+import HomeActions
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -27,7 +28,7 @@ import com.devstudio.expensemanager.presentation.transactionMainScreen.model.Hom
 import com.devstudio.feature.books.BooksViewModel
 import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.model.models.ExpressWalletAppState.HomeScreen
-import com.devstudio.model.models.ExpressWalletAppState.ImportScreen
+import com.devstudio.model.models.ExpressWalletAppState.ImportCsv
 import com.devstudio.model.models.OnEvent
 import com.devstudio.profile.BudgetScreen
 import com.devstudio.profile.ThemeSelectionScreen
@@ -54,7 +55,7 @@ fun ExpressWalletNavHost(
         composable(route = ExpressWalletAppState.BudgetScreen.route) {
             BudgetScreen()
         }
-        composable(route = ImportScreen.route) {
+        composable(route = ImportCsv.route) {
             CsvImportScreen()
         }
         composable(route = ExpressWalletAppState.ThemeScreen.route) {
@@ -86,7 +87,6 @@ private fun HomeScreen(navController: NavHostController) {
                     booksBottomSheet, transactionFilterBottomSheet, moreOptionBottomSheet
                 ),
                 onEvent(
-                    homeNavController,
                     booksBottomSheet,
                     transactionFilterBottomSheet,
                     transactionViewModel,
@@ -101,12 +101,12 @@ private fun HomeScreen(navController: NavHostController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun onEvent(
-    homeNavController: NavHostController,
     booksBottomSheet: SheetState,
     transactionFilterBottomSheet: SheetState,
     transactionViewModel: TransactionViewModel,
     moreOptionBottomSheet: SheetState,
     navController: NavHostController,
+    homeNavController: NavHostController = rememberNavController(),
     booksViewModel: BooksViewModel = hiltViewModel<BooksViewModel>(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     fragmentManager: FragmentManager = (LocalContext.current as AppCompatActivity).supportFragmentManager,
@@ -132,7 +132,7 @@ private fun onEvent(
             }
 
             is BottomSheetEvent<*> -> {
-                onBottomSheetEvent(coroutineScope, event, moreOptionBottomSheet)
+                moreOptionBottomSheet.onBottomSheetEvent(coroutineScope, event, navController)
             }
 
             is ExpressWalletAppState -> {
@@ -143,16 +143,19 @@ private fun onEvent(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-private fun onBottomSheetEvent(
+private fun SheetState.onBottomSheetEvent(
     coroutineScope: CoroutineScope,
     event: BottomSheetEvent<*>,
-    moreOptionBottomSheet: SheetState,
+    navController: NavHostController,
 ) {
     coroutineScope.launch {
         if (event.showBottomSheet) {
-            moreOptionBottomSheet.show()
+            show()
         } else {
-            moreOptionBottomSheet.hide()
+            hide()
+        }
+        if (event.selectedItem == HomeActions.IMPORT_CSV) {
+            navController.navigate(ImportCsv.route)
         }
     }
 }
