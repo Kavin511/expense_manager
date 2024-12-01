@@ -11,8 +11,8 @@ plugins {
 
 android {
 	namespace = "com.devstudio.expensemanager"
-    compileSdk = 34
-	buildToolsVersion = "33.0.1"
+    compileSdk = 35
+	buildToolsVersion = "34.0.0"
 	signingConfigs {
 		create("release") {
 			storeFile = file("../devstudiowork.jks")
@@ -25,7 +25,7 @@ android {
 	defaultConfig {
 		applicationId = "com.devstudio.expensemanager"
 		minSdk = 21
-		targetSdk = 34
+		targetSdk = 35
 		versionCode = 24
 		versionName = "1.1.8"
 

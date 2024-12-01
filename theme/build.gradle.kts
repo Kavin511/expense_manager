@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.androidLibrary)
@@ -5,14 +8,15 @@ plugins {
     alias(libs.plugins.compose)
 }
 
-kotlin {
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
+}
+
+kotlin {
+    androidTarget()
     
     listOf(
         iosX64(),
@@ -38,7 +42,7 @@ kotlin {
 
 android {
     namespace = "com.devstudio.theme"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         minSdk = 21
     }

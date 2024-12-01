@@ -36,6 +36,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(libs.lifecycle.viewmodel.compose)
+            implementation(libs.navigation.compose)
             implementation(compose.components.uiToolingPreview)
             api(project(":theme"))
             implementation(project(":database"))
@@ -63,11 +64,10 @@ kotlin {
 
 android {
     namespace = "com.devstudio.sharedModule"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 34
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

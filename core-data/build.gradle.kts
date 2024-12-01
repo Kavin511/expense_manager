@@ -8,12 +8,11 @@ plugins {
 
 android {
 	namespace ="com.devstudio.core.data"
-    compileSdk= 34
-    buildToolsVersion = "33.0.1"
+    compileSdk = 35
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         minSdk = 21
-        targetSdk= 34
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
