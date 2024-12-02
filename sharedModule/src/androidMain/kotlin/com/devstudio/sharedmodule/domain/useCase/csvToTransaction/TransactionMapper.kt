@@ -10,8 +10,8 @@ import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.domain.useCase.util.contains
 import com.devstudio.sharedmodule.domain.useCase.util.getCategoryMapping
 import com.devstudio.sharedmodule.domain.useCase.util.parseDateToTimestamp
-import com.devstudio.sharedmodule.model.TransactionMapResult
-import com.devstudio.sharedmodule.model.TransactionWithIndex
+import com.devstudio.sharedmodule.importData.model.TransactionMapResult
+import com.devstudio.sharedmodule.importData.model.TransactionWithIndex
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 

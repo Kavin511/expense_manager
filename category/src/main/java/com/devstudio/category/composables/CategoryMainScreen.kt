@@ -28,7 +28,7 @@ import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudio.utils.utils.AppConstants.Companion.INCOME
 import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudio.utils.utils.toPascalCase
-import com.devstudio.designSystem.components.Page
+import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.appColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +40,7 @@ fun CategoryMainScreen() {
     }
     val topAppBarState = rememberTopAppBarState()
     TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
-    Page(title = "Categories", fab = { CategoryFloatingActionButton() }) {
+    Screen(title = "Categories", fab = { CategoryFloatingActionButton() }) {
         Column {
             CategoryActions(selectedFilterType)
             with(categoryViewModel.categoryState.collectAsState()) {

@@ -1,4 +1,4 @@
-package com.devstudio.sharedmodule.model
+package com.devstudio.sharedmodule.importData.model
 
 import com.devstudio.database.models.Transaction
 

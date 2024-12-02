@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -21,7 +20,7 @@ import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.UserPreferencesData
 import com.devstudio.designSystem.MEDIUM_SPACING
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudio.designSystem.components.Page
+import com.devstudio.designSystem.components.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,7 +42,7 @@ fun ThemeSelectionScreen(navController: NavHostController) {
         Theme.LIGHT,
         Theme.SYSTEM_DEFAULT,
     )
-    Page(title = "Choose Theme", navController = navController, shouldNavigateUp = true) {
+    Screen(title = "Choose Theme", navController = navController, shouldNavigateUp = true) {
         LazyColumn {
             items(themeList.size) { index ->
                 val themeProto = themeList[index]

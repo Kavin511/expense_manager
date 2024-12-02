@@ -1,8 +1,8 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
-import com.devstudio.sharedmodule.model.CSVRow
-import com.devstudio.sharedmodule.model.TransactionMapResult
+import com.devstudio.sharedmodule.importData.model.CSVRow
+import com.devstudio.sharedmodule.importData.model.TransactionMapResult
 
 @Composable
 expect fun FilePicker(

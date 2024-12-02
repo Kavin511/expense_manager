@@ -6,8 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.devstudio.sharedmodule.model.TransactionMapResult
-import com.devstudio.sharedmodule.model.TransactionWithIndex
+import com.devstudio.sharedmodule.importData.model.TransactionMapResult
+import com.devstudio.sharedmodule.importData.model.TransactionWithIndex
 import com.devstudio.designSystem.components.BottomSheet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

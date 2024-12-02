@@ -16,12 +16,15 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backup
 import androidx.compose.material.icons.rounded.Upload
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
@@ -34,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -134,9 +138,10 @@ fun HomeActionsBottomSheet(
         Column(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
         ) {
-            RowWithImage(RowWithImageData(IMPORT_CSV.getActionName(), Icons.Rounded.Upload), onClick = {
-                onEvent.invoke(BottomSheetEvent(false, IMPORT_CSV))
-            })
+            RowWithImage(RowWithImageData(IMPORT_CSV.getActionName(), Icons.Rounded.Upload),
+                onClick = {
+                    onEvent.invoke(BottomSheetEvent(false, IMPORT_CSV))
+                })
             RowWithImage(RowWithImageData(BACKUP.getActionName(), Icons.Rounded.Backup), onClick = {
                 onEvent.invoke(BottomSheetEvent(false, BACKUP))
                 if (checkPermissionToStartBackup(context)) {
@@ -224,12 +229,7 @@ fun RowWithImage(data: RowWithImageData, onClick: () -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember {
-                    MutableInteractionSource()
-                },
-                indication = rememberRipple(),
-            ) {
+            .clickable {
                 onClick()
             }
             .padding(

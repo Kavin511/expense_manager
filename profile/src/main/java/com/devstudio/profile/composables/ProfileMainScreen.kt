@@ -33,7 +33,7 @@ import com.devstudio.data.model.Theme.LIGHT
 import com.devstudio.profile.viewmodels.EditableSettings
 import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudio.designSystem.components.Page
+import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.icons.EMAppIcons
 import com.devstudio.designSystem.appColors
 import com.devstudio.model.models.ExpressWalletAppState
@@ -46,7 +46,7 @@ fun ProfileMainScreen(
 ) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
     val profileUiState = profileViewModel.profileUiState.collectAsStateWithLifecycle()
-    Page(title = "Profile", navController = navController) {
+    Screen(title = "Profile", navController = navController) {
         Surface(
             modifier = Modifier
                 .widthIn(max = 640.dp)

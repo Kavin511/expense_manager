@@ -26,7 +26,7 @@ import com.devstudio.designSystem.icons.EMAppIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Page(
+fun Screen(
     title: String = "",
     navController: NavController = rememberNavController(),
     shouldNavigateUp: Boolean = false,
@@ -62,7 +62,7 @@ fun Page(
             Surface(
                 modifier = Modifier.padding(it).safeContentPadding()
                     .nestedScroll(scrollBehavior.nestedScrollConnection).widthIn(max = 640.dp)
-                    .waterfallPadding().align(alignment = Alignment.CenterHorizontally),
+                    .waterfallPadding().align(alignment = Alignment.CenterHorizontally).padding(horizontal = 18.dp),
             ) {
                 content()
             }

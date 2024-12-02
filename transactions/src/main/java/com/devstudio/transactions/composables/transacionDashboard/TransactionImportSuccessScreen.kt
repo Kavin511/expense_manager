@@ -32,8 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devstudio.database.models.Transaction
-import com.devstudio.sharedmodule.model.TransactionMapResult
-import com.devstudio.sharedmodule.model.TransactionWithIndex
+import com.devstudio.sharedmodule.importData.model.TransactionMapResult
+import com.devstudio.sharedmodule.importData.model.TransactionWithIndex
 import com.devstudio.designSystem.appColors
 
 /**
