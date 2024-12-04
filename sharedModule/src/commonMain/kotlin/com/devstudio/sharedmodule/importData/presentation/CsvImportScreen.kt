@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -54,6 +52,7 @@ fun CsvImportScreen() {
                     LazyColumn {
                         val csv = uiState.csv.orEmpty()
                         val header = csv.firstOrNull()
+                        val transactionField = transactionField()
                         if (header == null) {
                             item {
                                 Text(
@@ -82,19 +81,20 @@ fun CsvImportScreen() {
                             }
                         }
                         item {
-                            val transactionField = transactionField()
                             transactionField.forEach {
                                 CsvColumnToTransactionFieldMapping(header, it)
                             }
                         }
                         item {
-                            Button(modifier = Modifier.fillMaxWidth().height(48.dp),
-                                enabled = true,
-                                onClick = {
-//                                    onEvent(CSVEvent.Continue)
-                                }) {
+                            val shouldEnableButton =
+                                derivedStateOf { transactionField.all { it.selectedFieldIndex.value != -1 } }
+                            Button(
+                                modifier = Modifier.fillMaxWidth().height(48.dp),
+                                enabled = shouldEnableButton.value,
+                                colors = ButtonDefaults.filledTonalButtonColors(),
+                                onClick = { viewModel.onEvent(CsvImportEvent.VALIDATE_MAPPING(csv)) }) {
                                 Text(
-                                    "Complete Import", color = appColors.material.onSecondary,
+                                    "Continue",
                                     style = MaterialTheme.typography.bodyLarge,
                                 )
                             }
