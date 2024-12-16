@@ -10,36 +10,36 @@ import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.domain.useCase.util.contains
 import com.devstudio.sharedmodule.domain.useCase.util.getCategoryMapping
 import com.devstudio.sharedmodule.domain.useCase.util.parseDateToTimestamp
+import com.devstudio.sharedmodule.importData.model.CSVRow
 import com.devstudio.sharedmodule.importData.model.TransactionMapResult
 import com.devstudio.sharedmodule.importData.model.TransactionWithIndex
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 
-abstract class TransactionMapper(open val transactions: List<List<String>>) {
-    open fun getNote(row: List<String>): String {
-        return row[noteIndex]
+abstract class TransactionMapper(open val transactions: List<CSVRow>) {
+    open fun getNote(row: CSVRow): String {
+        return row.values[noteIndex]
     }
 
-
-    open fun getAmount(row: List<String>): Double {
-        return row[amountIndex].toDoubleOrNull() ?: 0.0
+    open fun getAmount(row: CSVRow): Double {
+        return row.values[amountIndex].toDoubleOrNull() ?: 0.0
     }
 
-    open fun categoryId(context: Context, row: List<String>): String {
+    open fun categoryId(context: Context, row: CSVRow): String {
         if (categoryIdIndex == -1) {
             return ""
         }
-        val matchingCategoryId = getMatchingCategoryId(context, row[categoryIdIndex], getNote(row))
+        val matchingCategoryId = getMatchingCategoryId(context, row.values[categoryIdIndex], getNote(row))
             ?: return insertOrGetDefaultCategory(row, context)
         return matchingCategoryId
     }
 
     private fun insertOrGetDefaultCategory(
-        row: List<String>, context: Context
+        row: CSVRow, context: Context
     ): String {
         if (categoryIdIndex != -1) {
             val category =
-                Category(name = row[categoryIdIndex], categoryType = transactionMode(row))
+                Category(name = row.values[categoryIdIndex], categoryType = transactionMode(row))
             CategoryRepositoryImpl(context).insertCategory(category)
             return category.id
         } else {
@@ -47,9 +47,9 @@ abstract class TransactionMapper(open val transactions: List<List<String>>) {
         }
     }
 
-    abstract fun transactionMode(row: List<String>): String
-    open fun transactionDate(row: List<String>): String {
-        return parseDateToTimestamp(row[transactionDateIndex]).toString()
+    abstract fun transactionMode(row: CSVRow): String
+    open fun transactionDate(row: CSVRow): String {
+        return parseDateToTimestamp(row.values[transactionDateIndex]).toString()
     }
 
     suspend fun invoke(context: Context): TransactionMapResult {
@@ -96,13 +96,13 @@ abstract class TransactionMapper(open val transactions: List<List<String>>) {
         }
     }
 
-    private suspend fun getBookId(context: Context, row: List<String>): Long {
+    private suspend fun getBookId(context: Context, row: CSVRow): Long {
         val userDataRepository = UserDataRepositoryImpl(DataSourceModule(context))
         val booksRepositoryImpl = BooksRepositoryImpl(context, userDataRepository)
         if (bookNameIndex == -1) {
             return userDataRepository.getSelectedBookId().last()
         }
-        return (booksRepositoryImpl.findBookByName(row[bookNameIndex])?.id)
+        return (booksRepositoryImpl.findBookByName(row.values[bookNameIndex])?.id)
             ?: userDataRepository.getSelectedBookId().first()
     }
 
@@ -132,8 +132,8 @@ abstract class TransactionMapper(open val transactions: List<List<String>>) {
             category.contains(*(it.value.toTypedArray()))
         }
 
-    fun initialiseIndex(strings: List<String>) {
-        strings.forEachIndexed { index, item ->
+    fun initialiseIndex(strings: CSVRow) {
+        strings.values.forEachIndexed { index, item ->
             when {
                 item.contains("Note", "Narration") -> noteIndex = index
                 item.contains("amount", "amt") -> amountIndex = index

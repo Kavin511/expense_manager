@@ -1,9 +1,13 @@
 package com.devstudio.designSystem
 
+import kotlinx.datetime.Clock
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+    override fun getCurrentTimeMillis(): Long {
+        return Clock.System.now().toEpochMilliseconds()
+    }
+
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()

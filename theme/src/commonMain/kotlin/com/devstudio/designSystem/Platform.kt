@@ -1,7 +1,7 @@
 package com.devstudio.designSystem
 
 interface Platform {
-    val name: String
+    fun getCurrentTimeMillis(): Long
 }
 
 expect fun getPlatform(): Platform

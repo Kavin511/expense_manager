@@ -7,6 +7,7 @@ plugins {
 	id("com.google.firebase.crashlytics")
 	id("dagger.hilt.android.plugin")
 	alias(libs.plugins.compose.compiler)
+	alias(libs.plugins.dependencyGuard)
 }
 
 android {
@@ -100,4 +101,8 @@ dependencies {
 	ksp(libs.hilt.android.compiler)
 	implementation(libs.androidx.work)
 	implementation(project(":core-data:model"))
+}
+
+dependencyGuard {
+	configuration("releaseRuntimeClasspath")
 }

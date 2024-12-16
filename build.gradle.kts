@@ -28,8 +28,6 @@ subprojects {
         kotlin {
             target("**/*.kt")
             target("**/*.java")
-            targetExclude("$buildDir/**/*.kt")
-
 //            ktlint("1.0.1")
         }
 

@@ -56,7 +56,7 @@ fun ExpressWalletNavHost(
             BudgetScreen()
         }
         composable(route = ImportCsv.route) {
-            CsvImportScreen()
+            CsvImportScreen(navController)
         }
         composable(route = ExpressWalletAppState.ThemeScreen.route) {
             ThemeSelectionScreen(navController)
@@ -95,6 +95,7 @@ private fun HomeScreen(navController: NavHostController) {
                 ),
             )
         }
+
     }
 }
 
@@ -112,6 +113,7 @@ private fun onEvent(
     fragmentManager: FragmentManager = (LocalContext.current as AppCompatActivity).supportFragmentManager,
 ) = remember {
     OnEvent { event ->
+
         when (event) {
             is HomeScreen -> {
                 homeNavController.navigate(event.route)

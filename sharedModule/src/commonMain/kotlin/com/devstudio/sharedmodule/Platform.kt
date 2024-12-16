@@ -1,8 +1,12 @@
 package com.devstudio.sharedmodule
 
 import androidx.compose.runtime.Composable
+import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.importData.model.CSVRow
+import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionMapResult
+import com.devstudio.sharedmodule.importData.presentation.TransactionFieldIndex
+import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult
 
 @Composable
 expect fun FilePicker(
@@ -11,5 +15,5 @@ expect fun FilePicker(
 )
 
 
-expect suspend fun saveTransactions(transactions: List<List<String>>) : TransactionMapResult
+expect suspend fun saveTransactions(transactions: List<Transaction>): TransactionImportResult
 

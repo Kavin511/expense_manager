@@ -1,39 +1,42 @@
 package com.devstudio.sharedmodule.domain.useCase.csvToTransaction
 
-import android.content.Context
 import com.devstudio.database.models.TransactionMode
 import com.devstudio.sharedmodule.domain.useCase.util.parseDateToTimestamp
+import com.devstudio.sharedmodule.importData.model.CSVRow
 
-class CsvToTransactionMapper(override val transactions: List<List<String>>) :
+class CsvToTransactionMapper(override val transactions: List<CSVRow>) :
     TransactionMapper(transactions) {
     init {
         transactions.firstOrNull()?.let { initialiseIndex(it) }
     }
 
-    private fun withdrawalAmount(row: List<String>) =
-        row[withdrawalAmountIndex].toDoubleOrNull() ?: 0.0
+    private fun withdrawalAmount(row: CSVRow) =
+        row.values[withdrawalAmountIndex].toDoubleOrNull() ?: 0.0
 
-    private fun depositAmount(row: List<String>) = row[depositAmountIndex].toDoubleOrNull() ?: 0.0
+    private fun depositAmount(row: CSVRow) = row.values[depositAmountIndex].toDoubleOrNull() ?: 0.0
 
-    override fun transactionMode(row: List<String>): String {
-        if (transactionModeIndex != -1) {
-            return row[transactionModeIndex]
-        } else {
-            return if (withdrawalAmount(row) > 0.0) {
-                return TransactionMode.EXPENSE.name
-            } else if (depositAmount(row) > 0.0) {
-                return TransactionMode.INCOME.name
-            } else {
+    override fun transactionMode(row: CSVRow): String {
+        return when {
+            transactionModeIndex != -1 -> {
+                row.values[transactionModeIndex]
+            }
+            withdrawalAmount(row) > 0.0 -> {
+                TransactionMode.EXPENSE.name
+            }
+            depositAmount(row) > 0.0 -> {
+                TransactionMode.INCOME.name
+            }
+            else -> {
                 TransactionMode.EXPENSE.name
             }
         }
     }
 
-    override fun transactionDate(row: List<String>): String {
+    override fun transactionDate(row: CSVRow): String {
         if (timeStampIndex != -1) {
-            return row[timeStampIndex]
+            return row.values[timeStampIndex]
         }
-        return parseDateToTimestamp(row[transactionDateIndex]).toString()
+        return parseDateToTimestamp(row.values[transactionDateIndex]).toString()
     }
 
 }

@@ -52,6 +52,7 @@ roomKtx = "2.6.1"
 navigationComposeVersion = "2.8.4"
 uiToolingPreviewAndroid = "1.7.5"
 androidxNavigationCompose = "2.8.4"
+dependencyGuard = "0.4.3"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
@@ -133,6 +134,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
 
 [bundles]
 compose=["compose_material3", "compose_ui", "compose_ui_tooling", "compose_foundation", "compose_material_icons", "compose_material_icons_extended", "activity_compose","viewmodel_compose","compose_runtime_livedata","navigation_compose","compose_runtime_lifecycle"]

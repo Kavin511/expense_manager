@@ -20,19 +20,19 @@ import androidx.compose.ui.unit.sp
 import com.devstudio.designSystem.appColors
 import com.devstudio.sharedmodule.importData.model.CSVRow
 import com.devstudio.sharedmodule.importData.model.TransactionField
+import com.devstudio.sharedmodule.importData.model.TransactionFieldType
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
 fun CsvColumnToTransactionFieldMapping(
     header: CSVRow = CSVRow(listOf()),
-    transactionField: TransactionField = TransactionField("", "")
+    transactionField: TransactionField = TransactionField("", "", type = TransactionFieldType.AMOUNT)
 ) {
-    val selectedIndex = remember { mutableIntStateOf(-1) }
     val shape = RoundedCornerShape(8.dp)
     Column(
         modifier = Modifier.padding(vertical = 8.dp).then(
-            if (selectedIndex.value != -1) {
+            if (transactionField.selectedFieldIndex.value != -1) {
                 Modifier.border(width = 2.dp, color = appColors.material.primary, shape = shape)
             } else {
                 Modifier.border(width = 2.dp, color = appColors.material.error, shape = shape)
@@ -56,8 +56,8 @@ fun CsvColumnToTransactionFieldMapping(
         )
         LazyRow {
             itemsIndexed(header.values) { index, value ->
-                FilterChip(selected = selectedIndex.value == index, onClick = {
-                    selectedIndex.value = index
+                FilterChip(selected = transactionField.selectedFieldIndex.value == index, onClick = {
+                    transactionField.selectedFieldIndex.value = index
                     transactionField.csvHeader = value
                 }, modifier = Modifier.padding(end = 8.dp), label = {
                     Text(

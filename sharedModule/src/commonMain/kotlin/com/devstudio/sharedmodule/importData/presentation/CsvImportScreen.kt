@@ -16,11 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import com.devstudio.designSystem.appColors
+import androidx.navigation.NavHostController
 import com.devstudio.designSystem.components.Screen
 import com.devstudio.sharedmodule.FilePicker
 import com.devstudio.sharedmodule.importData.model.TransactionField
+import com.devstudio.sharedmodule.importData.model.TransactionFieldType
+import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.saveTransactions
 
 /**
  * @Author: Kavin
@@ -28,7 +29,7 @@ import com.devstudio.sharedmodule.importData.model.TransactionField
  */
 
 @Composable
-fun CsvImportScreen() {
+fun CsvImportScreen(navController: NavHostController) {
     val viewModel: CsvImportViewModel = viewModel { CsvImportViewModel() }
     val uiState = viewModel.uiState()
     if (uiState.shouldImportFile) {
@@ -37,10 +38,11 @@ fun CsvImportScreen() {
         }
     }
     LaunchedEffect(viewModel) {
-        viewModel.onEvent(CsvImportEvent.Load)
+        viewModel.onEvent(CsvImportEvent.SelectFile)
     }
-    Screen(title = "Import CSV", navController = rememberNavController(), shouldNavigateUp = true) {
+    Screen(title = "Import CSV", navController = navController, shouldNavigateUp = true) {
         Column(modifier = Modifier.fillMaxSize()) {
+            val transactionField = remember { transactionField() }
             when (uiState.csvData) {
                 CsvUIState.Idle -> {}
 
@@ -52,7 +54,6 @@ fun CsvImportScreen() {
                     LazyColumn {
                         val csv = uiState.csv.orEmpty()
                         val header = csv.firstOrNull()
-                        val transactionField = transactionField()
                         if (header == null) {
                             item {
                                 Text(
@@ -92,12 +93,24 @@ fun CsvImportScreen() {
                                 modifier = Modifier.fillMaxWidth().height(48.dp),
                                 enabled = shouldEnableButton.value,
                                 colors = ButtonDefaults.filledTonalButtonColors(),
-                                onClick = { viewModel.onEvent(CsvImportEvent.VALIDATE_MAPPING(csv)) }) {
+                                onClick = {
+                                    viewModel.onEvent(saveTransactions(csv, transactionField))
+                                }) {
                                 Text(
                                     "Continue",
                                     style = MaterialTheme.typography.bodyLarge,
                                 )
                             }
+                        }
+                    }
+                }
+
+                is CsvUIState.TransactionSaveProcessed -> {
+                    if (uiState.csvData.transactionImportResult == TransactionImportResult.ImportedSuccessfully) {
+                        navController.popBackStack()
+                    } else {
+                        Column {
+                            Text("Failed to Import transactions")
                         }
                     }
                 }
@@ -109,11 +122,16 @@ fun CsvImportScreen() {
 fun transactionField() = listOf(
     TransactionField(
         "Mode",
-        "Type of transaction to identify if the transaction is an expense, income, or investment"
+        "Type of transaction to identify if the transaction is an expense, income, or investment",
+        type = TransactionFieldType.TRANSACTION_MODE
     ),
-    TransactionField("Amount", "The amount of the transaction"),
-    TransactionField("Book Name", "The name of the book where the transaction is recorded"),
-    TransactionField("Date", "The date of the transaction"),
-    TransactionField("Category", "The category of the transaction"),
-    TransactionField("Note", "Additional notes about the transaction")
+    TransactionField("Amount", "The amount of the transaction", type = TransactionFieldType.AMOUNT),
+    TransactionField(
+        "Book Name",
+        "The name of the book where the transaction is recorded",
+        type = TransactionFieldType.BOOK_NAME
+    ),
+    TransactionField("Date", "The date of the transaction", type = TransactionFieldType.DATE),
+    TransactionField("Category", "The category of the transaction", type = TransactionFieldType.CATEGORY),
+    TransactionField("Note", "Additional notes about the transaction", type = TransactionFieldType.NOTE)
 )

@@ -1,6 +1,5 @@
 package com.devstudio.data.repository
 
-import android.content.Context
 import androidx.annotation.WorkerThread
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.models.Transaction
@@ -8,7 +7,6 @@ import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
 import com.devstudio.utils.utils.AppConstants.Companion.INCOME
 import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 import javax.inject.Inject
@@ -18,7 +16,7 @@ interface TransactionsRepository {
     fun allTransactionsStream(bookId: Long): Flow<List<Transaction>>
     suspend fun findTransactionById(id: Long): Transaction?
     suspend fun deleteTransactions(transaction: Transaction)
-    suspend fun upsertTransaction(transaction: Transaction)
+    suspend fun upsertTransaction(transaction: Transaction): Boolean
     suspend fun updateTransaction(oldTransactionObject: Transaction)
     fun filterTransactionFromDateRange(
         dateRange: Pair<Long, Long>,
@@ -34,7 +32,6 @@ interface TransactionsRepository {
 
 @Singleton
 class TransactionsRepositoryImpl @Inject constructor(
-    @ApplicationContext context: Context,
     val userDataRepository: UserDataRepository,
 ) : TransactionsRepository {
     val db = ApplicationModule.config.factory.getRoomInstance()
@@ -78,12 +75,12 @@ class TransactionsRepositoryImpl @Inject constructor(
     }
 
     private fun formatCurrentMonth() = (
-        "0" + (
-            DateFormatter.getCurrentMonth(
-                Calendar.getInstance(),
-            ) + 1
-            ).toString()
-        ).takeLast(2)
+            "0" + (
+                    DateFormatter.getCurrentMonth(
+                        Calendar.getInstance(),
+                    ) + 1
+                    ).toString()
+            ).takeLast(2)
 
     override fun allTransactionsStream(bookId: Long): Flow<List<Transaction>> {
         return transactionDao.getAllTransactionsStream(shouldUseBookId = true, bookId = bookId)
@@ -98,8 +95,13 @@ class TransactionsRepositoryImpl @Inject constructor(
     }
 
     @WorkerThread
-    override suspend fun upsertTransaction(transaction: Transaction) {
-        transactionDao.upsertTransaction(transaction)
+    override suspend fun upsertTransaction(transaction: Transaction): Boolean {
+        try {
+            transactionDao.upsertTransaction(transaction)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
 
     override suspend fun updateTransaction(oldTransactionObject: Transaction) {

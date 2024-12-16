@@ -1,7 +1,11 @@
 package com.devstudio.designSystem
 
+import java.util.Calendar
+
 class AndroidPlatform : Platform {
-    override val name: String = "Android ${android.os.Build.VERSION.SDK_INT}"
+    override fun getCurrentTimeMillis(): Long {
+        return Calendar.getInstance().timeInMillis
+    }
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()

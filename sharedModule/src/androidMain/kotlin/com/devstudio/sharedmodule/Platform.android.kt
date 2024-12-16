@@ -10,16 +10,13 @@ import com.devstudio.data.datastore.DataSourceModule
 import com.devstudio.data.repository.TransactionsRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.database.AppContext
-import com.devstudio.sharedmodule.domain.useCase.csvToTransaction.CsvToTransactionMapper
+import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.domain.useCase.readFile
 import com.devstudio.sharedmodule.importData.model.CSVRow
-import com.devstudio.sharedmodule.importData.model.TransactionMapResult
+import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult
 import com.opencsv.CSVReaderBuilder
 import com.opencsv.validators.LineValidator
 import com.opencsv.validators.RowValidator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import java.io.StringReader
 import java.nio.charset.Charset
 import kotlin.text.Charsets.UTF_8
@@ -52,10 +49,9 @@ actual fun FilePicker(
     }
 }
 
-
 fun processFile(context: Context, uri: Uri, charset: Charset): List<CSVRow>? {
     return try {
-        val fileContent: String? = readFile(context, uri, charset = Charsets.UTF_8)
+        val fileContent: String? = readFile(context, uri, charset = UTF_8)
         var parsedCsvList = parseCSV(fileContent!!, normalizeCSV = false)
         if (parsedCsvList.size < 3) {
             parsedCsvList = parseCSV(fileContent, normalizeCSV = true)
@@ -93,22 +89,27 @@ private fun parseCSV(csv: String, normalizeCSV: Boolean): List<CSVRow> {
             override fun validate(row: Array<out String>?) {
             }
         })
-        .build()
+        .build()    
 
     return csvReader.readAll()
         .map { CSVRow(it.toList()) }
 }
 
-actual suspend fun saveTransactions(transactions: List<List<String>>): TransactionMapResult {
+actual suspend fun saveTransactions(transactions: List<Transaction>): TransactionImportResult {
     val context = AppContext.get()!!
-    val transactionsRepositoryImpl = TransactionsRepositoryImpl(
-        context, UserDataRepositoryImpl(DataSourceModule(context))
-    )
-    return CoroutineScope(Dispatchers.IO).async {
-        val transactionMapResult = CsvToTransactionMapper(transactions).invoke(context)
-        transactionMapResult.transactions.forEach {
-            transactionsRepositoryImpl.upsertTransaction(it.transaction)
+    val transactionsRepositoryImpl = TransactionsRepositoryImpl(UserDataRepositoryImpl(DataSourceModule(context)))
+    val failedTransactionList = mutableListOf<Transaction>()
+    transactions.map {
+        val isImported = transactionsRepositoryImpl.upsertTransaction(it)
+        if (isImported.not()) {
+            failedTransactionList.add(it)
         }
-        return@async transactionMapResult
-    }.await()
+    }
+    return if (failedTransactionList.isEmpty()) {
+        TransactionImportResult.ImportedSuccessfully
+    } else if (failedTransactionList.size == transactions.size) {
+        TransactionImportResult.ImportFailed
+    } else {
+        TransactionImportResult.PartiallyImported
+    }
 }

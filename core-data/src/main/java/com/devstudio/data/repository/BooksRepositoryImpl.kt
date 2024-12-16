@@ -33,7 +33,7 @@ class BooksRepositoryImpl @Inject constructor(
     }
 
     override fun getBookById(it: Long): Books? = booksDao.getBookById(it)
-    override fun insertBook(it: Books) = booksDao.insertBook(it)
+    override fun insertBook(it: Books): Long = booksDao.insertBook(it)
 
     override fun createBook(book: Books) {
     }
@@ -48,7 +48,7 @@ interface BooksRepository {
     fun updateBook(book: Books)
     suspend fun getSelectedBook(): Flow<Long>
     fun getBookById(it: Long): Books?
-    fun insertBook(it: Books)
+    fun insertBook(it: Books): Long
     fun getBooks(): List<Books>
     fun findBookByName(name: String): Books?
 }
