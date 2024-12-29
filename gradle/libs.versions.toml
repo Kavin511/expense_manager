@@ -10,6 +10,7 @@ hilt = "2.52"
 hiltNavigationCompose = '1.2.0'
 jetbrainsNavigationCompose = "2.7.0-alpha07"
 kotlin = "2.0.21"
+kotlinxDatetime = "0.6.1"
 kotlinxSerializationJson = "1.7.1"
 lifecycleViewmodelCompose = "2.8.2"
 materialIconsExtendedVersion = "1.6.10"
@@ -80,6 +81,7 @@ firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlyti
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtendedVersion" }

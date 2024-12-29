@@ -9,7 +9,8 @@ data class TransactionField(
     val description: String,
     var csvHeader: String = "",
     val selectedFieldIndex: MutableIntState = mutableIntStateOf(-1),
-    val type: TransactionFieldType
+    val type: TransactionFieldType,
+    var additionalInfo: String = "",
 )
 
 enum class TransactionFieldType {

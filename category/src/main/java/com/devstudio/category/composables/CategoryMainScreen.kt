@@ -24,12 +24,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryState
 import com.devstudio.category.CategoryViewModel
 import com.devstudio.utils.utils.AppConstants.Companion.ALL
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INCOME
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudio.utils.utils.toPascalCase
 import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.appColors
+import com.devstudio.utils.utils.TransactionMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,35 +100,35 @@ fun CategoryActions(
         item {
             FilterChip(
                 modifier = Modifier.padding(4.5.dp),
-                selected = selectedFilterType.value == EXPENSE,
+                selected = selectedFilterType.value == TransactionMode.EXPENSE.title,
                 onClick = {
-                    selectedFilterType.value = EXPENSE
+                    selectedFilterType.value = TransactionMode.EXPENSE.title
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = EXPENSE.toPascalCase()) },
+                label = { Text(text = TransactionMode.EXPENSE.title.toPascalCase()) },
             )
         }
         item {
             FilterChip(
                 modifier = Modifier.padding(4.5.dp),
-                selected = selectedFilterType.value == INCOME,
+                selected = selectedFilterType.value == TransactionMode.INCOME.title,
                 onClick = {
-                    selectedFilterType.value = INCOME
+                    selectedFilterType.value = TransactionMode.INCOME.title
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = INCOME.toPascalCase()) },
+                label = { Text(text = TransactionMode.INCOME.title.toPascalCase()) },
             )
         }
 
         item {
             FilterChip(
                 modifier = Modifier.padding(4.5.dp),
-                selected = selectedFilterType.value == INVESTMENT,
+                selected = selectedFilterType.value == TransactionMode.INVESTMENT.title,
                 onClick = {
-                    selectedFilterType.value = INVESTMENT
+                    selectedFilterType.value = TransactionMode.INVESTMENT.title
                     categoryViewModel.categoryState.value = CategoryState.LOADING
                 },
-                label = { Text(text = INVESTMENT.toPascalCase()) },
+                label = { Text(text = TransactionMode.INVESTMENT.title.toPascalCase()) },
             )
         }
     }

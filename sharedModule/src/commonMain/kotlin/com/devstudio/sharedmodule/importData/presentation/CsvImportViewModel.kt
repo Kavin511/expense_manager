@@ -12,6 +12,7 @@ import com.devstudio.database.models.Transaction
 import com.devstudio.designSystem.getPlatform
 import com.devstudio.sharedmodule.importData.model.CSVRow
 import com.devstudio.sharedmodule.importData.model.TransactionField
+import com.devstudio.sharedmodule.importData.model.TransactionFieldType
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.*
 import com.devstudio.sharedmodule.saveTransactions
 import kotlinx.coroutines.launch
@@ -58,7 +59,7 @@ class CsvImportViewModel : ViewModel() {
                             AMOUNT -> transactionFieldIndex.amountIndex =
                                 it.selectedFieldIndex.value
 
-                            TRANSACTION_MODE -> transactionFieldIndex.transactionModeIndex =
+                            TransactionFieldType.TRANSACTION_MODE -> transactionFieldIndex.transactionModeIndex =
                                 it.selectedFieldIndex.value
 
                             DATE -> transactionFieldIndex.transactionDateIndex =

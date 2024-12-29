@@ -1,16 +1,21 @@
 package com.devstudio.utils.utils
 
+import com.devstudio.utils.utils.TransactionMode.EXPENSE
+import com.devstudio.utils.utils.TransactionMode.INCOME
+import com.devstudio.utils.utils.TransactionMode.INVESTMENT
+
 class AppConstants {
     companion object {
         val ADDITION = "+"
         val DIVISION = "/"
         val MULTIPLICATION = "x"
         val SUBTRACTION = "-"
-        const val EXPENSE = "EXPENSE"
-        const val INVESTMENT = "INVESTMENT"
-        const val INCOME = "INCOME"
         const val ALL = "All"
-        val supportedTransactionTypes = listOf(EXPENSE, INCOME, INVESTMENT)
+        val supportedTransactionTypes = listOf(
+            EXPENSE.name,
+            INCOME.title,
+            INVESTMENT.title
+        )
     }
 
     object StringConstants {

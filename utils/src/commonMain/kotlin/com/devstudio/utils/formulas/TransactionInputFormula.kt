@@ -16,7 +16,7 @@ class TransactionInputFormula {
             for (i in 1 until numbersList.size) {
                 res = applyOperator(res.toDouble(), operationsLst[operatorPosition++].toString(), numbersList[i].toDouble())
             }
-            if (res == "0.0") 0.0 else CurrencyFormatter().format(res.toDouble()).toDouble()
+            if (res == "0.0") 0.0 else CurrencyFormatter().format(res.toDouble())
         } catch (e: Exception) {
             0.0
         }

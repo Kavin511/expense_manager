@@ -37,6 +37,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.androidx.room.runtime)
             api(libs.kotlinx.serialization.json)
+            implementation(project(":utils"))
         }
         commonTest.dependencies {
         }

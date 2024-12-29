@@ -41,6 +41,7 @@ kotlin {
             api(project(":theme"))
             implementation(project(":database"))
             implementation(project(":core-designSystem"))
+            implementation(project(":utils"))
         }
 
         commonTest.dependencies {
@@ -52,6 +53,7 @@ kotlin {
             implementation(project(":core-data"))
             implementation(project(":core-designSystem"))
             implementation(libs.opencsv.csv)
+            implementation(project(":utils"))
             implementation(libs.opencsv.apache.commons)
         }
 

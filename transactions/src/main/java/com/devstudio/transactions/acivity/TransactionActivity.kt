@@ -11,16 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import com.devstudio.data.repository.BooksRepositoryImpl
 import com.devstudio.database.models.Category
 import com.devstudio.database.models.Transaction
-import com.devstudio.database.models.TransactionMode
+import com.devstudio.utils.utils.TransactionMode
 import com.devstudio.transactions.R
 import com.devstudio.transactions.databinding.ActivityTransactionBinding
 import com.devstudio.transactions.uicomponents.TransactionKeyboard
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
-import com.devstudio.designSystem.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
@@ -200,12 +197,12 @@ class TransactionActivity : AppCompatActivity() {
                 selectedDate = it.transactionDate
                 selectedTransactionMode = it.transactionMode
                 when (selectedTransactionMode) {
-                    EXPENSE -> {
+                    TransactionMode.EXPENSE.title -> {
                         transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                         binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
                         transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
                     }
-                    INVESTMENT -> {
+                    TransactionMode.INVESTMENT.title -> {
                         transactionViewModel.transactionType.value = TransactionMode.INVESTMENT
                         binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
                         transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked

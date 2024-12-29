@@ -1,6 +1,6 @@
-package com.devstudio.database.models
+package com.devstudio.utils.utils
 
-enum class TransactionMode(val categoryList: List<String>) {
+enum class TransactionMode(val categoryList: List<String>, val title: String) {
     EXPENSE(
         listOf(
             "Food",
@@ -15,7 +15,7 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Entertainment",
             "Sports",
             "Other",
-        ),
+        ),"EXPENSE"
     ),
     INCOME(
         listOf(
@@ -27,7 +27,7 @@ enum class TransactionMode(val categoryList: List<String>) {
             "Capital Gains Income",
             "Royalty Income",
             "Other",
-        ),
+        ), "INCOME"
     ),
-    INVESTMENT(listOf("Stocks", "Mutual Funds", "Fixed Deposits", "Other")),
+    INVESTMENT(listOf("Stocks", "Mutual Funds", "Fixed Deposits", "Other"), "INVESTMENT"),
 }

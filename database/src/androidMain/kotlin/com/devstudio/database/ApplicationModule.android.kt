@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.devstudio.database.dao.CategoryDao
 import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
-import com.devstudio.database.models.TransactionMode
+import com.devstudio.utils.utils.TransactionMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

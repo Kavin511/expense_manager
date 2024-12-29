@@ -9,12 +9,10 @@ import com.devstudio.data.repository.TransactionsRepository
 import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.database.models.Category
 import com.devstudio.database.models.Transaction
-import com.devstudio.database.models.TransactionMode
+import com.devstudio.utils.utils.TransactionMode
 import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.models.FuturePaymentStatus
 import com.devstudio.transactions.models.TransactionUiState
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -81,11 +79,11 @@ class TransactionViewModel @Inject constructor(
         viewModelScope.launch {
             transactions.forEach {
                 when (it.transactionMode) {
-                    EXPENSE -> {
+                    TransactionMode.EXPENSE.title -> {
                         totalExpense += it.amount
                     }
 
-                    INVESTMENT -> {
+                    TransactionMode.INVESTMENT.title -> {
                         totalInvestment += it.amount
                     }
 

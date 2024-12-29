@@ -4,9 +4,7 @@ import androidx.annotation.WorkerThread
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.models.Transaction
 import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INCOME
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
+import com.devstudio.utils.utils.TransactionMode
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 import javax.inject.Inject
@@ -38,19 +36,19 @@ class TransactionsRepositoryImpl @Inject constructor(
     private val transactionDao = db.transactionsDao()
     override fun getTotalAssets(): Double {
         return transactionDao.getTotalAssets(
-            EXPENSE,
+            TransactionMode.EXPENSE.title,
             shouldUseBookId = false,
         ) + transactionDao.getTotalAssets(
-            INCOME,
+            TransactionMode.INCOME.title,
             shouldUseBookId = false,
-        ) + transactionDao.getTotalAssets(INVESTMENT, shouldUseBookId = false)
+        ) + transactionDao.getTotalAssets(TransactionMode.INVESTMENT.title, shouldUseBookId = false)
     }
 
     override fun getTransactionsForCurrentMonth(selectedBookId: Long): Flow<List<Transaction>> {
         return transactionDao.getCurrentMonthTransaction(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
-                Calendar.getInstance(),
+                Calendar.getInstance().timeInMillis,
             ).toString(),
             shouldUseBookId = true,
             selectedBookId,
@@ -65,7 +63,7 @@ class TransactionsRepositoryImpl @Inject constructor(
         return transactionDao.getCurrentMonthTransactionCount(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
-                Calendar.getInstance(),
+                Calendar.getInstance().timeInMillis,
             ).toString(),
         )
     }
@@ -77,7 +75,7 @@ class TransactionsRepositoryImpl @Inject constructor(
     private fun formatCurrentMonth() = (
             "0" + (
                     DateFormatter.getCurrentMonth(
-                        Calendar.getInstance(),
+                        Calendar.getInstance().timeInMillis,
                     ) + 1
                     ).toString()
             ).takeLast(2)
