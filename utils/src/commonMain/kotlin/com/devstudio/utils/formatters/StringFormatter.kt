@@ -10,3 +10,5 @@ object StringFormatter {
         return "%.${decimalPlaces}f".format(roundedValue)
     }
 }
+
+expect  fun String.format(vararg args: Any?): String

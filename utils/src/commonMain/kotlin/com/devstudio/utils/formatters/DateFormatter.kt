@@ -9,8 +9,7 @@ object DateFormatter {
         return try {
             val instant = Instant.fromEpochMilliseconds(time.toLong())
             val dateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            String.format(
-                format,
+            format.format(
                 monthNames[dateTime.monthNumber - 1],
                 dateTime.dayOfMonth,
                 dateTime.year,
@@ -29,8 +28,7 @@ object DateFormatter {
     fun getMonthAndYearFromLong(time: Long): String {
         val instant = Instant.fromEpochMilliseconds(time)
         val dateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-        return String.format(
-            MM_YY,
+        return MM_YY.format(
             monthNames[dateTime.monthNumber - 1],
             dateTime.year,
         )
