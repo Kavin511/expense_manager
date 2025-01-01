@@ -51,9 +51,10 @@ koin = "3.6.0-Beta4"
 koinComposeMultiplatform = "1.2.0-Beta4"
 roomKtx = "2.6.1"
 navigationComposeVersion = "2.8.4"
-uiToolingPreviewAndroid = "1.7.5"
+uiToolingPreviewAndroid = "1.7.6"
 androidxNavigationCompose = "2.8.4"
 dependencyGuard = "0.4.3"
+uiToolingPreviewDesktop = "1.7.0"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
@@ -120,11 +121,10 @@ androidx_compose_ui_test_junit4= { module='androidx.compose.ui:ui-test-junit4', 
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 opencsv-csv = { module = "com.opencsv:opencsv", version = "5.9" }
 opencsv-apache-commons = { module = "org.apache.commons:commons-lang3", version = "3.16.0" }
-androidx-navigation-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigationCompose" }
+androidx-ui-tooling-preview-desktop = { group = "androidx.compose.ui", name = "ui-tooling-preview-desktop", version.ref = "uiToolingPreviewDesktop" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

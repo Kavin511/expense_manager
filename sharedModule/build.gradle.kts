@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.navigation.compose)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.components.resources)
             api(project(":theme"))
             implementation(project(":database"))
             implementation(project(":core-designSystem"))
@@ -96,4 +97,10 @@ android {
         //enables a Compose tooling support in the AndroidStudio
         compose = true
     }
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "com.devstudio.sharedmodule.commonMain.composeResources"
+    generateResClass = auto
 }

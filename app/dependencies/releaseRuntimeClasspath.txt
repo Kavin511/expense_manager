@@ -1,0 +1,35 @@
+@Composable
+fun TrackJank(
+    vararg keys: Any,
+    reportMetric: suspend CoroutineScope.(state: Holder) -> Unit,
+) {
+    val metrics = rememberMetricsStateHolder()
+    LaunchedEffect(metrics, *keys) {
+        reportMetric(metrics)
+    }
+}
+
+
+@Composable
+fun rememberMetricsStateHolder(): Holder {
+    val localView = LocalView.current
+
+    return remember(localView) {
+        PerformanceMetricsState.getHolderForHierarchy(localView)
+    }
+}
+
+@Composable
+fun TrackScrollJank(scrollableState: ScrollableState, stateName: String) {
+    TrackJank(scrollableState) { metricsHolder ->
+        snapshotFlow { scrollableState.isScrollInProgress }.collect { isScrollInProgress ->
+            metricsHolder.state?.apply {
+                if (isScrollInProgress) {
+                    putState(stateName, "Scrolling=true")
+                } else {
+                    removeState(stateName)
+                }
+            }
+        }
+    }
+}
