@@ -18,10 +18,12 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devstudio.designSystem.appColors
+import com.devstudio.sharedmodule.isPortrait
 
 /**
  * @Author: Kavin
@@ -83,6 +85,9 @@ fun RegularText(
 ) {
     Text(text = text, fontSize = 16.sp, modifier = modifier, color = color, style = style)
 }
+
+@Composable
+fun getWidthRatio() = if (isPortrait()) 1f else 0.8f
 
 
 @Composable

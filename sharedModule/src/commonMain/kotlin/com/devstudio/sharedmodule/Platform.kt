@@ -14,6 +14,7 @@ expect fun FilePicker(
     onFileSelected: (List<CSVRow>?) -> Unit,
 )
 
-
 expect suspend fun saveTransactions(transactions: List<Transaction>): TransactionImportResult
 
+@Composable
+expect fun isPortrait(): Boolean
