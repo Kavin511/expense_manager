@@ -14,6 +14,6 @@ data class TransactionField(
 )
 
 enum class TransactionFieldType {
-    NOTE, AMOUNT, TRANSACTION_MODE, DATE, BOOK_NAME, CATEGORY
+    Note, Amount, TransactionMode, DATE, BookName, Category
 }
 

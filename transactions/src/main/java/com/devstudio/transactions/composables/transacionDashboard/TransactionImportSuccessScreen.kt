@@ -99,11 +99,7 @@ fun getSampleMap(): TransactionMapResult {
 @Preview(device = "id:resizable")
 @Composable
 fun TransactionImportSuccessScreen(
-    transactionMapResult: TransactionMapResult = getSampleMap(),
-    onDone: () -> Unit = {},
-    onModifyTransaction: (Transaction) -> Unit = {}
 ) {
-
     Column(
         modifier = Modifier
             .background(appColors.material.onPrimary)
@@ -112,8 +108,8 @@ fun TransactionImportSuccessScreen(
     ) {
         SuccessHeader()
         Content(
-            transactionMapResult, modifier = Modifier.wrapContentHeight(), onModifyTransaction
-        )
+            getSampleMap(), modifier = Modifier.wrapContentHeight()
+        ) {}
     }
 
 }

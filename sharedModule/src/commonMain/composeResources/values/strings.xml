@@ -3,4 +3,7 @@
     <string name="income_with_contains">Income (contains)</string>
     <string name="expense_with_contains">Expense (contains)</string>
     <string name="investment_with_contains">Investment (contains)</string>
+    <string name="import_csv">Import CSV</string>
+    <string name="failed_to_import_transactions">Failed to Import transactions</string>
+    <string name="continue_button">Continue</string>
 </resources>

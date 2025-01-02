@@ -55,20 +55,20 @@ class CsvImportViewModel : ViewModel() {
                     val transactionFieldIndex = TransactionFieldIndex()
                     event.transactionField.forEach {
                         when (it.type) {
-                            NOTE -> transactionFieldIndex.noteIndex = it.selectedFieldIndex.value
-                            AMOUNT -> transactionFieldIndex.amountIndex =
+                            Note -> transactionFieldIndex.noteIndex = it.selectedFieldIndex.value
+                            Amount -> transactionFieldIndex.amountIndex =
                                 it.selectedFieldIndex.value
 
-                            TransactionFieldType.TRANSACTION_MODE -> transactionFieldIndex.transactionModeIndex =
+                            TransactionMode -> transactionFieldIndex.transactionModeIndex =
                                 it.selectedFieldIndex.value
 
                             DATE -> transactionFieldIndex.transactionDateIndex =
                                 it.selectedFieldIndex.value
 
-                            BOOK_NAME -> transactionFieldIndex.bookIdIndex =
+                            BookName -> transactionFieldIndex.bookIdIndex =
                                 it.selectedFieldIndex.value
 
-                            CATEGORY -> transactionFieldIndex.categoryIdIndex =
+                            Category -> transactionFieldIndex.categoryIdIndex =
                                 it.selectedFieldIndex.value
                         }
                     }

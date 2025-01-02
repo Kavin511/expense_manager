@@ -19,9 +19,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.devstudio.designSystem.components.Screen
 import com.devstudio.sharedmodule.FilePicker
+import com.devstudio.sharedmodule.commonMain.composeResources.continue_button
+import com.devstudio.sharedmodule.commonMain.composeResources.expense_with_contains
+import com.devstudio.sharedmodule.commonMain.composeResources.failed_to_import_transactions
+import com.devstudio.sharedmodule.commonMain.composeResources.import_csv
+import com.devstudio.sharedmodule.commonMain.composeResources.income_with_contains
+import com.devstudio.sharedmodule.commonMain.composeResources.investment_with_contains
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType
+import com.devstudio.sharedmodule.importData.model.TransactionFieldType.TransactionMode
 import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.saveTransactions
+import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult.ImportedSuccessfully
+import org.jetbrains.compose.resources.stringResource
+import com.devstudio.sharedmodule.commonMain.composeResources.Res as R
 
 /**
  * @Author: Kavin
@@ -40,7 +50,11 @@ fun CsvImportScreen(navController: NavHostController) {
     LaunchedEffect(viewModel) {
         viewModel.onEvent(CsvImportEvent.SelectFile)
     }
-    Screen(title = "Import CSV", navController = navController, shouldNavigateUp = true) {
+    Screen(
+        title = stringResource(R.string.import_csv),
+        navController = navController,
+        shouldNavigateUp = true
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             val transactionField = remember { transactionField() }
             when (uiState.csvData) {
@@ -51,66 +65,15 @@ fun CsvImportScreen(navController: NavHostController) {
                 }
 
                 CsvUIState.Result -> {
-                    LazyColumn {
-                        val csv = uiState.csv.orEmpty()
-                        val header = csv.firstOrNull()
-                        if (header == null) {
-                            item {
-                                Text(
-                                    "No data found",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                            }
-                            return@LazyColumn
-                        }
-                        item {
-                            val rowSubset = remember { csv.take(6) }
-                            Column(
-                                modifier = Modifier.fillMaxWidth().horizontalScroll(
-                                    rememberScrollState()
-                                )
-                            ) {
-                                rowSubset.forEachIndexed { index, row ->
-                                    Row {
-                                        row.values.forEach {
-                                            CSVCell(
-                                                it, header = index == 0, even = index % 2 == 0
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        item {
-                            transactionField.forEach {
-                                CsvColumnToTransactionFieldMapping(header, it)
-                            }
-                        }
-                        item {
-                            val shouldEnableButton =
-                                derivedStateOf { transactionField.all { it.selectedFieldIndex.value != -1 } }
-                            Button(
-                                modifier = Modifier.fillMaxWidth().height(48.dp),
-                                enabled = shouldEnableButton.value,
-                                colors = ButtonDefaults.filledTonalButtonColors(),
-                                onClick = {
-                                    viewModel.onEvent(saveTransactions(csv, transactionField))
-                                }) {
-                                Text(
-                                    "Continue",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                            }
-                        }
-                    }
+                    FieldMappingScreen(uiState, transactionField, viewModel)
                 }
 
                 is CsvUIState.TransactionSaveProcessed -> {
-                    if (uiState.csvData.transactionImportResult == TransactionImportResult.ImportedSuccessfully) {
+                    if (uiState.csvData.transactionImportResult == ImportedSuccessfully) {
                         navController.popBackStack()
                     } else {
                         Column {
-                            Text("Failed to Import transactions")
+                            Text(stringResource(R.string.failed_to_import_transactions))
                         }
                     }
                 }
@@ -119,19 +82,91 @@ fun CsvImportScreen(navController: NavHostController) {
     }
 }
 
-fun transactionField() = listOf(
-    TransactionField(
-        "Mode",
-        "Type of transaction to identify if the transaction is an expense, income, or investment",
-        type = TransactionFieldType.TRANSACTION_MODE
-    ),
-    TransactionField("Amount", "The amount of the transaction", type = TransactionFieldType.AMOUNT),
-    TransactionField(
-        "Book Name",
-        "The name of the book where the transaction is recorded",
-        type = TransactionFieldType.BOOK_NAME
-    ),
-    TransactionField("Date", "The date of the transaction", type = TransactionFieldType.DATE),
-    TransactionField("Category", "The category of the transaction", type = TransactionFieldType.CATEGORY),
-    TransactionField("Note", "Additional notes about the transaction", type = TransactionFieldType.NOTE)
-)
+@Composable
+private fun FieldMappingScreen(
+    uiState: CsvImportState, transactionField: List<TransactionField>, viewModel: CsvImportViewModel
+) {
+    LazyColumn {
+        val csv = uiState.csv.orEmpty()
+        val header = csv.firstOrNull()
+        if (header == null) {
+            item {
+                Text(
+                    "No data found",
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+            return@LazyColumn
+        }
+        item {
+            val rowSubset = remember { csv.take(6) }
+            Column(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+            ) {
+                rowSubset.forEachIndexed { index, row ->
+                    Row {
+                        row.values.forEach {
+                            CSVCell(
+                                it, header = index == 0, even = index % 2 == 0
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        item {
+            transactionField.forEach {
+                FieldMappingRow(header, it) {
+                    if (it.type == TransactionMode) {
+                        val income = stringResource(R.string.income_with_contains)
+                        val expense = stringResource(R.string.expense_with_contains)
+                        val investment = stringResource(R.string.investment_with_contains)
+                        AdditionalMappingInfoRow(it, income)
+                        AdditionalMappingInfoRow(it, expense)
+                        AdditionalMappingInfoRow(it, investment)
+                    }
+                }
+            }
+        }
+        item {
+            val shouldEnableButton =
+                derivedStateOf { transactionField.all { it.selectedFieldIndex.value != -1 } }
+            Button(modifier = Modifier.fillMaxWidth().height(48.dp),
+                enabled = shouldEnableButton.value,
+                colors = ButtonDefaults.filledTonalButtonColors(),
+                onClick = {
+                    viewModel.onEvent(saveTransactions(csv, transactionField))
+                }) {
+                Text(
+                    stringResource(R.string.continue_button),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+        }
+    }
+}
+
+fun transactionField(): List<TransactionField> {
+    return listOf(
+        TransactionField(
+            "Mode",
+            "Type of transaction to identify if the transaction is an expense, income, or investment",
+            type = TransactionMode
+        ),
+        TransactionField(
+            "Amount", "The amount of the transaction", type = TransactionFieldType.Amount
+        ),
+        TransactionField(
+            "Book Name",
+            "The name of the book where the transaction is recorded",
+            type = TransactionFieldType.BookName
+        ),
+        TransactionField("Date", "The date of the transaction", type = TransactionFieldType.DATE),
+        TransactionField(
+            "Category", "The category of the transaction", type = TransactionFieldType.Category
+        ),
+        TransactionField(
+            "Note", "Additional notes about the transaction", type = TransactionFieldType.Note
+        )
+    )
+}
