@@ -15,6 +15,7 @@ interface TransactionsRepository {
     suspend fun findTransactionById(id: Long): Transaction?
     suspend fun deleteTransactions(transaction: Transaction)
     suspend fun upsertTransaction(transaction: Transaction): Boolean
+    suspend fun insertTransactions(transaction: List<Transaction>): Boolean
     suspend fun updateTransaction(oldTransactionObject: Transaction)
     fun filterTransactionFromDateRange(
         dateRange: Pair<Long, Long>,
@@ -97,6 +98,14 @@ class TransactionsRepositoryImpl @Inject constructor(
         try {
             transactionDao.upsertTransaction(transaction)
             return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun insertTransactions(transaction: List<Transaction>): Boolean {
+        try {
+            return transactionDao.insertTransactions(transaction).isEmpty().not()
         } catch (e: Exception) {
             return false
         }

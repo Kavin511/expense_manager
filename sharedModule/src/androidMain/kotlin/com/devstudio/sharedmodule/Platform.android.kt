@@ -2,7 +2,6 @@ package com.devstudio.sharedmodule
 
 import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalConfiguration
@@ -14,10 +13,10 @@ import com.devstudio.database.AppContext
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.domain.useCase.csvToTransaction.ProcessFileToCsv
 import com.devstudio.sharedmodule.importData.model.CSVRow
-import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult
-import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult.ImportFailed
-import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult.ImportedSuccessfully
-import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult.PartiallyImported
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.text.Charsets.UTF_8
 
 
@@ -46,23 +45,15 @@ actual fun FilePicker(
 }
 
 
-
-actual suspend fun saveTransactions(transactions: List<Transaction>): TransactionImportResult {
+actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Boolean> {
     val context = AppContext.get()!!
-    val transactionsRepositoryImpl = TransactionsRepositoryImpl(UserDataRepositoryImpl(DataSourceModule(context)))
-    val failedTransactionList = mutableListOf<Transaction>()
-    transactions.map {
-        val isImported = transactionsRepositoryImpl.upsertTransaction(it)
-        if (isImported.not()) {
-            failedTransactionList.add(it)
-        }
-    }
-    return if (failedTransactionList.isEmpty()) {
-        ImportedSuccessfully
-    } else if (failedTransactionList.size == transactions.size) {
-        ImportFailed
+    val transactionsRepositoryImpl =
+        TransactionsRepositoryImpl(UserDataRepositoryImpl(DataSourceModule(context)))
+    val isImported = transactionsRepositoryImpl.insertTransactions(transactions)
+    return if (isImported) {
+        Result.success(true)
     } else {
-        PartiallyImported
+        Result.failure(Throwable())
     }
 }
 
@@ -74,5 +65,16 @@ actual fun isPortrait(): Boolean {
         configuration.screenWidthDp < 840
     } else {
         configuration.screenWidthDp < 600
+    }
+}
+
+actual fun parseDateToTimestamp(dateStr: String, format: String): Long? {
+    val sdf = SimpleDateFormat(format, Locale.getDefault())
+    val parsedDate: Date?
+    try {
+        parsedDate = sdf.parse(dateStr)
+        return parsedDate?.time
+    } catch (_: ParseException) {
+        return null
     }
 }

@@ -25,11 +25,14 @@ import com.devstudio.sharedmodule.commonMain.composeResources.failed_to_import_t
 import com.devstudio.sharedmodule.commonMain.composeResources.import_csv
 import com.devstudio.sharedmodule.commonMain.composeResources.income_with_contains
 import com.devstudio.sharedmodule.commonMain.composeResources.investment_with_contains
+import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType
-import com.devstudio.sharedmodule.importData.model.TransactionFieldType.TransactionMode
-import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.saveTransactions
-import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult.ImportedSuccessfully
+import com.devstudio.sharedmodule.importData.model.TransactionFieldType.TransactionModeField
+import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.SaveTransactions
+import com.devstudio.utils.utils.TransactionMode.EXPENSE
+import com.devstudio.utils.utils.TransactionMode.INCOME
+import com.devstudio.utils.utils.TransactionMode.INVESTMENT
 import org.jetbrains.compose.resources.stringResource
 import com.devstudio.sharedmodule.commonMain.composeResources.Res as R
 
@@ -60,16 +63,16 @@ fun CsvImportScreen(navController: NavHostController) {
             when (uiState.csvData) {
                 CsvUIState.Idle -> {}
 
-                CsvUIState.Loading -> {
+                CsvUIState.SelectingFile -> {
                     CircularProgressIndicator()
                 }
 
-                CsvUIState.Result -> {
+                CsvUIState.MappingSelectedFile -> {
                     FieldMappingScreen(uiState, transactionField, viewModel)
                 }
 
-                is CsvUIState.TransactionSaveProcessed -> {
-                    if (uiState.csvData.transactionImportResult == ImportedSuccessfully) {
+                is CsvUIState.TransactionSaveResult -> {
+                    if (uiState.csvData.result.isSuccess) {
                         navController.popBackStack()
                     } else {
                         Column {
@@ -116,14 +119,19 @@ private fun FieldMappingScreen(
         }
         item {
             transactionField.forEach {
-                FieldMappingRow(header, it) {
-                    if (it.type == TransactionMode) {
+                FieldMappingItem(header, it, onEvent = viewModel::onEvent) {
+                    if (it.type == TransactionModeField) {
                         val income = stringResource(R.string.income_with_contains)
                         val expense = stringResource(R.string.expense_with_contains)
                         val investment = stringResource(R.string.investment_with_contains)
-                        AdditionalMappingInfoRow(it, income)
-                        AdditionalMappingInfoRow(it, expense)
-                        AdditionalMappingInfoRow(it, investment)
+                        val incomeMeta = MetaInformation(INCOME, "")
+                        val expenseMeta = MetaInformation(EXPENSE, "")
+                        val investmentMeta = MetaInformation(INVESTMENT, "")
+                        it.additionalInfo = mutableListOf()
+                        it.additionalInfo?.addAll(arrayOf(incomeMeta, expenseMeta, investmentMeta))
+                        AdditionalMappingInfoRow(income, incomeMeta)
+                        AdditionalMappingInfoRow(expense, expenseMeta)
+                        AdditionalMappingInfoRow(investment, investmentMeta)
                     }
                 }
             }
@@ -135,7 +143,7 @@ private fun FieldMappingScreen(
                 enabled = shouldEnableButton.value,
                 colors = ButtonDefaults.filledTonalButtonColors(),
                 onClick = {
-                    viewModel.onEvent(saveTransactions(csv, transactionField))
+                    viewModel.onEvent(SaveTransactions(csv, transactionField))
                 }) {
                 Text(
                     stringResource(R.string.continue_button),
@@ -151,7 +159,7 @@ fun transactionField(): List<TransactionField> {
         TransactionField(
             "Mode",
             "Type of transaction to identify if the transaction is an expense, income, or investment",
-            type = TransactionMode
+            type = TransactionModeField
         ),
         TransactionField(
             "Amount", "The amount of the transaction", type = TransactionFieldType.Amount

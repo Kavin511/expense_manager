@@ -78,4 +78,7 @@ order by transactionDate DESC""",
         shouldUseBookId: Boolean = true,
         bookId: Long = 0,
     ): Double
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertTransactions(transaction: List<Transaction>): List<Long>
 }

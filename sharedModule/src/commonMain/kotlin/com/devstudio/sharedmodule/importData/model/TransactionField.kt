@@ -1,7 +1,10 @@
 package com.devstudio.sharedmodule.importData.model
 
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import com.devstudio.sharedmodule.importData.model.MappingStatus.YeToMap
 
 
 data class TransactionField(
@@ -10,10 +13,12 @@ data class TransactionField(
     var csvHeader: String = "",
     val selectedFieldIndex: MutableIntState = mutableIntStateOf(-1),
     val type: TransactionFieldType,
-    var additionalInfo: String = "",
+    var additionalInfo: MutableList<MetaInformation>? = null,
+    val mappingStatus: MutableState<MappingStatus> = mutableStateOf(YeToMap)
 )
 
 enum class TransactionFieldType {
-    Note, Amount, TransactionMode, DATE, BookName, Category
+    Note, Amount, TransactionModeField, DATE, BookName, Category
 }
 
+data class MetaInformation(val type: Any, var value: String)

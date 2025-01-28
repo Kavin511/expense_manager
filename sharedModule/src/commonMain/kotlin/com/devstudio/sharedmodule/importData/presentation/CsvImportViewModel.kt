@@ -10,10 +10,21 @@ import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
 import com.devstudio.database.models.Transaction
 import com.devstudio.designSystem.getPlatform
+import com.devstudio.sharedmodule.importData.domain.notBlankTrimmedString
+import com.devstudio.sharedmodule.importData.domain.parseAmount
+import com.devstudio.sharedmodule.importData.domain.parseDate
+import com.devstudio.sharedmodule.importData.domain.parseTransactionType
 import com.devstudio.sharedmodule.importData.model.CSVRow
+import com.devstudio.sharedmodule.importData.model.MappingStatus.Mapped
+import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError
+import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.BookNameMappingFailed
+import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.CategoryMappingFailed
+import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.DATEMappingFailed
+import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.TransactionModeMappingFailed
 import com.devstudio.sharedmodule.importData.model.TransactionField
-import com.devstudio.sharedmodule.importData.model.TransactionFieldType
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.*
+import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.FieldMappingEvent
+import com.devstudio.sharedmodule.importData.presentation.CsvUIState.TransactionSaveResult
 import com.devstudio.sharedmodule.saveTransactions
 import kotlinx.coroutines.launch
 
@@ -29,10 +40,7 @@ class CsvImportViewModel : ViewModel() {
 
     fun uiState(): CsvImportState {
         return CsvImportState(
-            csvData = csvUIData,
-            columns = columns,
-            csv = csv,
-            shouldImportFile = shouldImportFile
+            csvData = csvUIData, columns = columns, csv = csv, shouldImportFile = shouldImportFile
         )
     }
 
@@ -46,50 +54,100 @@ class CsvImportViewModel : ViewModel() {
                 shouldImportFile = false
                 csv = event.csv ?: emptyList()
                 columns = event.csv?.firstOrNull() ?: CSVRow(mutableListOf())
-                csvUIData = CsvUIState.Result
+                csvUIData = CsvUIState.MappingSelectedFile
             }
 
-            is CsvImportEvent.saveTransactions -> {
+            is CsvImportEvent.SaveTransactions -> {
                 viewModelScope.launch {
-                    val header = event.csv[0]
                     val transactionFieldIndex = TransactionFieldIndex()
+                    var hasError = false
                     event.transactionField.forEach {
-                        when (it.type) {
-                            Note -> transactionFieldIndex.noteIndex = it.selectedFieldIndex.value
-                            Amount -> transactionFieldIndex.amountIndex =
-                                it.selectedFieldIndex.value
+                        if (it.selectedFieldIndex.value == -1) {
+                            it.mappingStatus.value = MappingError.FieldNotSelected(-1)
+                            hasError = true
+                        } else {
+                            when (it.type) {
+                                Note -> transactionFieldIndex.noteIndex =
+                                    it.selectedFieldIndex.value
 
-                            TransactionMode -> transactionFieldIndex.transactionModeIndex =
-                                it.selectedFieldIndex.value
+                                Amount -> transactionFieldIndex.amountIndex =
+                                    it.selectedFieldIndex.value
 
-                            DATE -> transactionFieldIndex.transactionDateIndex =
-                                it.selectedFieldIndex.value
+                                TransactionModeField -> transactionFieldIndex.transactionModeIndex =
+                                    it.selectedFieldIndex.value
 
-                            BookName -> transactionFieldIndex.bookIdIndex =
-                                it.selectedFieldIndex.value
+                                DATE -> transactionFieldIndex.transactionDateIndex =
+                                    it.selectedFieldIndex.value
 
-                            Category -> transactionFieldIndex.categoryIdIndex =
-                                it.selectedFieldIndex.value
+                                BookName -> transactionFieldIndex.bookIdIndex =
+                                    it.selectedFieldIndex.value
+
+                                Category -> transactionFieldIndex.categoryIdIndex =
+                                    it.selectedFieldIndex.value
+                            }
                         }
                     }
 
-                    val transactionList = event.csv.map {
-                        val transactionMode = it.values[transactionFieldIndex.transactionModeIndex]
-                        val bookId = findBookByNameOrInsert(it.values[transactionFieldIndex.bookIdIndex])
-                        Transaction(
-                            id = getPlatform().getCurrentTimeMillis(),
-                            bookId = bookId,
-                            note = it.values[transactionFieldIndex.noteIndex],
-                            amount = it.values[transactionFieldIndex.amountIndex].toDoubleOrNull() ?: 0.0,
-                            categoryId = getCategoryOrInsert(it, transactionFieldIndex, transactionMode, bookId),
-                            transactionMode = transactionMode,//convert this as any of avaible three
-                            transactionDate = it.values[transactionFieldIndex.transactionDateIndex],
-                        )
+                    if (hasError) {
+                        csvUIData =
+                            TransactionSaveResult(Result.failure(Throwable("Mapping failed")))
+                    } else {
+                        val transactionList = event.csv.map {
+                            val transactionMode =
+                                it.values[transactionFieldIndex.transactionModeIndex]
+                            val bookId =
+                                findBookByNameOrInsert(it.values[transactionFieldIndex.bookIdIndex])
+                            Transaction(
+                                id = getPlatform().getCurrentTimeMillis(),
+                                bookId = bookId,
+                                note = it.values[transactionFieldIndex.noteIndex],
+                                amount = it.values[transactionFieldIndex.amountIndex].toDoubleOrNull()
+                                    ?: 0.0,
+                                categoryId = getCategoryOrInsert(
+                                    it, transactionFieldIndex, transactionMode, bookId
+                                ),
+                                transactionMode = transactionMode,
+                                transactionDate = it.values[transactionFieldIndex.transactionDateIndex],
+                            )
+                        }
+                        val saveTransactions = saveTransactions(transactionList)
+                        csvUIData = TransactionSaveResult(saveTransactions)
                     }
-                    csvUIData = CsvUIState.TransactionSaveProcessed(saveTransactions(transactionList))
                 }
+
+            }
+
+            is FieldMappingEvent -> onFieldMappingEvent(event)
+        }
+    }
+
+    private fun onFieldMappingEvent(event: FieldMappingEvent) {
+        val valueMap = csv.subList(1, csv.size).map { it.values[event.index] }
+        for (value in valueMap) {
+            val index = valueMap.indexOf(value)
+            val mappingStatus = when (event.transactionField.type) {
+                Amount -> parseAmount(value)?.let { Mapped(event.index) }
+                    ?: MappingError.AmountMappingFailed(index)
+
+                TransactionModeField -> parseTransactionType(
+                    value, event.transactionField.additionalInfo
+                )?.let { Mapped(event.index) } ?: TransactionModeMappingFailed(index)
+
+                DATE -> parseDate(value)?.let { Mapped(event.index) } ?: DATEMappingFailed(index)
+                BookName -> notBlankTrimmedString(value)?.let { Mapped(event.index) }
+                    ?: BookNameMappingFailed(index)
+
+                Category -> notBlankTrimmedString(value)?.let { Mapped(event.index) }
+                    ?: CategoryMappingFailed(index)
+
+                Note -> Mapped(event.index)
+            }
+            if (mappingStatus is MappingError) {
+                event.transactionField.mappingStatus.value = mappingStatus
+                return
             }
         }
+        event.transactionField.mappingStatus.value = Mapped(event.index)
     }
 
     private fun getCategoryOrInsert(
@@ -102,9 +160,7 @@ class CsvImportViewModel : ViewModel() {
         val categoryDao = ApplicationModule.config.factory.getRoomInstance().categoryDao()
         val category = categoryDao.getCategoryByName(categoryName)
         val constructedCategory = Category(
-            name = categoryName,
-            categoryType = transactionMode,
-            bookId = bookId
+            name = categoryName, categoryType = transactionMode, bookId = bookId
         )
         return if (category == null) {
             categoryDao.insertCategory(constructedCategory)
@@ -116,8 +172,11 @@ class CsvImportViewModel : ViewModel() {
 
     private fun findBookByNameOrInsert(bookName: String): Long {
         val booksDao = ApplicationModule.config.factory.getRoomInstance().booksDao()
-        val book = booksDao.findBookByName(bookName)
-            ?: return booksDao.insertBook(Books(name = bookName, timeStamp = getPlatform().getCurrentTimeMillis()))
+        val book = booksDao.findBookByName(bookName) ?: return booksDao.insertBook(
+            Books(
+                name = bookName, timeStamp = getPlatform().getCurrentTimeMillis()
+            )
+        )
         return book.id
     }
 
@@ -136,7 +195,12 @@ data class TransactionFieldIndex(
 interface CsvImportEvent {
     data object SelectFile : CsvImportEvent
     data class Import(val csv: List<CSVRow>?) : CsvImportEvent
-    data class saveTransactions(val csv: List<CSVRow>, val transactionField: List<TransactionField>) : CsvImportEvent
+    data class SaveTransactions(
+        val csv: List<CSVRow>, val transactionField: List<TransactionField>
+    ) : CsvImportEvent
+
+    data class FieldMappingEvent(val transactionField: TransactionField, val index: Int) :
+        CsvImportEvent
 }
 
 data class CsvImportState(
@@ -148,13 +212,7 @@ data class CsvImportState(
 
 sealed interface CsvUIState {
     data object Idle : CsvUIState
-    data object Loading : CsvUIState
-    data object Result : CsvUIState
-    data class TransactionSaveProcessed(val transactionImportResult: TransactionImportResult) : CsvUIState
-}
-
-sealed class TransactionImportResult {
-    data object ImportedSuccessfully : TransactionImportResult()
-    data object PartiallyImported : TransactionImportResult()
-    data object ImportFailed : TransactionImportResult()
+    data object SelectingFile : CsvUIState
+    data object MappingSelectedFile : CsvUIState
+    data class TransactionSaveResult(val result: Result<Boolean>) : CsvUIState
 }

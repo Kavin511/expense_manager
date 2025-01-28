@@ -3,12 +3,11 @@ package com.devstudio.sharedmodule
 import androidx.compose.runtime.Composable
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.importData.model.CSVRow
-import com.devstudio.sharedmodule.importData.presentation.TransactionImportResult
 import platform.UIKit.*
 import platform.UIKit.UIUserInterfaceIdiomPad
 
-actual suspend fun saveTransactions(transactions: List<Transaction>): TransactionImportResult {
-    return TransactionImportResult.ImportFailed
+actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Boolean> {
+    return Result.failure(Throwable("Not implemented"))
 }
 
 @Composable
@@ -23,4 +22,8 @@ actual fun FilePicker(
 @Composable
 actual fun isPortrait(): Boolean {
     return UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad
+}
+
+actual fun parseDateToTimestamp(dateStr: String, format: String): Long? {
+    return null
 }
