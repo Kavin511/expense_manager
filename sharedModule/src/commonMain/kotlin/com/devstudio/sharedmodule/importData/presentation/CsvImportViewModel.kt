@@ -18,11 +18,11 @@ import com.devstudio.sharedmodule.importData.model.CSVRow
 import com.devstudio.sharedmodule.importData.model.MappingStatus.Mapped
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.CategoryMappingFailed
-import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.DATEMappingFailed
+import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.DateMappingFailed
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.TransactionModeMappingFailed
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.*
-import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.FieldMappingEvent
+import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.MapTransactionField
 import com.devstudio.sharedmodule.importData.presentation.CsvUIState.TransactionSaveResult
 import com.devstudio.sharedmodule.saveTransactions
 import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
@@ -44,20 +44,20 @@ class CsvImportViewModel : ViewModel() {
         )
     }
 
-    fun onEvent(event: CsvImportEvent) {
+    fun onEvent(event: CsvImportIntent) {
         when (event) {
-            is CsvImportEvent.SelectFile -> {
+            is CsvImportIntent.SelectFile -> {
                 shouldImportFile = true
             }
 
-            is CsvImportEvent.Import -> {
+            is CsvImportIntent.Import -> {
                 shouldImportFile = false
                 csv = event.csv ?: emptyList()
                 columns = event.csv?.firstOrNull() ?: CSVRow(mutableListOf())
                 csvUIData = CsvUIState.MappingSelectedFile
             }
 
-            is CsvImportEvent.SaveTransactions -> {
+            is CsvImportIntent.SaveTransactions -> {
                 viewModelScope.launch {
                     val transactionFieldIndex = TransactionFieldIndex()
                     var hasError = false
@@ -92,11 +92,14 @@ class CsvImportViewModel : ViewModel() {
                         csvUIData =
                             TransactionSaveResult(Result.failure(Throwable("Mapping failed")))
                     } else {
-                        val transactionList = event.csv.map {
+                        val transactionList = event.csv.subList(1, csv.size).map {
                             val transactionMode =
                                 it.values[transactionFieldIndex.transactionModeIndex]
                             val bookId =
                                 findBookByNameOrInsert(it.values.getOrNull(transactionFieldIndex.bookIdIndex))
+                            val transactionDate =
+                                parseDate(it.values[transactionFieldIndex.transactionDateIndex])
+                                    ?: getPlatform().getCurrentTimeMillis()
                             Transaction(
                                 id = getPlatform().getCurrentTimeMillis(),
                                 bookId = bookId,
@@ -107,7 +110,7 @@ class CsvImportViewModel : ViewModel() {
                                     it, transactionFieldIndex, transactionMode, bookId
                                 ),
                                 transactionMode = transactionMode,
-                                transactionDate = it.values[transactionFieldIndex.transactionDateIndex],
+                                transactionDate = transactionDate.toString(),
                             )
                         }
                         val saveTransactions = saveTransactions(transactionList)
@@ -117,11 +120,11 @@ class CsvImportViewModel : ViewModel() {
 
             }
 
-            is FieldMappingEvent -> onFieldMappingEvent(event)
+            is MapTransactionField -> onFieldMappingIntent(event)
         }
     }
 
-    private fun onFieldMappingEvent(event: FieldMappingEvent) {
+    private fun onFieldMappingIntent(event: MapTransactionField) {
         val valueMap = csv.subList(1, csv.size).map { it.values[event.index] }
         for (value in valueMap) {
             val index = valueMap.indexOf(value)
@@ -133,7 +136,7 @@ class CsvImportViewModel : ViewModel() {
                     value, event.transactionField.additionalInfo
                 )?.let { Mapped(event.index) } ?: TransactionModeMappingFailed(index)
 
-                DATE -> parseDate(value)?.let { Mapped(event.index) } ?: DATEMappingFailed(index)
+                DATE -> parseDate(value)?.let { Mapped(event.index) } ?: DateMappingFailed(index)
                 BookName -> Mapped(event.index)
 
                 Category -> notBlankTrimmedString(value)?.let { Mapped(event.index) }
@@ -195,15 +198,15 @@ data class TransactionFieldIndex(
     var paymentStatusIndex: Int = -1,
 )
 
-interface CsvImportEvent {
-    data object SelectFile : CsvImportEvent
-    data class Import(val csv: List<CSVRow>?) : CsvImportEvent
+interface CsvImportIntent {
+    data object SelectFile : CsvImportIntent
+    data class Import(val csv: List<CSVRow>?) : CsvImportIntent
     data class SaveTransactions(
         val csv: List<CSVRow>, val transactionField: List<TransactionField>
-    ) : CsvImportEvent
+    ) : CsvImportIntent
 
-    data class FieldMappingEvent(val transactionField: TransactionField, val index: Int) :
-        CsvImportEvent
+    data class MapTransactionField(val transactionField: TransactionField, val index: Int) :
+        CsvImportIntent
 }
 
 data class CsvImportState(

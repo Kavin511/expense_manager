@@ -30,7 +30,7 @@ import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.TransactionModeField
-import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.SaveTransactions
+import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.SaveTransactions
 import com.devstudio.utils.utils.TransactionMode.EXPENSE
 import com.devstudio.utils.utils.TransactionMode.INCOME
 import com.devstudio.utils.utils.TransactionMode.INVESTMENT
@@ -48,11 +48,11 @@ fun CsvImportScreen(navController: NavHostController) {
     val uiState = viewModel.uiState()
     if (uiState.shouldImportFile) {
         FilePicker(show = uiState.shouldImportFile) { platformFile ->
-            viewModel.onEvent(CsvImportEvent.Import(platformFile))
+            viewModel.onEvent(CsvImportIntent.Import(platformFile))
         }
     }
     LaunchedEffect(viewModel) {
-        viewModel.onEvent(CsvImportEvent.SelectFile)
+        viewModel.onEvent(CsvImportIntent.SelectFile)
     }
     Screen(
         title = stringResource(R.string.import_csv),

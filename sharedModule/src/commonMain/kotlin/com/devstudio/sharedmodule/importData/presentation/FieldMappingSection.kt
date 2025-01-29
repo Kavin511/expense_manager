@@ -28,14 +28,14 @@ import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.Fi
 import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.Amount
-import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.FieldMappingEvent
+import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.MapTransactionField
 import com.devstudio.sharedmodule.utils.getWidthRatio
 
 @Composable
 fun FieldMappingItem(
     header: CSVRow = CSVRow(listOf()),
     transactionField: TransactionField = TransactionField("", "", type = Amount),
-    onEvent: (CsvImportEvent) -> Unit,
+    onEvent: (CsvImportIntent) -> Unit,
     metaData: @Composable (() -> Unit)? = null,
 ) {
     val shape = RoundedCornerShape(8.dp)
@@ -70,7 +70,7 @@ fun FieldMappingItem(
                 FilterChip(
                     selected = transactionField.selectedFieldIndex.value == index,
                     onClick = {
-                        onEvent.invoke(FieldMappingEvent(transactionField, index))
+                        onEvent.invoke(MapTransactionField(transactionField, index))
                         transactionField.selectedFieldIndex.value = index
                         transactionField.csvHeader = value
                     },

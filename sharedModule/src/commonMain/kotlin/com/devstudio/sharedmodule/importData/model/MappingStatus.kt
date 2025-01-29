@@ -13,7 +13,7 @@ sealed class MappingStatus {
         data class TransactionModeMappingFailed(override val errorValueIndex: Int) :
             MappingError(errorValueIndex)
 
-        data class DATEMappingFailed(override val errorValueIndex: Int) :
+        data class DateMappingFailed(override val errorValueIndex: Int) :
             MappingError(errorValueIndex)
 
         data class BookNameMappingFailed(override val errorValueIndex: Int) :
