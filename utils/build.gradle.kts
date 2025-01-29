@@ -19,7 +19,9 @@ kotlin {
     }
 
     listOf(
-        iosX64(), iosArm64(), iosSimulatorArm64()
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
             baseName = "ComposeApp"
@@ -58,7 +60,8 @@ android {
         res.srcDirs("src/androidMain/res")
     }
     //https://developer.android.com/studio/test/gradle-managed-devices
-    @Suppress("UnstableApiUsage") testOptions {
+    @Suppress("UnstableApiUsage")
+    testOptions {
         managedDevices.devices {
             maybeCreate<ManagedVirtualDevice>("pixel5").apply {
                 device = "Pixel 5"

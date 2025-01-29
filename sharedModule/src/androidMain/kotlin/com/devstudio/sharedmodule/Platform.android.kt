@@ -47,8 +47,9 @@ actual fun FilePicker(
 
 actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Boolean> {
     val context = AppContext.get()!!
+    val userDataRepository = UserDataRepositoryImpl(DataSourceModule(context))
     val transactionsRepositoryImpl =
-        TransactionsRepositoryImpl(UserDataRepositoryImpl(DataSourceModule(context)))
+        TransactionsRepositoryImpl(userDataRepository)
     val isImported = transactionsRepositoryImpl.insertTransactions(transactions)
     return if (isImported) {
         Result.success(true)

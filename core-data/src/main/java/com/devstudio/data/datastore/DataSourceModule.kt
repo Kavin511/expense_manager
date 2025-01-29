@@ -15,8 +15,8 @@ import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.data.model.UserPreferencesData
 import com.devstudio.data.repository.BooksRepositoryImpl
 import com.devstudio.data.repository.UserDataRepositoryImpl
-import com.devstudio.database.DEFAULT_BOOK_NAME
 import com.devstudio.database.models.Books
+import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

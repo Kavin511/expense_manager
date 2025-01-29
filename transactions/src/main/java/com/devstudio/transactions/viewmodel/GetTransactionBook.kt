@@ -4,8 +4,8 @@ import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.repository.BooksRepository
 import com.devstudio.data.repository.TransactionsRepository
 import com.devstudio.data.repository.UserDataRepository
-import com.devstudio.database.DEFAULT_BOOK_NAME
 import com.devstudio.database.models.Books
+import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map

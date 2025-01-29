@@ -25,6 +25,7 @@ import com.devstudio.sharedmodule.commonMain.composeResources.failed_to_import_t
 import com.devstudio.sharedmodule.commonMain.composeResources.import_csv
 import com.devstudio.sharedmodule.commonMain.composeResources.income_with_contains
 import com.devstudio.sharedmodule.commonMain.composeResources.investment_with_contains
+import com.devstudio.sharedmodule.importData.model.MappingStatus
 import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType
@@ -138,7 +139,7 @@ private fun FieldMappingScreen(
         }
         item {
             val shouldEnableButton =
-                derivedStateOf { transactionField.all { it.selectedFieldIndex.value != -1 } }
+                derivedStateOf { transactionField.all { it.isMapped } }
             Button(modifier = Modifier.fillMaxWidth().height(48.dp),
                 enabled = shouldEnableButton.value,
                 colors = ButtonDefaults.filledTonalButtonColors(),
@@ -157,17 +158,11 @@ private fun FieldMappingScreen(
 fun transactionField(): List<TransactionField> {
     return listOf(
         TransactionField(
+            "Amount", "The amount of the transaction", type = TransactionFieldType.Amount
+        ),TransactionField(
             "Mode",
             "Type of transaction to identify if the transaction is an expense, income, or investment",
             type = TransactionModeField
-        ),
-        TransactionField(
-            "Amount", "The amount of the transaction", type = TransactionFieldType.Amount
-        ),
-        TransactionField(
-            "Book Name",
-            "The name of the book where the transaction is recorded",
-            type = TransactionFieldType.BookName
         ),
         TransactionField("Date", "The date of the transaction", type = TransactionFieldType.DATE),
         TransactionField(
@@ -175,6 +170,11 @@ fun transactionField(): List<TransactionField> {
         ),
         TransactionField(
             "Note", "Additional notes about the transaction", type = TransactionFieldType.Note
-        )
+        ),
+        TransactionField(
+            "Book Name (Optional)",
+            "The name of the account where the transaction has to be recorded",
+            type = TransactionFieldType.BookName,
+        ).apply { mappingStatus.value = MappingStatus.Mapped(-1) }
     )
 }

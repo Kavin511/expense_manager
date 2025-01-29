@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.devstudio.database.dao.CategoryDao
 import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
+import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import com.devstudio.utils.utils.TransactionMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,6 @@ import java.lang.ref.WeakReference
 import java.util.Calendar
 import java.util.UUID
 
-val DEFAULT_BOOK_NAME = "Daily Book"
 actual class Factory(val app: Application) {
     actual fun getRoomInstance(): ExpenseManagerDataBase {
         var INSTANCE: ExpenseManagerDataBase? = null

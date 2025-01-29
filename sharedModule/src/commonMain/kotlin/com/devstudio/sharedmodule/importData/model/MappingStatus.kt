@@ -2,7 +2,7 @@ package com.devstudio.sharedmodule.importData.model
 
 
 sealed class MappingStatus {
-    data object YeToMap : MappingStatus()
+    data object YetToMap : MappingStatus()
     data class Mapped(var fieldIndex: Int) : MappingStatus()
     sealed class MappingError(open val errorValueIndex: Int) : MappingStatus() {
         data class FieldNotSelected(override val errorValueIndex: Int) :

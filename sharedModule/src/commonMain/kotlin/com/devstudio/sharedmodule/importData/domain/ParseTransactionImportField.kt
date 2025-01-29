@@ -154,17 +154,6 @@ fun parseDate(
     null
 }
 
-fun parseCategory(
-    value: String
-): String? = notBlankTrimmedString(value)
-
-fun parseTitle(
-    value: String
-): String? = notBlankTrimmedString(value)
-
-fun parseDescription(
-    value: String
-): String? = notBlankTrimmedString(value)
 
 fun notBlankTrimmedString(value: String?): String? =
     value?.trim().takeIf { it?.isNotBlank() == true }

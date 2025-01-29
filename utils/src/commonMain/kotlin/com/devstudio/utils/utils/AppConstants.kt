@@ -24,5 +24,6 @@ class AppConstants {
         const val BACK_UP_STATUS_KEY = "is_success"
         const val BACK_UP_STATUS_MESSAGE = "backUpStatusMessage"
         const val WORK_TRIGGERING_MODE_KEY = "isManuallyTriggered"
+        const val DEFAULT_BOOK_NAME = "Daily Book"
     }
 }

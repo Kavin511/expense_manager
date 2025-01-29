@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devstudio.designSystem.appColors
 import com.devstudio.sharedmodule.importData.model.CSVRow
+import com.devstudio.sharedmodule.importData.model.MappingStatus
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.FieldNotSelected
 import com.devstudio.sharedmodule.importData.model.MetaInformation
@@ -35,14 +36,14 @@ fun FieldMappingItem(
     header: CSVRow = CSVRow(listOf()),
     transactionField: TransactionField = TransactionField("", "", type = Amount),
     onEvent: (CsvImportEvent) -> Unit,
-    metaData: @Composable() (() -> Unit)? = null,
+    metaData: @Composable (() -> Unit)? = null,
 ) {
     val shape = RoundedCornerShape(8.dp)
     val mappingStatus = transactionField.mappingStatus.value
     val isMappingError = mappingStatus is MappingError
     Column(
         modifier = Modifier.padding(vertical = 8.dp).then(
-            if (isMappingError) {
+            if (transactionField.mappingStatus.value !is MappingStatus.Mapped) {
                 Modifier.border(width = 2.dp, color = appColors.material.error, shape = shape)
             } else {
                 Modifier.border(width = 2.dp, color = appColors.material.primary, shape = shape)

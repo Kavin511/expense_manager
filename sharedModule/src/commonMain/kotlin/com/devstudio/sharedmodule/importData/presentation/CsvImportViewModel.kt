@@ -17,7 +17,6 @@ import com.devstudio.sharedmodule.importData.domain.parseTransactionType
 import com.devstudio.sharedmodule.importData.model.CSVRow
 import com.devstudio.sharedmodule.importData.model.MappingStatus.Mapped
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError
-import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.BookNameMappingFailed
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.CategoryMappingFailed
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.DATEMappingFailed
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.TransactionModeMappingFailed
@@ -26,6 +25,7 @@ import com.devstudio.sharedmodule.importData.model.TransactionFieldType.*
 import com.devstudio.sharedmodule.importData.presentation.CsvImportEvent.FieldMappingEvent
 import com.devstudio.sharedmodule.importData.presentation.CsvUIState.TransactionSaveResult
 import com.devstudio.sharedmodule.saveTransactions
+import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import kotlinx.coroutines.launch
 
 /**
@@ -96,7 +96,7 @@ class CsvImportViewModel : ViewModel() {
                             val transactionMode =
                                 it.values[transactionFieldIndex.transactionModeIndex]
                             val bookId =
-                                findBookByNameOrInsert(it.values[transactionFieldIndex.bookIdIndex])
+                                findBookByNameOrInsert(it.values.getOrNull(transactionFieldIndex.bookIdIndex))
                             Transaction(
                                 id = getPlatform().getCurrentTimeMillis(),
                                 bookId = bookId,
@@ -134,8 +134,7 @@ class CsvImportViewModel : ViewModel() {
                 )?.let { Mapped(event.index) } ?: TransactionModeMappingFailed(index)
 
                 DATE -> parseDate(value)?.let { Mapped(event.index) } ?: DATEMappingFailed(index)
-                BookName -> notBlankTrimmedString(value)?.let { Mapped(event.index) }
-                    ?: BookNameMappingFailed(index)
+                BookName -> Mapped(event.index)
 
                 Category -> notBlankTrimmedString(value)?.let { Mapped(event.index) }
                     ?: CategoryMappingFailed(index)
@@ -170,11 +169,15 @@ class CsvImportViewModel : ViewModel() {
         }
     }
 
-    private fun findBookByNameOrInsert(bookName: String): Long {
+    private fun findBookByNameOrInsert(bookName: String?): Long {
         val booksDao = ApplicationModule.config.factory.getRoomInstance().booksDao()
-        val book = booksDao.findBookByName(bookName) ?: return booksDao.insertBook(
+        val book = if (bookName.isNullOrEmpty()) {
+            booksDao.getBooks().firstOrNull()
+        } else {
+            booksDao.findBookByName(bookName)
+        } ?: return booksDao.insertBook(
             Books(
-                name = bookName, timeStamp = getPlatform().getCurrentTimeMillis()
+                name = bookName ?: DEFAULT_BOOK_NAME, timeStamp = getPlatform().getCurrentTimeMillis()
             )
         )
         return book.id
