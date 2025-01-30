@@ -52,8 +52,8 @@ class CsvImportViewModel : ViewModel() {
 
             is CsvImportIntent.Import -> {
                 shouldImportFile = false
-                csv = event.csv ?: emptyList()
-                columns = event.csv?.firstOrNull() ?: CSVRow(mutableListOf())
+                csv = event.csv ?: return
+                columns = event.csv.firstOrNull() ?: CSVRow(mutableListOf())
                 csvUIData = CsvUIState.MappingSelectedFile
             }
 

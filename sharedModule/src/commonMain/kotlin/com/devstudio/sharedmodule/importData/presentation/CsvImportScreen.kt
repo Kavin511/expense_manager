@@ -25,6 +25,7 @@ import com.devstudio.sharedmodule.commonMain.composeResources.failed_to_import_t
 import com.devstudio.sharedmodule.commonMain.composeResources.import_csv
 import com.devstudio.sharedmodule.commonMain.composeResources.income_with_contains
 import com.devstudio.sharedmodule.commonMain.composeResources.investment_with_contains
+import com.devstudio.sharedmodule.commonMain.composeResources.select_csv
 import com.devstudio.sharedmodule.importData.model.MappingStatus
 import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
@@ -46,8 +47,9 @@ import com.devstudio.sharedmodule.commonMain.composeResources.Res as R
 fun CsvImportScreen(navController: NavHostController) {
     val viewModel: CsvImportViewModel = viewModel { CsvImportViewModel() }
     val uiState = viewModel.uiState()
-    if (uiState.shouldImportFile) {
-        FilePicker(show = uiState.shouldImportFile) { platformFile ->
+    val shouldImportFile = uiState.shouldImportFile
+    if (shouldImportFile) {
+        FilePicker(show = shouldImportFile) { platformFile ->
             viewModel.onEvent(CsvImportIntent.Import(platformFile))
         }
     }
@@ -62,7 +64,19 @@ fun CsvImportScreen(navController: NavHostController) {
         Column(modifier = Modifier.fillMaxSize()) {
             val transactionField = remember { transactionField() }
             when (uiState.csvData) {
-                CsvUIState.Idle -> {}
+                CsvUIState.Idle -> {
+                    Button(
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        onClick = {
+                            viewModel.onEvent(CsvImportIntent.SelectFile)
+                        }
+                    ) {
+                        Text(
+                            stringResource(R.string.select_csv),
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+                }
 
                 CsvUIState.SelectingFile -> {
                     CircularProgressIndicator()

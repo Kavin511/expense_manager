@@ -31,9 +31,12 @@ actual fun FilePicker(
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*"
         }) { _, intent ->
-            intent?.data?.also {
-                val csvRows = ProcessFileToCsv().invoke(context, it, UTF_8)
+            val data = intent?.data
+            if (data != null) {
+                val csvRows = ProcessFileToCsv().invoke(context, data, UTF_8)
                 onFileSelected(csvRows)
+            } else {
+                onFileSelected(null)
             }
         }
 
