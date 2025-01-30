@@ -2,29 +2,26 @@ import HomeActions.BACKUP
 import HomeActions.IMPORT_CSV
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backup
 import androidx.compose.material.icons.rounded.Upload
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
@@ -32,12 +29,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -45,10 +40,10 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.data.repository.TransactionDataBackupWorker
+import com.devstudio.data.util.FileUtils.getBackupFolder
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
-import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.SHARE
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.OPEN
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.OnEvent
 import com.devstudio.model.models.Status.SUCCESS
@@ -56,6 +51,7 @@ import com.devstudio.transactions.models.BottomSheetEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -177,7 +173,7 @@ private fun showBackUpResultAlert(
 ) {
     CoroutineScope(Dispatchers.Main).launch {
         val snackBarResult = snackBarHostState.showSnackbar(
-            actionLabel = SHARE,
+            actionLabel = OPEN,
             duration = SnackbarDuration.Short,
             message = backStatus.message,
             withDismissAction = true,
@@ -187,39 +183,30 @@ private fun showBackUpResultAlert(
             }
 
             SnackbarResult.ActionPerformed -> {
-                createIntentToShareTransactions(context)
+                openFile(context)
             }
         }
     }
 }
 
-fun openFileLocation(context: Context) {
+fun openFile(context: Context) {
+    val filePath = File(getBackupFolder(context))
     val uri = FileProvider.getUriForFile(
-        context,
-        context.packageName + ".provider",
-        TransactionDataBackupWorker.getFileToStoreTransactions(context),
+        context, context.applicationContext.packageName + ".provider", filePath
     )
-    val intent = Intent(Intent.ACTION_VIEW)
-    intent.setDataAndType(uri, "*/*")
-    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    context.startActivity(intent)
-}
-
-fun createIntentToShareTransactions(context: Context) {
-    val intent = Intent()
-    intent.action = Intent.ACTION_SEND
-    intent.type = HomeActionsViewModel.CSV_INTENT_TYPE
-    intent.putExtra(
-        Intent.EXTRA_STREAM,
-        FileProvider.getUriForFile(
-            context,
-            context.packageName + ".provider",
-            TransactionDataBackupWorker.getFileToStoreTransactions(context),
-        ),
-    )
-    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    intent.putExtra(Intent.EXTRA_SUBJECT, "Transactions export")
-    context.startActivity(Intent.createChooser(intent, "Share Transactions"))
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, type ?: context.contentResolver.getType(uri))
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    if (!filePath.exists()) {
+        Log.e("FolderError", "Folder does not exist: ${filePath.absolutePath}")
+        return
+    }
+    try {
+        context.startActivity(Intent.createChooser(intent, "Open Folder"))
+    } catch (e: ActivityNotFoundException) {
+        Log.e("IntentError", "No application found to open this folder.")
+    }
 }
 
 data class RowWithImageData(val text: String, val iconResource: ImageVector)

@@ -1,13 +1,12 @@
 package com.devstudio.data.repository
 
 import android.content.Context
-import android.os.Build
-import android.os.Environment
 import android.util.Log
 import androidx.room.Room
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.devstudio.data.util.FileUtils.backupPath
 import com.devstudio.database.ExpenseManagerDataBase
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.Status
@@ -103,24 +102,11 @@ class TransactionDataBackupWorker(
     companion object {
         fun getFileToStoreTransactions(context: Context): File {
             val backupPath = backupPath(context)
-            val folder = File(backupPath)
-            if (!folder.exists()) {
-                folder.mkdirs()
+            val backupFile = File(backupPath)
+            if (!backupFile.exists()) {
+                backupFile.mkdirs()
             }
-            return File(folder.absolutePath, BACK_UP_FILE_NAME)
+            return File(backupFile.absolutePath)
         }
-
-        private fun backupPath(context: Context): String {
-            val path = if (Build.VERSION.SDK_INT >= 33) {
-                context.filesDir.absolutePath
-            } else {
-                Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOCUMENTS,
-                ).absolutePath
-            }
-            return "$path/${context.applicationInfo.packageName}"
-        }
-
-        private const val BACK_UP_FILE_NAME = "transactions.csv"
     }
 }

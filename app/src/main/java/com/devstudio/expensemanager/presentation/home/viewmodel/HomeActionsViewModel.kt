@@ -65,6 +65,6 @@ class HomeActionsViewModel @Inject constructor(
 
     companion object {
         const val CSV_INTENT_TYPE = "text/*"
-        const val SHARE = "Share"
+        const val OPEN = "Open"
     }
 }
