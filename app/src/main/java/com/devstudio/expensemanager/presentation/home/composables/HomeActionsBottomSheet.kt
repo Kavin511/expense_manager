@@ -40,7 +40,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.data.util.FileUtils.getBackupFolder
+import com.devstudio.data.util.FileUtils.backupFilePath
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.OPEN
@@ -190,7 +190,7 @@ private fun showBackUpResultAlert(
 }
 
 fun openFile(context: Context) {
-    val filePath = File(getBackupFolder(context))
+    val filePath = File(backupFilePath(context))
     val uri = FileProvider.getUriForFile(
         context, context.applicationContext.packageName + ".provider", filePath
     )

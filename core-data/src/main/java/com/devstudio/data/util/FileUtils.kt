@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Environment
 
 object FileUtils {
-    fun backupPath(context: Context): String {
+    fun backupFilePath(context: Context): String {
         val path = getBackupFolder(context)
         return "$path/transactions.csv"
     }

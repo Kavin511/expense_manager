@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.devstudio.data.util.FileUtils.backupPath
+import com.devstudio.data.util.FileUtils.backupFilePath
 import com.devstudio.database.ExpenseManagerDataBase
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.Status
@@ -101,7 +101,7 @@ class TransactionDataBackupWorker(
 
     companion object {
         fun getFileToStoreTransactions(context: Context): File {
-            val backupPath = backupPath(context)
+            val backupPath = backupFilePath(context)
             val backupFile = File(backupPath)
             if (!backupFile.exists()) {
                 backupFile.mkdirs()
