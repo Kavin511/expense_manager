@@ -1,6 +1,11 @@
 package com.devstudio.expensemanager.presentation.home.composables
 
 import HomeActionsBottomSheet
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
@@ -35,23 +40,36 @@ fun HomeScreenNavHost(
     homeScreenState: HomeScreenState,
     onEvent: OnEvent,
 ) {
-    NavHost(navController, startDestination = TransactionsScreen.route) {
+    NavHost(navController = navController,
+        startDestination = TransactionsScreen.route,
+        enterTransition = { fadeIn(animationSpec = tween(700)) },
+        exitTransition = { fadeOut(animationSpec = tween(700)) },
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { -it }, animationSpec = tween(700)
+            )
+        },
+        popExitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { it }, animationSpec = tween(700)
+            )
+        }) {
         composable(route = TransactionsScreen.route) {
             val snackBarHostState = remember { SnackbarHostState() }
             val booksBottomSheet = homeScreenState.booksBottomSheet
             val transactionFilterBottomSheet = homeScreenState.transactionFilterBottomSheet
             val moreOptionsBottomSheet = homeScreenState.moreOptionsBottomSheet
-            if (booksBottomSheet.currentValue.equals(SheetValue.Expanded)) {
+            if (booksBottomSheet.currentValue == SheetValue.Expanded) {
                 BooksMainScreen(booksBottomSheet) {
                     onEvent.invoke(BookEvent(false, it))
                 }
             }
-            if (transactionFilterBottomSheet.currentValue.equals(SheetValue.Expanded)) {
+            if (transactionFilterBottomSheet.currentValue == SheetValue.Expanded) {
                 TransactionFilterBottomSheet(transactionFilterBottomSheet) {
                     onEvent.invoke(TransactionOptionsEvent(false, it))
                 }
             }
-            if (moreOptionsBottomSheet.currentValue.equals(SheetValue.Expanded)) {
+            if (moreOptionsBottomSheet.currentValue == SheetValue.Expanded) {
                 HomeActionsBottomSheet(snackBarHostState, onEvent)
             }
             TransactionMainScreen(
@@ -60,17 +78,6 @@ fun HomeScreenNavHost(
                 onEvent,
                 uiState,
             )
-        }
-        composable(
-            route = CategoryScreen.route,
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern =
-                        "android:app://com.devstudio.expensemanager.ui.home.activity.HomeActivity/categoryMainScreen"
-                },
-            ),
-        ) {
-            CategoryMainScreen()
         }
         composable(
             route = CategoryScreen.route,

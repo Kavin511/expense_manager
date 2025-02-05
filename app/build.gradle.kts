@@ -86,8 +86,9 @@ dependencies {
 	implementation(libs.firebase.analytics)
 	implementation(libs.androidx.constraintlayout.compose)
 	implementation(libs.androidx.foundation.v168)
+	implementation(libs.androidx.animation)
 
-    testImplementation(libs.junit)
+	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.test.junit)
 	androidTestImplementation(libs.androidx.test.espresso)
 	testImplementation(libs.google.truth)

@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "8.5.2"
+animation = "1.7.7"
 constraintlayoutCompose = "1.1.0"
 coreKtx = "1.15.0"
 firebaseBom = "33.6.0"
@@ -57,6 +58,8 @@ dependencyGuard = "0.4.3"
 uiToolingPreviewDesktop = "1.7.0"
 
 [libraries]
+androidx-animation = { module = "androidx.compose.animation:animation-android", version.ref = "animation" }
+androidx-animation-core = { module = "androidx.compose.animation:animation-core-android", version.ref = "animation" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastoreCoreAndroidVersion" }
 androidx-foundation-v168 = { module = "androidx.compose.foundation:foundation-android", version.ref = "foundation" }

@@ -23,6 +23,7 @@ import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.Tr
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.*
 import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.MapTransactionField
+import com.devstudio.sharedmodule.importData.presentation.CsvUIState.CloseImportScreen
 import com.devstudio.sharedmodule.importData.presentation.CsvUIState.TransactionSaveResult
 import com.devstudio.sharedmodule.saveTransactions
 import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
@@ -52,7 +53,12 @@ class CsvImportViewModel : ViewModel() {
 
             is CsvImportIntent.Import -> {
                 shouldImportFile = false
-                csv = event.csv ?: return
+                if (event.csv == null) {
+                    csvUIData = CloseImportScreen
+                    return
+                } else {
+                    csv = event.csv
+                }
                 columns = event.csv.firstOrNull() ?: CSVRow(mutableListOf())
                 csvUIData = CsvUIState.MappingSelectedFile
             }
@@ -219,6 +225,7 @@ data class CsvImportState(
 sealed interface CsvUIState {
     data object Idle : CsvUIState
     data object SelectingFile : CsvUIState
+    data object CloseImportScreen : CsvUIState
     data object MappingSelectedFile : CsvUIState
     data class TransactionSaveResult(val result: Result<Boolean>) : CsvUIState
 }

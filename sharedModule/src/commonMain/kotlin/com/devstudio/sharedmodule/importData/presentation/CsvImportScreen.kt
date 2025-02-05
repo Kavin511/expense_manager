@@ -64,20 +64,7 @@ fun CsvImportScreen(navController: NavHostController) {
         Column(modifier = Modifier.fillMaxSize()) {
             val transactionField = remember { transactionField() }
             when (uiState.csvData) {
-                CsvUIState.Idle -> {
-                    Button(
-                        modifier = Modifier.fillMaxWidth().height(48.dp),
-                        onClick = {
-                            viewModel.onEvent(CsvImportIntent.SelectFile)
-                        }
-                    ) {
-                        Text(
-                            stringResource(R.string.select_csv),
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                }
-
+                CsvUIState.Idle -> {}
                 CsvUIState.SelectingFile -> {
                     CircularProgressIndicator()
                 }
@@ -94,6 +81,10 @@ fun CsvImportScreen(navController: NavHostController) {
                             Text(stringResource(R.string.failed_to_import_transactions))
                         }
                     }
+                }
+
+                CsvUIState.CloseImportScreen -> {
+                    navController.popBackStack()
                 }
             }
         }

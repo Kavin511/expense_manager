@@ -66,9 +66,6 @@ fun HomeScreenBottomBar(navController: NavHostController) {
                             .clickable {
                                 selectedIndex.intValue = index
                                 navController.navigate(it.navigationRoute) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
                                     launchSingleTop = true
                                     restoreState = true
                                 }
