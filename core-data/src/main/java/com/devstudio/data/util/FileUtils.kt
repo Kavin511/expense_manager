@@ -5,13 +5,8 @@ import android.os.Build
 import android.os.Environment
 
 object FileUtils {
-    fun backupFilePath(context: Context): String {
-        val path = getBackupFolder(context)
-        return "$path/transactions.csv"
-    }
-
     fun getBackupFolder(context: Context) = if (Build.VERSION.SDK_INT >= 33) {
-        context.getExternalFilesDir(null).toString() + "/Backups"
+        context.getExternalFilesDir(null)?.absolutePath + "/Backups"
     } else {
         buildString {
             append(

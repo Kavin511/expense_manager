@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.devstudio.data.util.FileUtils.backupFilePath
+import com.devstudio.data.util.FileUtils.getBackupFolder
 import com.devstudio.database.ExpenseManagerDataBase
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.Status
@@ -94,14 +94,14 @@ class TransactionDataBackupWorker(
     )
 
     private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
-        val file = getFileToStoreTransactions(context)
+        val file = getFileFolderToStoreTransactions(context)
         file.createNewFile()
-        return CSVWriter(FileWriter(file, false))
+        return CSVWriter(FileWriter(File(file, "transaction.csv"), false))
     }
 
     companion object {
-        fun getFileToStoreTransactions(context: Context): File {
-            val backupPath = backupFilePath(context)
+        fun getFileFolderToStoreTransactions(context: Context): File {
+            val backupPath = getBackupFolder(context)
             val backupFile = File(backupPath)
             if (!backupFile.exists()) {
                 backupFile.mkdirs()
