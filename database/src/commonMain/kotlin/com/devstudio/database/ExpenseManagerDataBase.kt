@@ -9,7 +9,7 @@ import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
 import com.devstudio.database.models.Transaction
 
-@Database(entities = [Transaction::class, Category::class, Books::class], version = 5, exportSchema = false)
+@Database(entities = [Transaction::class, Category::class, Books::class], version = 6, exportSchema = false)
 abstract class ExpenseManagerDataBase : RoomDatabase() {
     abstract fun transactionsDao(): TransactionDao
     abstract fun categoryDao(): CategoryDao

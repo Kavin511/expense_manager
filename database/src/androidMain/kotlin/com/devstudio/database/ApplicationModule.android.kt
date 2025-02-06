@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.devstudio.database.dao.CategoryDao
 import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
+import com.devstudio.database.models.DataSource
 import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import com.devstudio.utils.utils.TransactionMode
 import kotlinx.coroutines.CoroutineScope
@@ -34,8 +35,14 @@ actual class Factory(val app: Application) {
             return Room.databaseBuilder<ExpenseManagerDataBase>(app, dbFile.absolutePath)
                 .allowMainThreadQueries()
                 .addCallback(rdc)
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                 .build()
+        }
+    }
+
+    val MIGRATION_5_6 = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE TRANSACTIONS_TABLE ADD COLUMN dataSource INTEGER NOT NULL DEFAULT ${DataSource.MANUAL.value}")
         }
     }
 

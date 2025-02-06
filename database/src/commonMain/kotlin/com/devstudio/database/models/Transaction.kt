@@ -25,4 +25,15 @@ class Transaction(
     @ColumnInfo(name = "isEditingOldTransaction") var transactionMode: String = "",
     @ColumnInfo(name = "transactionDate") var transactionDate: String = "",
     @ColumnInfo(name = "paymentStatus") var paymentStatus: String = "COMPLETED",
+    @ColumnInfo(name = "dataSource") var dataSource: Int = DataSource.MANUAL.ordinal
 )
+
+enum class DataSource(val value: Int) {
+    MANUAL(0), CSV(1);
+
+    companion object {
+        fun fromValue(ordinal: Int): DataSource {
+            return entries.toTypedArray().firstOrNull { it.value == ordinal } ?: MANUAL
+        }
+    }
+}

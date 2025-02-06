@@ -6,7 +6,7 @@ import com.devstudio.sharedmodule.importData.model.CSVRow
 import platform.UIKit.*
 import platform.UIKit.UIUserInterfaceIdiomPad
 
-actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Boolean> {
+actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Int> {
     return Result.failure(Throwable("Not implemented"))
 }
 

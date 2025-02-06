@@ -2,6 +2,7 @@ package com.devstudio.sharedmodule
 
 import android.content.Intent
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalConfiguration
@@ -48,14 +49,14 @@ actual fun FilePicker(
 }
 
 
-actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Boolean> {
+actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Int> {
     val context = AppContext.get()!!
     val userDataRepository = UserDataRepositoryImpl(DataSourceModule(context))
     val transactionsRepositoryImpl =
         TransactionsRepositoryImpl(userDataRepository)
-    val isImported = transactionsRepositoryImpl.insertTransactions(transactions)
-    return if (isImported) {
-        Result.success(true)
+    val importedCount = transactionsRepositoryImpl.insertTransactions(transactions)
+    return if (transactions.size == importedCount) {
+        Result.success(importedCount)
     } else {
         Result.failure(Throwable())
     }
@@ -81,4 +82,9 @@ actual fun parseDateToTimestamp(dateStr: String, format: String): Long? {
     } catch (_: ParseException) {
         return null
     }
+}
+
+@Composable
+actual fun showToastAlert(message: String) {
+    Toast.makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
 }

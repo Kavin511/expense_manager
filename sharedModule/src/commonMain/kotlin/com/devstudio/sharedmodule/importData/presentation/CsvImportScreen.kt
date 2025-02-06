@@ -25,13 +25,15 @@ import com.devstudio.sharedmodule.commonMain.composeResources.failed_to_import_t
 import com.devstudio.sharedmodule.commonMain.composeResources.import_csv
 import com.devstudio.sharedmodule.commonMain.composeResources.income_with_contains
 import com.devstudio.sharedmodule.commonMain.composeResources.investment_with_contains
-import com.devstudio.sharedmodule.commonMain.composeResources.select_csv
+import com.devstudio.sharedmodule.commonMain.composeResources.successfully_imported_transactions
 import com.devstudio.sharedmodule.importData.model.MappingStatus
 import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.TransactionModeField
 import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.SaveTransactions
+import com.devstudio.sharedmodule.showToastAlert
+import com.devstudio.utils.formatters.format
 import com.devstudio.utils.utils.TransactionMode.EXPENSE
 import com.devstudio.utils.utils.TransactionMode.INCOME
 import com.devstudio.utils.utils.TransactionMode.INVESTMENT
@@ -46,8 +48,8 @@ import com.devstudio.sharedmodule.commonMain.composeResources.Res as R
 @Composable
 fun CsvImportScreen(navController: NavHostController) {
     val viewModel: CsvImportViewModel = viewModel { CsvImportViewModel() }
-    val uiState = viewModel.uiState()
-    val shouldImportFile = uiState.shouldImportFile
+    val csvImportState = viewModel.uiState()
+    val shouldImportFile = csvImportState.shouldImportFile
     if (shouldImportFile) {
         FilePicker(show = shouldImportFile) { platformFile ->
             viewModel.onEvent(CsvImportIntent.Import(platformFile))
@@ -63,24 +65,27 @@ fun CsvImportScreen(navController: NavHostController) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             val transactionField = remember { transactionField() }
-            when (uiState.csvData) {
+            val csvUiState = csvImportState.csvUIState
+            when (csvUiState) {
                 CsvUIState.Idle -> {}
                 CsvUIState.SelectingFile -> {
                     CircularProgressIndicator()
                 }
 
                 CsvUIState.MappingSelectedFile -> {
-                    FieldMappingScreen(uiState, transactionField, viewModel)
+                    FieldMappingScreen(csvImportState, transactionField, viewModel)
                 }
 
                 is CsvUIState.TransactionSaveResult -> {
-                    if (uiState.csvData.result.isSuccess) {
-                        navController.popBackStack()
+                    val importedCount: Int = csvUiState.result.getOrDefault(0)
+                    if (importedCount > 0) {
+                        showToastAlert(
+                            stringResource(R.string.successfully_imported_transactions).format(importedCount)
+                        )
                     } else {
-                        Column {
-                            Text(stringResource(R.string.failed_to_import_transactions))
-                        }
+                        showToastAlert(stringResource(R.string.failed_to_import_transactions))
                     }
+                    navController.popBackStack()
                 }
 
                 CsvUIState.CloseImportScreen -> {

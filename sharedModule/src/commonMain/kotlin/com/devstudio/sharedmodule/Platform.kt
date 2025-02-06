@@ -10,7 +10,10 @@ expect fun FilePicker(
     onFileSelected: (List<CSVRow>?) -> Unit,
 )
 
-expect suspend fun saveTransactions(transactions: List<Transaction>): Result<Boolean>
+expect suspend fun saveTransactions(transactions: List<Transaction>): Result<Int>
+
+@Composable
+expect fun showToastAlert(message: String)
 
 @Composable
 expect fun isPortrait(): Boolean

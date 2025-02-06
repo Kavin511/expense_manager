@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
+import com.devstudio.database.models.DataSource
 import com.devstudio.database.models.Transaction
 import com.devstudio.designSystem.getPlatform
 import com.devstudio.sharedmodule.importData.domain.notBlankTrimmedString
@@ -41,7 +42,7 @@ class CsvImportViewModel : ViewModel() {
 
     fun uiState(): CsvImportState {
         return CsvImportState(
-            csvData = csvUIData, columns = columns, csv = csv, shouldImportFile = shouldImportFile
+            csvUIState = csvUIData, columns = columns, csv = csv, shouldImportFile = shouldImportFile
         )
     }
 
@@ -68,7 +69,7 @@ class CsvImportViewModel : ViewModel() {
                     val transactionFieldIndex = TransactionFieldIndex()
                     var hasError = false
                     event.transactionField.forEach {
-                        if (it.selectedFieldIndex.value == -1) {
+                        if (it.selectedFieldIndex.value == -1 && it.mappingStatus.value !is Mapped) {
                             it.mappingStatus.value = MappingError.FieldNotSelected(-1)
                             hasError = true
                         } else {
@@ -117,6 +118,7 @@ class CsvImportViewModel : ViewModel() {
                                 ),
                                 transactionMode = transactionMode,
                                 transactionDate = transactionDate.toString(),
+                                dataSource = DataSource.CSV.value
                             )
                         }
                         val saveTransactions = saveTransactions(transactionList)
@@ -216,7 +218,7 @@ interface CsvImportIntent {
 }
 
 data class CsvImportState(
-    val csvData: CsvUIState,
+    val csvUIState: CsvUIState,
     val columns: CSVRow?,
     val csv: List<CSVRow>?,
     val shouldImportFile: Boolean,
@@ -227,5 +229,5 @@ sealed interface CsvUIState {
     data object SelectingFile : CsvUIState
     data object CloseImportScreen : CsvUIState
     data object MappingSelectedFile : CsvUIState
-    data class TransactionSaveResult(val result: Result<Boolean>) : CsvUIState
+    data class TransactionSaveResult(val result: Result<Int>) : CsvUIState
 }
