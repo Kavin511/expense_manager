@@ -40,20 +40,7 @@ fun HomeScreenNavHost(
     homeScreenState: HomeScreenState,
     onEvent: OnEvent,
 ) {
-    NavHost(navController = navController,
-        startDestination = TransactionsScreen.route,
-        enterTransition = { fadeIn(animationSpec = tween(700)) },
-        exitTransition = { fadeOut(animationSpec = tween(700)) },
-        popEnterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { -it }, animationSpec = tween(700)
-            )
-        },
-        popExitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { it }, animationSpec = tween(700)
-            )
-        }) {
+    NavHost(navController = navController, startDestination = TransactionsScreen.route) {
         composable(route = TransactionsScreen.route) {
             val snackBarHostState = remember { SnackbarHostState() }
             val booksBottomSheet = homeScreenState.booksBottomSheet
