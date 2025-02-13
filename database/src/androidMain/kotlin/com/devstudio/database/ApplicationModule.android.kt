@@ -35,8 +35,14 @@ actual class Factory(val app: Application) {
             return Room.databaseBuilder<ExpenseManagerDataBase>(app, dbFile.absolutePath)
                 .allowMainThreadQueries()
                 .addCallback(rdc)
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
-                .build()
+                .addMigrations(
+                    MIGRATION_1_2,
+                    MIGRATION_2_3,
+                    MIGRATION_3_4,
+                    MIGRATION_4_5,
+                    MIGRATION_5_6
+                )
+                .build().also { INSTANCE = it }
         }
     }
 
