@@ -8,5 +8,6 @@ import androidx.compose.ui.unit.dp
  */
 
 val defaultHorizontalPadding = 12.dp
+val defaultVerticalPadding = 16.dp
 val smallPadding = 4.dp
 val maxScreenWidth = 640.dp

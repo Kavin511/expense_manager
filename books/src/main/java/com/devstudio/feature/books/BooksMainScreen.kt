@@ -29,7 +29,9 @@ import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.designSystem.components.InputDialog
 import com.devstudio.designSystem.components.InputEnterDialog
+import com.devstudio.designSystem.defaultVerticalPadding
 import com.devstudio.designSystem.icons.EMAppIcons
+import com.devstudio.designSystem.smallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +76,7 @@ fun BooksMainScreen(
                 }
                 Column(
                     modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                        .padding(vertical = defaultVerticalPadding, horizontal = 8.dp),
                 ) {
                     BooksHeading {
                         shouldShowBookCreationDialog = true
@@ -140,12 +142,13 @@ private fun BooksHeading(createBookCallback: () -> Unit) {
 fun BookItem(book: Books, itemSelectionCallback: (Books) -> Unit) {
     Text(
         text = book.name,
+        style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 8.dp)
             .clickable {
                 itemSelectionCallback.invoke(book)
-            },
+            }
+            .padding(vertical = defaultVerticalPadding, horizontal = 8.dp),
     )
 }
 
