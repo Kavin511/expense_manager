@@ -42,7 +42,7 @@ fun ThemeSelectionScreen(navController: NavHostController) {
         Theme.LIGHT,
         Theme.SYSTEM_DEFAULT,
     )
-    Screen(title = "Choose Theme", navController = navController, shouldNavigateUp = true) {
+    Screen(title = { Text(text = "Choose Theme") }, navController = navController, shouldNavigateUp = true) {
         LazyColumn {
             items(themeList.size) { index ->
                 val themeProto = themeList[index]

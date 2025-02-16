@@ -59,7 +59,7 @@ fun CsvImportScreen(navController: NavHostController) {
         viewModel.onEvent(CsvImportIntent.SelectFile)
     }
     Screen(
-        title = stringResource(R.string.import_csv),
+        title = { Text(text = stringResource(R.string.import_csv)) },
         navController = navController,
         shouldNavigateUp = true
     ) {

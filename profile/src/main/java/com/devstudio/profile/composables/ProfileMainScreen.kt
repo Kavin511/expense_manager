@@ -47,7 +47,7 @@ fun ProfileMainScreen(
 ) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
     val profileUiState = profileViewModel.profileUiState.collectAsStateWithLifecycle()
-    Screen(title = "Profile", navController = navController) {
+    Screen(title = { Text(text = "Profile") }, navController = navController) {
         Surface(
             modifier = Modifier
                 .widthIn(max = maxScreenWidth)

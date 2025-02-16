@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.components.DefaultLoader
 import com.devstudio.designSystem.components.ExpressWalletFab
+import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.icons.EMAppIcons
 import com.devstudio.expensemanager.R
 import com.devstudio.expensemanager.presentation.home.composables.HomeSnackBar
@@ -59,38 +60,22 @@ fun TransactionMainScreen(
         }
 
         is TransactionUiState.Success -> {
-            Scaffold(
-                snackbarHost = {
-                    SnackbarHost(hostState = snackBarHostState) {
-                        HomeSnackBar(snackBarHostState)
-                    }
-                },
-                floatingActionButton = {
-                    AddTransactions()
-                },
-                topBar = {
-                    TopAppBar(title = {
-                        BookSelectionTitle(uiState.data.bookName) {
-                            booksEvent.invoke(BookEvent(showBottomSheet = true))
-                        }
-                    }, actions = {
-                        IconButton(onClick = {
-                            booksEvent.invoke(BottomSheetEvent(true, null))
-                        }) {
-                            Icon(Icons.Rounded.MoreVert, "More")
-                        }
-                    }, scrollBehavior = scrollBehavior)
-                },
-            ) {
-                Box(
-                    contentAlignment = Alignment.TopCenter,
-                    modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
-                        .fillMaxSize()
-                        .padding(it),
-                ) {
-                    TransactionDashBoard(uiState, booksEvent)
+            Screen(title = {
+                BookSelectionTitle(uiState.data.bookName) {
+                    booksEvent.invoke(BookEvent(showBottomSheet = true))
                 }
+            }, action = {
+                IconButton(onClick = {
+                    booksEvent.invoke(BottomSheetEvent(true, null))
+                }) {
+                    Icon(Icons.Rounded.MoreVert, "More")
+                }
+            }, snackbarHost = {
+                SnackbarHost(hostState = snackBarHostState) {
+                    HomeSnackBar(snackBarHostState)
+                }
+            }) {
+                TransactionDashBoard(uiState, booksEvent)
             }
         }
 

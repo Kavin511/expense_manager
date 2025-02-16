@@ -56,7 +56,7 @@ fun RemainderScreen(navController: NavHostController) {
             Day("S", false, "Saturday", 6),
         )
     }
-    Screen(title = "Remainder", navController = navController, shouldNavigateUp = true, action = {
+    Screen(title = { Text(text = "Remainder") }, navController = navController, shouldNavigateUp = true, action = {
         Text(
             text = "Save",
             modifier = Modifier.clickable {

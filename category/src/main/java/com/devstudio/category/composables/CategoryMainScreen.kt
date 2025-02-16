@@ -38,7 +38,7 @@ fun CategoryMainScreen() {
     }
     val topAppBarState = rememberTopAppBarState()
     TopAppBarDefaults.enterAlwaysScrollBehavior(topAppBarState)
-    Screen(title = "Categories", fab = { CategoryFloatingActionButton() }) {
+    Screen(title = { Text(text = "Categories") }, fab = { CategoryFloatingActionButton() }) {
         Column {
             CategoryActions(selectedFilterType)
             with(categoryViewModel.categoryState.collectAsState()) {

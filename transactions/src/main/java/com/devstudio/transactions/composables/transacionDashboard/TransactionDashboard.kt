@@ -48,7 +48,6 @@ fun TransactionDashBoard(uiState: TransactionUiState.Success, onEvent: OnEvent) 
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(PaddingValues(6.dp)),
         ) {
             TransactionSummary(uiState.data)
             TransactionOptions(uiState.data.filterType, onEvent)
