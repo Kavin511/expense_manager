@@ -36,6 +36,7 @@ import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.icons.EMAppIcons
 import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.maxScreenWidth
 import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.model.models.OnEvent
 
@@ -49,8 +50,7 @@ fun ProfileMainScreen(
     Screen(title = "Profile", navController = navController) {
         Surface(
             modifier = Modifier
-                .widthIn(max = 640.dp)
-                .padding(10.dp),
+                .widthIn(max = maxScreenWidth)
         ) {
             Column {
                 when (val uiState = profileUiState.value) {
