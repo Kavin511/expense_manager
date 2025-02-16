@@ -3,8 +3,6 @@ package com.devstudio.designSystem.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.waterfallPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,7 +20,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.devstudio.designSystem.defaultHorizontalPadding
 import com.devstudio.designSystem.icons.EMAppIcons
+import com.devstudio.designSystem.maxScreenWidth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,9 +60,11 @@ fun Screen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Surface(
-                modifier = Modifier.padding(it).safeContentPadding()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection).widthIn(max = 640.dp)
-                    .waterfallPadding().align(alignment = Alignment.CenterHorizontally).padding(horizontal = 18.dp),
+                modifier = Modifier.padding(it)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .widthIn(max = maxScreenWidth)
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(horizontal = defaultHorizontalPadding),
             ) {
                 content()
             }

@@ -75,19 +75,17 @@ fun CategoryMainScreen() {
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun CategoryActions(
     selectedFilterType: MutableState<String>,
 ) {
     val categoryViewModel = hiltViewModel<CategoryViewModel>()
     LazyRow(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
             FilterChip(
-                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == "",
                 onClick = {
                     selectedFilterType.value = ""
@@ -99,7 +97,6 @@ fun CategoryActions(
 
         item {
             FilterChip(
-                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == TransactionMode.EXPENSE.title,
                 onClick = {
                     selectedFilterType.value = TransactionMode.EXPENSE.title
@@ -110,7 +107,6 @@ fun CategoryActions(
         }
         item {
             FilterChip(
-                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == TransactionMode.INCOME.title,
                 onClick = {
                     selectedFilterType.value = TransactionMode.INCOME.title
@@ -122,7 +118,6 @@ fun CategoryActions(
 
         item {
             FilterChip(
-                modifier = Modifier.padding(4.5.dp),
                 selected = selectedFilterType.value == TransactionMode.INVESTMENT.title,
                 onClick = {
                     selectedFilterType.value = TransactionMode.INVESTMENT.title

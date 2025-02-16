@@ -101,7 +101,7 @@ fun CategoryList(categoryStateList: List<Category>) {
             items(categoryStateList) {
                 Card(
                     modifier = Modifier
-                        .padding(vertical = 4.dp, horizontal = 16.dp)
+                        .padding(vertical = 4.dp)
                         .combinedClickable(onLongClick = {
                             shouldShowDeleteDialog.value = true
                         }) {
