@@ -12,11 +12,10 @@ fun parseAmount(value: String?): Double? {
 }
 
 fun parseTransactionType(
-    value: String?, metaInfo: List<MetaInformation>?
+    value: String, metaInfo: MutableList<MetaInformation>? = null
 ): TransactionMode? {
-    value ?: return null
     return tryParse {
-        val cleanedValue = value.filter { it.isLetterOrDigit() || it == '+' || it == '-' }
+        val cleanedValue = value.trim()
         if (metaInfo != null) {
             val metaInformation = metaInfo.firstOrNull {
                 it.value.isNotEmpty() && it.value.equals(value, ignoreCase = true)

@@ -1,5 +1,7 @@
 package com.devstudio.sharedmodule.importData.model
 
+import com.devstudio.utils.utils.TransactionMode
+
 
 sealed class MappingStatus {
     data object YetToMap : MappingStatus()

@@ -21,6 +21,7 @@ import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.CategoryMappingFailed
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.DateMappingFailed
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError.TransactionModeMappingFailed
+import com.devstudio.sharedmodule.importData.model.MetaInformation
 import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.*
 import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.MapTransactionField
@@ -28,7 +29,9 @@ import com.devstudio.sharedmodule.importData.presentation.CsvUIState.CloseImport
 import com.devstudio.sharedmodule.importData.presentation.CsvUIState.TransactionSaveResult
 import com.devstudio.sharedmodule.saveTransactions
 import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
+import com.devstudio.utils.utils.TransactionMode.EXPENSE
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 /**
  * @Author: Kavin
@@ -80,8 +83,12 @@ class CsvImportViewModel : ViewModel() {
                                 Amount -> transactionFieldIndex.amountIndex =
                                     it.selectedFieldIndex.value
 
-                                TransactionModeField -> transactionFieldIndex.transactionModeIndex =
-                                    it.selectedFieldIndex.value
+                                TransactionModeField -> {
+                                    transactionFieldIndex.transactionModeIndex =
+                                        it.selectedFieldIndex.value
+                                    transactionFieldIndex.transactionModeMetaList =
+                                        it.additionalInfo ?: listOf()
+                                }
 
                                 DATE -> transactionFieldIndex.transactionDateIndex =
                                     it.selectedFieldIndex.value
@@ -100,8 +107,10 @@ class CsvImportViewModel : ViewModel() {
                             TransactionSaveResult(Result.failure(Throwable("Mapping failed")))
                     } else {
                         val transactionList = event.csv.subList(1, csv.size).map {
-                            val transactionMode =
-                                it.values[transactionFieldIndex.transactionModeIndex]
+                            val transactionMode = parseTransactionType(
+                                it.values[transactionFieldIndex.transactionModeIndex],
+                                transactionFieldIndex.transactionModeMetaList.toMutableList()
+                            ) ?: EXPENSE
                             val bookId =
                                 findBookByNameOrInsert(it.values.getOrNull(transactionFieldIndex.bookIdIndex))
                             val transactionDate =
@@ -111,12 +120,11 @@ class CsvImportViewModel : ViewModel() {
                                 id = getPlatform().getCurrentTimeMillis(),
                                 bookId = bookId,
                                 note = it.values[transactionFieldIndex.noteIndex],
-                                amount = it.values[transactionFieldIndex.amountIndex].toDoubleOrNull()
-                                    ?: 0.0,
+                                amount = abs(it.values[transactionFieldIndex.amountIndex].toDoubleOrNull()?:0.0),
                                 categoryId = getCategoryOrInsert(
-                                    it, transactionFieldIndex, transactionMode, bookId
+                                    it, transactionFieldIndex, transactionMode.name, bookId
                                 ),
-                                transactionMode = transactionMode,
+                                transactionMode = transactionMode.name,
                                 transactionDate = transactionDate.toString(),
                                 dataSource = DataSource.CSV.value
                             )
@@ -169,10 +177,8 @@ class CsvImportViewModel : ViewModel() {
         val categoryName = it.values[transactionFieldIndex.categoryIdIndex]
         val categoryDao = ApplicationModule.config.factory.getRoomInstance().categoryDao()
         val category = categoryDao.getCategoryByName(categoryName)
-        val constructedCategory = Category(
-            name = categoryName, categoryType = transactionMode, bookId = bookId
-        )
         return if (category == null) {
+            val constructedCategory = Category(name = categoryName, categoryType = transactionMode, bookId = bookId)
             categoryDao.insertCategory(constructedCategory)
             constructedCategory.id
         } else {
@@ -202,6 +208,7 @@ data class TransactionFieldIndex(
     var amountIndex: Int = -1,
     var categoryIdIndex: Int = -1,
     var transactionModeIndex: Int = -1,
+    var transactionModeMetaList: List<MetaInformation> = listOf(),
     var transactionDateIndex: Int = -1,
     var paymentStatusIndex: Int = -1,
 )
