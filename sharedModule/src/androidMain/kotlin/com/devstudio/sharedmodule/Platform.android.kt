@@ -55,6 +55,7 @@ actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Int
     val transactionsRepositoryImpl =
         TransactionsRepositoryImpl(userDataRepository)
     val importedCount = transactionsRepositoryImpl.insertTransactions(transactions)
+    transactions.firstOrNull()?.bookId?.let { userDataRepository.updateSelectedBookId(it) }
     return if (transactions.size == importedCount) {
         Result.success(importedCount)
     } else {
