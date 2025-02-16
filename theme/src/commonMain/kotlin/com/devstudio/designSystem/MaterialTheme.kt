@@ -99,21 +99,21 @@ fun AppMaterialTheme(
 val lightPalette =
     AppColor(
         material = LightColors,
-        transactionIncomeColor = md_theme_light_transaction_income_container,
+        transactionIncomeColor = md_theme_light_secondary,
         transactionExpenseColor = md_theme_light_transaction_expense_container,
         incomeIconTint = md_theme_light_income_icon_tint,
         expenseIconTint = md_theme_light_expense_icon_tint,
-        transactionInvestmentColor = md_theme_light_tertiary,
+        transactionInvestmentColor = md_theme_light_onTertiaryContainer,
     )
 
 val darkPalette =
     AppColor(
         material = DarkColors,
-        transactionIncomeColor = md_theme_dark_transaction_income_container,
+        transactionIncomeColor = md_theme_dark_secondary,
         transactionExpenseColor = md_theme_dark_transaction_expense_container,
         incomeIconTint = md_theme_dark_income_icon_tint,
         expenseIconTint = md_theme_dark_expense_icon_tint,
-        transactionInvestmentColor = md_theme_dark_tertiary,
+        transactionInvestmentColor = md_theme_dark_onTertiaryContainer,
     )
 
 private val LocalColors = staticCompositionLocalOf { lightPalette }

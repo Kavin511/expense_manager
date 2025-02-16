@@ -70,6 +70,8 @@ fun TransactionMainScreen(
                 }) {
                     Icon(Icons.Rounded.MoreVert, "More")
                 }
+            }, fab = {
+                AddTransactions()
             }, snackbarHost = {
                 SnackbarHost(hostState = snackBarHostState) {
                     HomeSnackBar(snackBarHostState)
