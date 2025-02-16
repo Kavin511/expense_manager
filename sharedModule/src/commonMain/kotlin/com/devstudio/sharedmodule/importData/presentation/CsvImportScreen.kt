@@ -34,6 +34,7 @@ import com.devstudio.sharedmodule.importData.model.TransactionFieldType.Transact
 import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.SaveTransactions
 import com.devstudio.sharedmodule.showToastAlert
 import com.devstudio.utils.formatters.format
+import com.devstudio.utils.utils.TransactionMode
 import com.devstudio.utils.utils.TransactionMode.EXPENSE
 import com.devstudio.utils.utils.TransactionMode.INCOME
 import com.devstudio.utils.utils.TransactionMode.INVESTMENT
@@ -132,17 +133,14 @@ private fun FieldMappingScreen(
             transactionField.forEach {
                 FieldMappingItem(header, it, onEvent = viewModel::onEvent) {
                     if (it.type == TransactionModeField) {
-                        val income = stringResource(R.string.income_with_contains)
-                        val expense = stringResource(R.string.expense_with_contains)
-                        val investment = stringResource(R.string.investment_with_contains)
                         val incomeMeta = MetaInformation(INCOME, "")
                         val expenseMeta = MetaInformation(EXPENSE, "")
                         val investmentMeta = MetaInformation(INVESTMENT, "")
                         it.additionalInfo = mutableListOf()
                         it.additionalInfo?.addAll(arrayOf(incomeMeta, expenseMeta, investmentMeta))
-                        AdditionalMappingInfoRow(income, incomeMeta)
-                        AdditionalMappingInfoRow(expense, expenseMeta)
-                        AdditionalMappingInfoRow(investment, investmentMeta)
+                        AdditionalMappingInfoRow(TransactionMode.INCOME, incomeMeta)
+                        AdditionalMappingInfoRow(TransactionMode.EXPENSE, expenseMeta)
+                        AdditionalMappingInfoRow(TransactionMode.INVESTMENT, investmentMeta)
                     }
                 }
             }

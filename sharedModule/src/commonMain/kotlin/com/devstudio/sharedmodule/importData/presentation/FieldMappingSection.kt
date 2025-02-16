@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,10 +18,17 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.ImeAction.Companion.Next
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Sentences
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devstudio.designSystem.appColors
+import com.devstudio.sharedmodule.commonMain.composeResources.Res
+import com.devstudio.sharedmodule.commonMain.composeResources.expense_with_contains
+import com.devstudio.sharedmodule.commonMain.composeResources.income_with_contains
+import com.devstudio.sharedmodule.commonMain.composeResources.investment_with_contains
 import com.devstudio.sharedmodule.importData.model.CSVRow
 import com.devstudio.sharedmodule.importData.model.MappingStatus
 import com.devstudio.sharedmodule.importData.model.MappingStatus.MappingError
@@ -30,6 +38,9 @@ import com.devstudio.sharedmodule.importData.model.TransactionField
 import com.devstudio.sharedmodule.importData.model.TransactionFieldType.Amount
 import com.devstudio.sharedmodule.importData.presentation.CsvImportIntent.MapTransactionField
 import com.devstudio.sharedmodule.utils.getWidthRatio
+import com.devstudio.utils.utils.TransactionMode
+import com.devstudio.utils.utils.TransactionMode.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FieldMappingItem(
@@ -48,7 +59,7 @@ fun FieldMappingItem(
             } else {
                 Modifier.border(width = 2.dp, color = appColors.material.primary, shape = shape)
             }
-        ).shadow(2.dp, shape).padding(8.dp)
+        ).padding(8.dp)
     ) {
         val defaultModifier = Modifier.padding(bottom = 8.dp)
         Text(
@@ -63,7 +74,7 @@ fun FieldMappingItem(
         )
         Text(
             text = "Choose suitable column:", modifier = defaultModifier,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleMedium,
         )
         LazyRow {
             itemsIndexed(header.values) { index, value ->
@@ -103,27 +114,30 @@ fun FieldMappingItem(
 }
 
 @Composable
-fun AdditionalMappingInfoRow(type: String, metaData: MetaInformation) {
+fun AdditionalMappingInfoRow(transactionMode: TransactionMode, metaData: MetaInformation) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth(getWidthRatio()).padding(8.dp),
     ) {
         val inputValue = mutableStateOf(metaData.value)
-        Text(
-            type,
-            modifier = Modifier
-                .weight(0.3f)
-                .wrapContentHeight()
-        )
+        val label = when (transactionMode) {
+            INCOME -> stringResource(Res.string.income_with_contains)
+            EXPENSE -> stringResource(Res.string.expense_with_contains)
+            INVESTMENT -> stringResource(Res.string.investment_with_contains)
+        }
         TextField(
             value = inputValue.value,
             onValueChange = {
                 inputValue.value = it
                 metaData.value = it
             },
-            modifier = Modifier
-                .weight(0.7f)
-                .wrapContentHeight()
+            label = { Text(label) },
+            placeholder = { Text("Enter keywords to identify transaction modes") },
+            keyboardOptions = KeyboardOptions(
+                imeAction = Next, capitalization = Sentences
+            ),
+            singleLine = true,
+            modifier = Modifier.weight(0.7f).wrapContentHeight().fillMaxWidth()
         )
     }
 }
