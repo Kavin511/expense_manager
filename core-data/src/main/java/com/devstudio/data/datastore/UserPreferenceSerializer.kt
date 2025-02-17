@@ -1,8 +1,8 @@
-package com.devstudio.core_data.datastore
+package com.devstudio.data.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.devstudio.core_data.UserPreferences
+import com.devstudio.core.data.UserPreferences
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
@@ -21,5 +21,4 @@ class UserPreferenceSerializer @Inject constructor() : Serializer<UserPreference
     override suspend fun writeTo(t: UserPreferences, output: OutputStream) {
         t.writeTo(output)
     }
-
 }

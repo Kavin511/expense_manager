@@ -83,6 +83,17 @@
                             android:padding="@dimen/primary_button_padding"
                             android:text="@string/income"
                             android:textSize="@dimen/default_body_text_size" />
+
+                        <Button
+                            android:id="@+id/investment_mode"
+                            style="@style/toggleButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="@dimen/primary_button_padding"
+                            android:text="@string/investment"
+                            android:textSize="@dimen/default_body_text_size" />
+
                     </com.google.android.material.button.MaterialButtonToggleGroup>
 
                     <com.google.android.material.textfield.TextInputLayout

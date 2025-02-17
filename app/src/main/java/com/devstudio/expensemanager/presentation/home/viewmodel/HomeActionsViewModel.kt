@@ -7,10 +7,10 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import com.devstudio.core_data.repository.TransactionDataBackupWorker
-import com.devstudio.core_model.models.BackupStatus
-import com.devstudio.core_model.models.BackupStatus.Companion.failure
-import com.devstudio.core_model.models.BackupStatus.Companion.success
+import com.devstudio.data.repository.TransactionDataBackupWorker
+import com.devstudio.model.models.BackupStatus
+import com.devstudio.model.models.BackupStatus.Companion.failure
+import com.devstudio.model.models.BackupStatus.Companion.success
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_WORK_NAME
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeActionsViewModel @Inject constructor(
-    application: Application
+    application: Application,
 ) : ViewModel() {
     private val workManager: WorkManager = WorkManager.getInstance(application)
 
@@ -29,10 +29,12 @@ class HomeActionsViewModel @Inject constructor(
         val transactionDataBackupWorker =
             OneTimeWorkRequest.Builder(TransactionDataBackupWorker::class.java)
                 .addTag(BACK_UP_WORK_NAME).setInputData(
-                    Data.Builder().putBoolean(WORK_TRIGGERING_MODE_KEY, isManuallyTriggered).build()
+                    Data.Builder().putBoolean(WORK_TRIGGERING_MODE_KEY, isManuallyTriggered).build(),
                 ).build()
         val transactionBackupWork = workManager.beginUniqueWork(
-            BACK_UP_WORK_NAME, ExistingWorkPolicy.REPLACE, transactionDataBackupWorker
+            BACK_UP_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            transactionDataBackupWorker,
         )
         transactionBackupWork.enqueue()
         viewModelScope.launch {
@@ -42,17 +44,17 @@ class HomeActionsViewModel @Inject constructor(
                         resultEvent.invoke(
                             success(
                                 result[0].outputData.getString(
-                                    BACK_UP_STATUS_MESSAGE
-                                ) ?: ""
-                            )
+                                    BACK_UP_STATUS_MESSAGE,
+                                ) ?: "",
+                            ),
                         )
                     } else {
                         resultEvent.invoke(
                             failure(
                                 result[0].outputData.getString(
-                                    BACK_UP_STATUS_MESSAGE
-                                ) ?: ""
-                            )
+                                    BACK_UP_STATUS_MESSAGE,
+                                ) ?: "",
+                            ),
                         )
                     }
                 }
@@ -66,4 +68,3 @@ class HomeActionsViewModel @Inject constructor(
         const val SHARE = "Share"
     }
 }
-

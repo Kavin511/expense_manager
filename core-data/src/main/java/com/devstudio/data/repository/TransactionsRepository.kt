@@ -1,10 +1,12 @@
-package com.devstudio.core_data.repository
+package com.devstudio.data.repository
 
 import androidx.annotation.WorkerThread
 import com.devstudio.expensemanager.db.dao.TransactionDao
 import com.devstudio.expensemanager.db.models.Transaction
-import com.devstudio.expensemanager.db.models.TransactionMode
 import com.devstudio.utils.formatters.DateFormatter
+import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
+import com.devstudio.utils.utils.AppConstants.Companion.INCOME
+import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 import javax.inject.Inject
@@ -18,7 +20,7 @@ interface TransactionsRepository {
     suspend fun updateTransaction(oldTransactionObject: Transaction)
     fun filterTransactionFromDateRange(
         dateRange: Pair<Long, Long>,
-        bookId: Long
+        bookId: Long,
     ): Flow<List<Transaction>>
 
     fun getTotalTransactionCount(): Int
@@ -31,23 +33,26 @@ interface TransactionsRepository {
 @Singleton
 class TransactionsRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao,
-    val userDataRepository: UserDataRepository
-) :
-    TransactionsRepository {
+    val userDataRepository: UserDataRepository,
+) : TransactionsRepository {
     override fun getTotalAssets(): Double {
-        return transactionDao.getTotalAssets(TransactionMode.EXPENSE.name) + transactionDao.getTotalAssets(
-            TransactionMode.INCOME.name
-        )
+        return transactionDao.getTotalAssets(
+            EXPENSE,
+            shouldUseBookId = false,
+        ) + transactionDao.getTotalAssets(
+            INCOME,
+            shouldUseBookId = false,
+        ) + transactionDao.getTotalAssets(INVESTMENT, shouldUseBookId = false)
     }
 
     override fun getTransactionsForCurrentMonth(selectedBookId: Long): Flow<List<Transaction>> {
         return transactionDao.getCurrentMonthTransaction(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
-                Calendar.getInstance()
+                Calendar.getInstance(),
             ).toString(),
             shouldUseBookId = true,
-            selectedBookId
+            selectedBookId,
         )
     }
 
@@ -59,8 +64,8 @@ class TransactionsRepositoryImpl @Inject constructor(
         return transactionDao.getCurrentMonthTransactionCount(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
-                Calendar.getInstance()
-            ).toString()
+                Calendar.getInstance(),
+            ).toString(),
         )
     }
 
@@ -68,9 +73,13 @@ class TransactionsRepositoryImpl @Inject constructor(
         return transactionDao.getTransactionCategoryName(categoryId)
     }
 
-    private fun formatCurrentMonth() = ("0" + (DateFormatter.getCurrentMonth(
-        Calendar.getInstance()
-    ) + 1).toString()).takeLast(2)
+    private fun formatCurrentMonth() = (
+        "0" + (
+            DateFormatter.getCurrentMonth(
+                Calendar.getInstance(),
+            ) + 1
+            ).toString()
+        ).takeLast(2)
 
     override fun allTransactionsStream(bookId: Long): Flow<List<Transaction>> {
         return transactionDao.getAllTransactionsStream(shouldUseBookId = true, bookId = bookId)
@@ -95,13 +104,13 @@ class TransactionsRepositoryImpl @Inject constructor(
 
     override fun filterTransactionFromDateRange(
         dateRange: Pair<Long, Long>,
-        bookId: Long
+        bookId: Long,
     ): Flow<List<Transaction>> {
         return transactionDao.filterTransactionDateRange(
             dateRange.first,
             dateRange.second,
             shouldUseBookId = true,
-            bookId = bookId
+            bookId = bookId,
         )
     }
 }

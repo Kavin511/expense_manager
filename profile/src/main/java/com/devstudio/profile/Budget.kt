@@ -21,12 +21,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.devstudio.core_model.models.ExpressWalletAppState
+import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.profile.composables.Label
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudioworks.ui.theme.appColors
 import java.util.Calendar
-
 
 @Composable
 fun BudgetScreen() {
@@ -35,19 +34,25 @@ fun BudgetScreen() {
             mutableStateOf("")
         }
         OutlinedTextField(
-            value = budget, onValueChange = {
+            value = budget,
+            onValueChange = {
                 budget = it
-            }, keyboardOptions = KeyboardOptions(
-                autoCorrect = false, imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal
-            )
+            },
+            keyboardOptions = KeyboardOptions(
+                autoCorrect = false,
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Decimal,
+            ),
         )
 
         FilledTonalButton(
-            onClick = { /*TODO*/ }, modifier = Modifier
+            onClick = { /*TODO*/ },
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = appColors.material.primaryContainer, shape = RoundedCornerShape(10.dp)
-                )
+                    color = appColors.material.primaryContainer,
+                    shape = RoundedCornerShape(10.dp),
+                ),
         ) {
             Text(text = "Add")
         }
@@ -58,14 +63,16 @@ fun BudgetScreen() {
 private fun BudgetPanel(navController: NavHostController) {
     Column {
         Label(
-            "Budget"
+            "Budget",
         )
         Text(
             text = "${
-                DateFormatter.monthNames[Calendar.getInstance().get(
-                    Calendar.MONTH
-                )]
-            } month budget"
+                DateFormatter.monthNames[
+                    Calendar.getInstance().get(
+                        Calendar.MONTH,
+                    ),
+                ]
+            } month budget",
         )
         Row {
             Text(text = "Expense")

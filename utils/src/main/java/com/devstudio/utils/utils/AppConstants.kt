@@ -7,9 +7,10 @@ class AppConstants {
         val MULTIPLICATION = "x"
         val SUBTRACTION = "-"
         const val EXPENSE = "EXPENSE"
+        const val INVESTMENT = "INVESTMENT"
         const val INCOME = "INCOME"
         const val ALL = "All"
-        val supportedTransactionTypes = listOf(EXPENSE, INCOME)
+        val supportedTransactionTypes = listOf(EXPENSE, INCOME, INVESTMENT)
     }
 
     object StringConstants {

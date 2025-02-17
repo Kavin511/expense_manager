@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,9 +26,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.devstudio.account.R
-import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.data.model.Theme
-import com.devstudio.data.model.Theme.*
+import com.devstudio.data.model.Theme.DARK
+import com.devstudio.data.model.Theme.LIGHT
+import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.profile.viewmodels.EditableSettings
 import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
@@ -68,7 +67,6 @@ data class Preference(
     val clickEvent: () -> Unit = {},
 )
 
-
 @Composable
 private fun PreferencesPanel(profileUiState: EditableSettings, navController: NavHostController) {
     val theme = profileUiState.theme
@@ -92,19 +90,15 @@ private fun PreferencesPanel(profileUiState: EditableSettings, navController: Na
             EMAppIcons.Light
         }
     }
-    val preferenceList = listOf(Preference(
-        title = "Change Theme",
-        description = "Theme preferences",
-        icon = themeIcon,
-    ) {
-        navController.navigate(ExpressWalletAppState.ThemeScreen.route)
-    }, /*Preference(
-        title = "Custom Remainder",
-        description = "Remainder to update transactions",
-        icon = Icons.Filled.Notifications,
-    ) {
-        navController.navigate(ExpressWalletAppState.RemainderScreen.route)
-    }*/)
+    val preferenceList = listOf(
+        Preference(
+            title = "Change Theme",
+            description = "Theme preferences",
+            icon = themeIcon,
+        ) {
+            navController.navigate(ExpressWalletAppState.ThemeScreen.route)
+        },
+    )
     Column {
         Spacer(modifier = Modifier.padding(10.dp))
         Label("Preferences")
@@ -118,19 +112,30 @@ private fun PreferencesPanel(profileUiState: EditableSettings, navController: Na
     }
 }
 
+/*
+    Preference(
+       title = "Custom Remainder",
+       description = "Remainder to update transactions",
+       icon = Icons.Filled.Notifications,
+   ) {
+       navController.navigate(ExpressWalletAppState.RemainderScreen.route)
+   }
+ */
+
 @Composable
 fun PreferenceItem(preference: Preference) {
     Row(
         modifier = Modifier
             .padding(vertical = 5.dp)
             .clickable(onClick = preference.clickEvent)
-            .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = preference.icon,
             contentDescription = null,
             modifier = Modifier.padding(end = 10.dp),
-            tint = appColors.material.onSurfaceVariant
+            tint = appColors.material.onSurfaceVariant,
         )
         Text(
             text = preference.description,
@@ -141,8 +146,8 @@ fun PreferenceItem(preference: Preference) {
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
-                color = appColors.material.onSurfaceVariant
-            )
+                color = appColors.material.onSurfaceVariant,
+            ),
         )
     }
 }
@@ -150,10 +155,12 @@ fun PreferenceItem(preference: Preference) {
 @Composable
 fun Label(value: String) {
     Text(
-        text = value, color = appColors.material.onSurfaceVariant, style = TextStyle(
+        text = value,
+        color = appColors.material.onSurfaceVariant,
+        style = TextStyle(
             fontSize = 22.sp,
             fontWeight = FontWeight.Medium,
-            color = appColors.material.onSurfaceVariant
-        )
+            color = appColors.material.onSurfaceVariant,
+        ),
     )
 }

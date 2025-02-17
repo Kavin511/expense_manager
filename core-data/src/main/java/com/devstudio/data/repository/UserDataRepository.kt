@@ -1,6 +1,6 @@
-package com.devstudio.core_data.repository
+package com.devstudio.data.repository
 
-import com.devstudio.core_data.datastore.DataSourceModule
+import com.devstudio.data.datastore.DataSourceModule
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.UserPreferencesData
@@ -27,11 +27,10 @@ class UserDataRepositoryImpl @Inject constructor(val userDataSource: DataSourceM
     override val userData: Flow<UserPreferencesData>
         get() = userDataSource.userData
 
-    override suspend fun updateSelectedBookId(id: Long)  = userDataSource.updateSelectedBookId(id)
+    override suspend fun updateSelectedBookId(id: Long) = userDataSource.updateSelectedBookId(id)
 
     override suspend fun updateTheme(theme: Theme) = userDataSource.updateTheme(theme)
     override suspend fun getSelectedBookId(): Flow<Long> = userDataSource.getSelectedBookId()
     override suspend fun updateTransactionFilter(filterItem: TransactionFilterType) = userDataSource.updateTransactionFilter(filterItem)
-    override suspend fun getCurrentTransactionFilter(): Flow<TransactionFilterType>  = userDataSource.getCurrentTransactionFilter()
+    override suspend fun getCurrentTransactionFilter(): Flow<TransactionFilterType> = userDataSource.getCurrentTransactionFilter()
 }
-

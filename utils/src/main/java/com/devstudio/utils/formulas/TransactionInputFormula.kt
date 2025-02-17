@@ -9,8 +9,8 @@ class TransactionInputFormula {
         return try {
             var res = numbersList[0]
             var operatorPosition = 0
-            if(value[0]=='-'){
-                res=value[0]+res
+            if (value[0] == '-') {
+                res = value[0] + res
                 operatorPosition++
             }
             for (i in 1 until numbersList.size) {
@@ -25,16 +25,16 @@ class TransactionInputFormula {
     private fun applyOperator(value1: Double, operator: String?, value2: Double): String {
         val result: Double
         when (operator) {
-            "+"  -> {
+            "+" -> {
                 result = value1 + value2
             }
-            "-"  -> {
+            "-" -> {
                 result = value1 - value2
             }
-            "/"  -> {
+            "/" -> {
                 if (value2 == 0.0) {
                     throw UnsupportedOperationException(
-                        "Cannot divide by zero"
+                        "Cannot divide by zero",
                     )
                 }
                 result = value1 / value2

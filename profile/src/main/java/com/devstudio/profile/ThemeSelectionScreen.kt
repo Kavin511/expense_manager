@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +16,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.devstudio.core_data.FilterType
-import com.devstudio.core_data.UserPreferences
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.UserPreferencesData
@@ -35,11 +31,16 @@ fun ThemeSelectionScreen(navController: NavHostController) {
     val theme: UserPreferencesData =
         profileViewModel.userPreferencesDataStore.userData.collectAsState(
             initial = UserPreferencesData(
-                Theme.SYSTEM_DEFAULT, selectedBookId = 0, filterType = TransactionFilterType.ALL
-            )).value
+                Theme.SYSTEM_DEFAULT,
+                selectedBookId = 0,
+                filterType = TransactionFilterType.ALL,
+            ),
+        ).value
 
     val themeList = listOf(
-        Theme.DARK, Theme.LIGHT, Theme.SYSTEM_DEFAULT
+        Theme.DARK,
+        Theme.LIGHT,
+        Theme.SYSTEM_DEFAULT,
     )
     Page(title = "Choose Theme", navController = navController, shouldNavigateUp = true) {
         LazyColumn {
@@ -55,7 +56,7 @@ fun ThemeSelectionScreen(navController: NavHostController) {
                             }
                         },
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.Start,
                 ) {
                     RadioButton(selected = themeProto == theme.theme, onClick = null)
                     val name = themeProto.name.replace("_", " ").lowercase()
@@ -64,8 +65,8 @@ fun ThemeSelectionScreen(navController: NavHostController) {
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .padding(
-                                start = dimensionResource(id = com.devstudio.core.designsystem.R.dimen.spacing_medium)
-                            )
+                                start = dimensionResource(id = com.devstudio.core.designsystem.R.dimen.spacing_medium),
+                            ),
                     )
                 }
             }

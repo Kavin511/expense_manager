@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.devstudio.core_data.repository.BooksRepositoryImpl
+import com.devstudio.data.repository.BooksRepositoryImpl
 import com.devstudio.expensemanager.db.models.Category
 import com.devstudio.expensemanager.db.models.Transaction
 import com.devstudio.expensemanager.db.models.TransactionMode
@@ -19,6 +19,7 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
 import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
+import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
 import com.devstudioworks.ui.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
@@ -37,7 +38,7 @@ class TransactionActivity : AppCompatActivity() {
 
     private var _binding: ActivityTransactionBinding? = null
     private val transactionViewModel by viewModels<TransactionViewModel>()
-    var selectedCategoryIndexList: MutableList<Int> = mutableListOf(0, 0)
+    var selectedCategoryIndexList: MutableList<Int> = mutableListOf(0, 0, 0)
     private val binding
         get() = _binding!!
     private var categoryList = listOf<Category>()
@@ -107,7 +108,7 @@ class TransactionActivity : AppCompatActivity() {
             transactionMode = transactionViewModel.transactionType.value.toString()
             transactionDate = selectedDate
             categoryId = categoryList[getSelectedCategoryIndex()].id
-            paymentStatus  = getPaymentStatus().name
+            paymentStatus = getPaymentStatus().name
             bookId = booksRepositoryImpl.getSelectedBook().first()
         }
         transactionViewModel.upsertTransaction(transaction)
@@ -154,19 +155,29 @@ class TransactionActivity : AppCompatActivity() {
                     DateFormatter.convertLongToDate(it.transactionDate.toLong())
                 selectedDate = it.transactionDate
                 selectedTransactionMode = it.transactionMode
-                if (selectedTransactionMode == EXPENSE) {
-                    transactionViewModel.transactionType.value = TransactionMode.EXPENSE
-                    binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
-                    transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
-                } else {
-                    transactionViewModel.transactionType.value = TransactionMode.INCOME
-                    binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
-                    transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
+                when (selectedTransactionMode) {
+                    EXPENSE -> {
+                        transactionViewModel.transactionType.value = TransactionMode.EXPENSE
+                        binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
+                        transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
+                    }
+                    INVESTMENT -> {
+                        transactionViewModel.transactionType.value = TransactionMode.INVESTMENT
+                        binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
+                        transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
+                    }
+                    else -> {
+                        transactionViewModel.transactionType.value = TransactionMode.INCOME
+                        binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
+                        transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
+                    }
                 }
                 categoryList = transactionViewModel.getCategories(selectedTransactionMode).first()
-                setSelectedCategoryIndex(categoryList.indexOfFirst { category ->
-                    category.id == it.categoryId
-                })
+                setSelectedCategoryIndex(
+                    categoryList.indexOfFirst { category ->
+                        category.id == it.categoryId
+                    },
+                )
                 binding.categoryGroup.check(getSelectedCategoryIndex())
             }
         }
@@ -186,6 +197,11 @@ class TransactionActivity : AppCompatActivity() {
                         transactionViewModel.transactionType.value = TransactionMode.INCOME
                     }
                 }
+                R.id.investment_mode -> {
+                    if (isChecked) {
+                        transactionViewModel.transactionType.value = TransactionMode.INVESTMENT
+                    }
+                }
             }
         }
         lifecycleScope.launch {
@@ -201,6 +217,13 @@ class TransactionActivity : AppCompatActivity() {
                     binding.transactionMode.check(R.id.expense_mode)
                     binding.futurePayment.text = "Mark transaction as Debt"
                     binding.futurePayment.isChecked = transactionViewModel.futurePaymentModeStatus.isDebit
+                }
+
+                TransactionMode.INVESTMENT -> {
+                    updateCategoriesBasedOnTransactionType(TransactionMode.INVESTMENT)
+                    binding.transactionMode.check(R.id.investment_mode)
+                    binding.futurePayment.text = "Mark transaction as Credit"
+                    binding.futurePayment.isChecked = transactionViewModel.futurePaymentModeStatus.isCredit
                 }
 
                 else -> {
@@ -245,7 +268,7 @@ class TransactionActivity : AppCompatActivity() {
         val transactionKeyboard = TransactionKeyboard(
             baseContext,
             binding.keyboard.amountText.editableText,
-            binding.keyboard
+            binding.keyboard,
         )
         transactionKeyboard.initialiseListeners()
         binding.keyboard.amountText.requestFocus()
@@ -275,9 +298,11 @@ class TransactionActivity : AppCompatActivity() {
 
     private fun getSelectedCategoryIndex(type: String = transactionViewModel.transactionType.value.name): Int {
         return if (type == TransactionMode.EXPENSE.name) {
-            selectedCategoryIndexList[0]
+            selectedCategoryIndexList[EXPENSE_INDEX]
+        } else if (type == TransactionMode.INCOME.name) {
+            selectedCategoryIndexList[INCOME_INDEX]
         } else {
-            selectedCategoryIndexList[1]
+            selectedCategoryIndexList[INVESTMENT_INDEX]
         }
     }
 
@@ -285,18 +310,28 @@ class TransactionActivity : AppCompatActivity() {
         val selectedIndex = if (categoryList.isEmpty()) {
             categoryAdditionSnackBar()
             0
-        } else if (index >= 0) index else {
+        } else if (index >= 0) {
+            index
+        } else {
             Toast.makeText(
                 applicationContext,
                 "First category is selected as old category is not available for this transaction type",
-                Toast.LENGTH_LONG
+                Toast.LENGTH_LONG,
             ).show()
             0
         }
-        if (transactionViewModel.transactionType.value == TransactionMode.EXPENSE) {
-            selectedCategoryIndexList[0] = selectedIndex
-        } else {
-            selectedCategoryIndexList[1] = selectedIndex
+        when (transactionViewModel.transactionType.value) {
+            TransactionMode.EXPENSE -> {
+                selectedCategoryIndexList[EXPENSE_INDEX] = selectedIndex
+            }
+
+            TransactionMode.INCOME -> {
+                selectedCategoryIndexList[INCOME_INDEX] = selectedIndex
+            }
+
+            else -> {
+                selectedCategoryIndexList[INVESTMENT_INDEX] = selectedIndex
+            }
         }
     }
 
@@ -304,7 +339,7 @@ class TransactionActivity : AppCompatActivity() {
         Snackbar.make(
             binding.root,
             "No category available for this transaction type",
-            Snackbar.LENGTH_LONG
+            Snackbar.LENGTH_LONG,
         ).show()
     }
 
@@ -328,19 +363,25 @@ class TransactionActivity : AppCompatActivity() {
             context = this@TransactionActivity,
             title = "Are you sure to delete this transaction",
             negativeText = "No",
-            positiveText = "Delete", positiveCallback = {
+            positiveText = "Delete",
+            positiveCallback = {
                 transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
                 it.dismiss()
                 this.finish()
-            }, negativeCallback = {
+            },
+            negativeCallback = {
                 it.dismiss()
-            }
+            },
         )
     }
 }
 
+val EXPENSE_INDEX = 0
+val INCOME_INDEX = 1
+val INVESTMENT_INDEX = 2
+
 enum class PaymentStatus {
     DEBT,
     CREDIT,
-    COMPLETED
+    COMPLETED,
 }

@@ -2,7 +2,7 @@ package com.devstudio.expensemanager.presentation.mainScreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devstudio.core_data.repository.UserDataRepository
+import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.profile.viewmodels.EditableSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -12,23 +12,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    userPreferencesDataStore: UserDataRepository
+    userPreferencesDataStore: UserDataRepository,
 ) : ViewModel() {
     val mainUiState: StateFlow<MainUiState> = userPreferencesDataStore.userData.map { userData ->
         MainUiState.Success(
             MainUiData(
                 settings = EditableSettings(
-                    theme = userData.theme
-                )
-            )
+                    theme = userData.theme,
+                ),
+            ),
         )
     }.stateIn(
         scope = viewModelScope,
         started = kotlinx.coroutines.flow.SharingStarted.Eagerly,
-        initialValue = MainUiState.Loading
+        initialValue = MainUiState.Loading,
     )
-
-
 }
 
 sealed class MainUiState {
@@ -37,5 +35,5 @@ sealed class MainUiState {
 }
 
 data class MainUiData(
-    val settings: EditableSettings
+    val settings: EditableSettings,
 )

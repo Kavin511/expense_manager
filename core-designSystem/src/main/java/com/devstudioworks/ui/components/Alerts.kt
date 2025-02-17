@@ -1,6 +1,5 @@
 package com.devstudioworks.ui.components
 
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -11,11 +10,11 @@ fun MaterialAlert(
     positiveText: String,
     negativeText: String,
     positiveCallback: (DialogInterface) -> Unit,
-    negativeCallback: (DialogInterface) -> Unit
+    negativeCallback: (DialogInterface) -> Unit,
 ) {
     val materialAlertDialogBuilder = MaterialAlertDialogBuilder(context)
     materialAlertDialogBuilder.setTitle(
-        title
+        title,
     ).setPositiveButton(positiveText) { dialog, _ ->
         positiveCallback.invoke(dialog)
     }.setNegativeButton(negativeText) { dialog, _ ->

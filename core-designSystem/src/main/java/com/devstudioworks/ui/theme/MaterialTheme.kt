@@ -42,7 +42,6 @@ private val LightColors = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -78,7 +77,9 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun MaterialTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content:
+    @Composable()
+    () -> Unit,
 ) {
     val colors = if (!useDarkTheme) {
         lightPalette
@@ -102,6 +103,7 @@ val lightPalette =
         transactionExpenseColor = md_theme_light_transaction_expense_container,
         incomeIconTint = md_theme_light_income_icon_tint,
         expenseIconTint = md_theme_light_expense_icon_tint,
+        transactionInvestmentColor = md_theme_light_tertiary,
     )
 
 val darkPalette =
@@ -111,6 +113,7 @@ val darkPalette =
         transactionExpenseColor = md_theme_dark_transaction_expense_container,
         incomeIconTint = md_theme_dark_income_icon_tint,
         expenseIconTint = md_theme_dark_expense_icon_tint,
+        transactionInvestmentColor = md_theme_dark_tertiary,
     )
 
 private val LocalColors = staticCompositionLocalOf { lightPalette }

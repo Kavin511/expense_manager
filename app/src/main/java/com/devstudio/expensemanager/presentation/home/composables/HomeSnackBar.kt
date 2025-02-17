@@ -12,12 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.devstudioworks.ui.theme.appColors
-import com.devstudioworks.ui.theme.model.AppColor
 
 @Preview(name = "")
 @Composable
 fun HomeSnackBar(
-    snackBarHostState: SnackbarHostState = SnackbarHostState()
+    snackBarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     Snackbar(
         modifier = Modifier.padding(dimensionResource(id = com.devstudio.core.designsystem.R.dimen.default_padding)).fillMaxWidth().wrapContentSize(),
@@ -30,8 +29,7 @@ fun HomeSnackBar(
         },
     ) {
         Text(
-            text = snackBarHostState.currentSnackbarData?.visuals?.message ?: ""
+            text = snackBarHostState.currentSnackbarData?.visuals?.message ?: "",
         )
     }
-
 }

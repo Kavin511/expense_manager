@@ -33,7 +33,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <receiver android:name="com.devstudio.core_data.repository.RemainderReceiver"/>
+        <receiver android:name="com.devstudio.data.repository.RemainderReceiver"/>
         <activity
             android:name=".presentation.mainScreen.activity.MainActivity"
             android:exported="true">

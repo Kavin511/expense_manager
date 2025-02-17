@@ -8,5 +8,5 @@ data class TransactionBook(
     val bookId: Long,
     val transactions: Flow<List<Transaction>>,
     val bookName: String,
-    val filterType: TransactionFilterType
+    val filterType: TransactionFilterType,
 )

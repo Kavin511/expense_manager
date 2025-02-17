@@ -48,7 +48,7 @@ fun TransactionMainScreen(
     navController: NavHostController,
     scrollBehavior: TopAppBarScrollBehavior,
     transactionEvents: TransactionEvents,
-    uiState: TransactionUiState
+    uiState: TransactionUiState,
 ) {
     val booksEvent = transactionEvents.booksEventCallback
     when (uiState) {
@@ -81,7 +81,7 @@ fun TransactionMainScreen(
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                         .fillMaxSize()
-                        .padding(it)
+                        .padding(it),
                 ) {
                     TransactionDashBoard(uiState, transactionEvents.filterEvent)
                 }
@@ -102,25 +102,27 @@ private fun AddTransactions() {
     }
 }
 
-
 fun onClickAddTransaction(context: Context) {
     val intent = Intent(context, TransactionActivity::class.java)
     context.startActivity(intent)
 }
 
-
 @Composable
 fun BookSelectionTitle(
-    homeScreenData: String, bookSelectionEvent: () -> Unit
+    homeScreenData: String,
+    bookSelectionEvent: () -> Unit,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
-        bookSelectionEvent.invoke()
-    }) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            bookSelectionEvent.invoke()
+        },
+    ) {
         Text(text = homeScreenData)
         Image(
             imageVector = EMAppIcons.DropDown,
             colorFilter = ColorFilter.tint(appColors.material.onSurfaceVariant),
-            contentDescription = "Book selection arrow"
+            contentDescription = "Book selection arrow",
         )
     }
 }

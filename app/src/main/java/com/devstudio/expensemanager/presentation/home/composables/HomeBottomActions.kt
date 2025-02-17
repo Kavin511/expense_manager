@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.devstudio.core_model.models.ExpressWalletAppState
 import com.devstudio.expensemanager.R
+import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudioworks.ui.theme.appColors
 
 /**
@@ -47,37 +47,40 @@ fun HomeBottomActions(navController: NavHostController) {
             .fillMaxWidth()
             .background(
                 color = appColors.material.secondaryContainer,
-                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
+                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp),
             )
-            .height(56.dp), content = {
+            .height(56.dp),
+        content = {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.SpaceAround,
             ) {
                 itemsIndexed(bottomNavigationList) { index, it ->
-                    Box(modifier = Modifier
-                        .clickable {
-                            selectedIndex.value = index
-                            navController.navigate(it.navigationRoute) {
-                                launchSingleTop = true
+                    Box(
+                        modifier = Modifier
+                            .clickable {
+                                selectedIndex.value = index
+                                navController.navigate(it.navigationRoute) {
+                                    launchSingleTop = true
+                                }
                             }
-                        }
-                        .fillMaxHeight()
-                        .fillParentMaxSize(0.33f)) {
-
+                            .fillMaxHeight()
+                            .fillParentMaxSize(0.33f),
+                    ) {
                         Icon(
                             if (selectedIndex.value == index) it.selectedIcon else it.unselectedIcon,
                             contentDescription = it.name,
                             modifier = Modifier
                                 .fillParentMaxSize(0.5f)
-                                .align(alignment = Alignment.Center)
+                                .align(alignment = Alignment.Center),
                         )
                     }
                 }
             }
-        }, containerColor = appColors.material.surfaceVariant
+        },
+        containerColor = appColors.material.surfaceVariant,
     )
 }
 
@@ -88,17 +91,19 @@ private fun getBottomNavigationItems(): List<BottomNavigationItem> {
             name = stringResource(id = R.string.transaction),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
-            navigationRoute = ExpressWalletAppState.HomeScreen.route
-        ), BottomNavigationItem(
+            navigationRoute = ExpressWalletAppState.HomeScreen.route,
+        ),
+        BottomNavigationItem(
             name = stringResource(id = R.string.category),
             selectedIcon = Icons.Rounded.Category,
             unselectedIcon = Icons.Outlined.Category,
-            navigationRoute = ExpressWalletAppState.HomeScreen.CategoryScreen.route
-        ), BottomNavigationItem(
+            navigationRoute = ExpressWalletAppState.HomeScreen.CategoryScreen.route,
+        ),
+        BottomNavigationItem(
             name = stringResource(id = R.string.profile),
             selectedIcon = Icons.Rounded.AccountCircle,
             unselectedIcon = Icons.Outlined.AccountCircle,
-            navigationRoute = ExpressWalletAppState.HomeScreen.AccountScreen.route
-        )
+            navigationRoute = ExpressWalletAppState.HomeScreen.AccountScreen.route,
+        ),
     )
 }

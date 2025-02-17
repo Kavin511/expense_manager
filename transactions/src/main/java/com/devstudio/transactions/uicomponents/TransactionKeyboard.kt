@@ -11,7 +11,7 @@ import com.devstudio.utils.formulas.TransactionInputFormula
 class TransactionKeyboard(
     val context: Context,
     private val editable: Editable,
-    private val keyboardBinding: KeyboardBinding
+    private val keyboardBinding: KeyboardBinding,
 ) {
     var selectionPosition = 0
 
@@ -44,15 +44,15 @@ class TransactionKeyboard(
                 keyboardBinding.amountText.dispatchKeyEvent(
                     KeyEvent(
                         KeyEvent.ACTION_DOWN,
-                        KeyEvent.KEYCODE_DEL
-                    )
+                        KeyEvent.KEYCODE_DEL,
+                    ),
                 )
             }
             keyboardBinding.amountText.dispatchKeyEvent(
                 KeyEvent(
                     KeyEvent.ACTION_DOWN,
-                    event
-                )
+                    event,
+                ),
             )
         }
     }
@@ -93,14 +93,14 @@ class TransactionKeyboard(
                 keyboardBinding.amountText.dispatchKeyEvent(
                     KeyEvent(
                         KeyEvent.ACTION_DOWN,
-                        KeyEvent.KEYCODE_PERIOD
-                    )
+                        KeyEvent.KEYCODE_PERIOD,
+                    ),
                 )
             } else {
                 Toast.makeText(
                     context,
                     "Last entered amount already has a decimal!",
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT,
                 ).show()
             }
         }
@@ -114,8 +114,8 @@ class TransactionKeyboard(
         keyboardBinding.amountText.dispatchKeyEvent(
             KeyEvent(
                 KeyEvent.ACTION_DOWN,
-                input
-            )
+                input,
+            ),
         )
     }
 
@@ -130,8 +130,8 @@ class TransactionKeyboard(
             keyboardBinding.amountText.dispatchKeyEvent(
                 KeyEvent(
                     KeyEvent.ACTION_DOWN,
-                    KeyEvent.KEYCODE_DEL
-                )
+                    KeyEvent.KEYCODE_DEL,
+                ),
             )
         }
         keyboardBinding.amountTextWrapper.setEndIconOnLongClickListener {

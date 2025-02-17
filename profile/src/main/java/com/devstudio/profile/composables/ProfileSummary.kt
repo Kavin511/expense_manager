@@ -25,21 +25,20 @@ import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudioworks.ui.theme.model.AppColor
 
-
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 fun ProfileSummary(
     appColors: AppColor,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 color = appColors.material.tertiaryContainer,
-                shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS)
+                shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS),
             )
-            .padding(bottom = 10.dp)
+            .padding(bottom = 10.dp),
     ) {
         FlowRow(
             horizontalArrangement = Arrangement.SpaceAround,
@@ -47,18 +46,18 @@ fun ProfileSummary(
                 .background(color = appColors.material.tertiaryContainer)
                 .padding(10.dp)
                 .align(
-                    Alignment.CenterHorizontally
-                )
+                    Alignment.CenterHorizontally,
+                ),
         ) {
             ProfileInfoCardElement(
                 value = profileViewModel.getTotalAssets().toString(),
                 Icons.Filled.Money,
-                "Total Assets"
+                "Total Assets",
             )
             ProfileInfoCardElement(
                 value = profileViewModel.getTotalNumberOfTransactions().toString(),
                 Icons.Filled.Numbers,
-                "Total Transactions"
+                "Total Transactions",
             )
         }
     }
@@ -70,7 +69,7 @@ private fun ProfileInfoCardElement(value: String, icon: ImageVector, title: Stri
         modifier = Modifier
             .fillMaxWidth(.5f),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Image(
             imageVector = icon,
@@ -78,7 +77,7 @@ private fun ProfileInfoCardElement(value: String, icon: ImageVector, title: Stri
             modifier = Modifier
                 .width(25.dp)
                 .height(25.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
         )
         Text(text = value, modifier = Modifier.padding(top = 5.dp))
         Text(text = title, modifier = Modifier.padding(top = 5.dp))

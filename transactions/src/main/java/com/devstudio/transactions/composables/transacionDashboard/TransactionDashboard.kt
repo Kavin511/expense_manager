@@ -39,29 +39,27 @@ import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudioworks.ui.theme.appColors
 import com.google.android.material.datepicker.MaterialDatePicker
 
-
 @Composable
 fun TransactionDashBoard(uiState: TransactionUiState.Success, filterEvent: (TransactionOptionsEvent) -> Unit) {
     Surface(
         modifier = Modifier
-            .widthIn(max = 640.dp)
+            .widthIn(max = 640.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(PaddingValues(6.dp))
+            modifier = Modifier.padding(PaddingValues(6.dp)),
         ) {
             TransactionSummary(uiState.data)
             TransactionOptions(uiState.data.filterType, filterEvent)
             TransactionsList(uiState.data)
         }
     }
-
 }
 
 fun showDateRangePicker(
     fragmentManager: FragmentManager,
     dateSelectionRange: Pair<Long, Long>?,
-    dateSelectionListener: (DateSelectionStatus) -> Unit
+    dateSelectionListener: (DateSelectionStatus) -> Unit,
 ) {
     val dateRangePicker =
         MaterialDatePicker.Builder.dateRangePicker().setSelection(dateSelectionRange).build()
@@ -84,21 +82,21 @@ fun TransactionOptions(filterType: TransactionFilterType, filterEvent: (Transact
 private fun TransactionOptionsRow(
     filterType: TransactionFilterType,
     transactionViewModel: TransactionViewModel,
-    filterEvent: (TransactionOptionsEvent) -> Unit
+    filterEvent: (TransactionOptionsEvent) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AnimatedVisibility(
             visible = filterType.isNotDefault(),
             enter = fadeIn(initialAlpha = .5f),
-            exit = fadeOut(animationSpec = tween(durationMillis = 200))
+            exit = fadeOut(animationSpec = tween(durationMillis = 200)),
         ) {
             TextButton(onClick = {
                 if (filterType.isNotDefault()) {
-                    transactionViewModel.updateSelectedTransactionFilter(TransactionFilterType.CURRENT_MONTH)
+                    transactionViewModel.updateSelectedTransactionFilter(TransactionFilterType.CurrentMonth)
                 }
             }) {
                 Text(
@@ -112,7 +110,7 @@ private fun TransactionOptionsRow(
                     } else {
                         Color.Unspecified
                     },
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
                 )
             }
         }
@@ -132,7 +130,7 @@ private fun TransactionOptionsRow(
                 filterEvent.invoke(TransactionOptionsEvent(true))
             },
             border = BorderStroke(width = 1.dp, color = appColors.material.onPrimaryContainer),
-            modifier = Modifier.align(alignment = Alignment.CenterVertically)
+            modifier = Modifier.align(alignment = Alignment.CenterVertically),
         ) {
             Icon(imageVector = Icons.Filled.FilterList, contentDescription = "Filter")
         }
@@ -140,5 +138,5 @@ private fun TransactionOptionsRow(
 }
 
 private fun TransactionFilterType.isNotDefault(): Boolean {
-    return this != TransactionFilterType.CURRENT_MONTH
+    return this != TransactionFilterType.CurrentMonth
 }

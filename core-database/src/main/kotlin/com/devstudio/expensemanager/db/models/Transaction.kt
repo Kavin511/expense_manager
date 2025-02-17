@@ -7,14 +7,15 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity(
-    tableName = "transactions_table", foreignKeys = [
+    tableName = "transactions_table",
+    foreignKeys = [
         ForeignKey(
             entity = Books::class,
             parentColumns = ["id"],
             childColumns = ["bookId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
 )
 class Transaction(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -24,5 +25,5 @@ class Transaction(
     @ColumnInfo(name = "categoryId") var categoryId: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "isEditingOldTransaction") var transactionMode: String = "",
     @ColumnInfo(name = "transactionDate") var transactionDate: String = "",
-    @ColumnInfo(name = "paymentStatus") var paymentStatus: String = "COMPLETED"
+    @ColumnInfo(name = "paymentStatus") var paymentStatus: String = "COMPLETED",
 )

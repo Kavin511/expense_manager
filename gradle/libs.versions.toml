@@ -1,12 +1,16 @@
 [versions]
-androidGradlePlugin = "8.1.0"
+androidGradlePlugin = "8.2.2"
 coreKtx = "1.7.0"
+firebaseBom = "33.2.0"
+firebaseCrashlyticsGradle = "2.9.9"
+googleServices = "4.4.1"
+gradle = "8.2.2"
 hilt = "2.44.2"
 hiltAndroid="2.42"
 hiltNavigationCompose = '1.0.0'
 kotlin = "1.8.20"
 androidxRoom = "2.4.3"
-materialVersion = "1.1.0-rc01"
+materialVersion = "1.2.1"
 androidxCoreVersion = "1.9.0"
 androidxAppcompat = "1.5.1"
 material = "1.7.0"
@@ -53,6 +57,11 @@ compose_material_icons = { module = 'androidx.compose.material:material-icons-co
 compose_material_icons_extended = { module = 'androidx.compose.material:material-icons-extended', version.ref = 'compose' }
 activity_compose={module = 'androidx.activity:activity-compose', version.ref = 'activityCompose' }
 core_ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 viewmodel_compose={module =  'androidx.lifecycle:lifecycle-viewmodel-compose', version.ref = 'viewmodel' }
 compose_runtime_livedata = { module = 'androidx.compose.runtime:runtime-livedata', version.ref = 'composeLivedata' }
 compose_runtime_lifecycle = {module='androidx.lifecycle:lifecycle-runtime-compose',version.ref='composeRuntime'}

@@ -19,13 +19,13 @@ class TransactionInputFormulaTest {
     }
 
     @Test
-    fun `test decimal operations`(){
+    fun `test decimal operations`() {
         assertThat(TransactionInputFormula().calculate("1.4+2.3+12/3")).isEqualTo(5.23)
         assertThat(TransactionInputFormula().calculate(".14+2.3+12/3")).isEqualTo(4.81)
     }
 
     @Test
-    fun `test for negative values`(){
+    fun `test for negative values`() {
         assertThat(TransactionInputFormula().calculate("-.14+2.3+12/3")).isEqualTo(4.72)
     }
 

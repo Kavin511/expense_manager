@@ -29,7 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.devstudio.core_data.repository.Remainder
+import com.devstudio.data.repository.Remainder
 import com.devstudio.profile.viewmodels.ProfileViewModel
 import com.devstudioworks.ui.components.Page
 import com.devstudioworks.ui.theme.appColors
@@ -40,6 +40,7 @@ import java.util.Locale
 
 var hour = 0
 var minute = 0
+
 @Composable
 fun RemainderScreen(navController: NavHostController) {
     val profilerViewModel = hiltViewModel<ProfileViewModel>()
@@ -52,15 +53,18 @@ fun RemainderScreen(navController: NavHostController) {
             Day("W", false, "Wednesday", 3),
             Day("T", false, "Thursday", 4),
             Day("F", false, "Friday", 5),
-            Day("S", false, "Saturday", 6)
+            Day("S", false, "Saturday", 6),
         )
     }
     Page(title = "Remainder", navController = navController, shouldNavigateUp = true, action = {
-        Text(text = "Save", modifier = Modifier.clickable {
-            val remainders = dayStateList.map { Remainder(it.id, hour, minute, isEnabled = it.isSelected) }
-            profilerViewModel.setRemainders(remainders, context)
+        Text(
+            text = "Save",
+            modifier = Modifier.clickable {
+                val remainders = dayStateList.map { Remainder(it.id, hour, minute, isEnabled = it.isSelected) }
+                profilerViewModel.setRemainders(remainders, context)
 //            navController.popBackStack()
-        })
+            },
+        )
     }) {
         val text = remember {
             mutableStateOf("12:00 PM")
@@ -68,7 +72,7 @@ fun RemainderScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(10.dp),
         ) {
             Column(
                 modifier = Modifier
@@ -96,27 +100,33 @@ private fun TimeSelector(text: MutableState<String>) {
         minute = picker.minute
         val time = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(
             SimpleDateFormat("HH:mm", Locale.getDefault()).parse(
-                "$hour:$minute"
-            )!!
+                "$hour:$minute",
+            )!!,
         )
         text.value = time
     }
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = "What time of the day?")
         Row {
-            Text(text = text.value, modifier = Modifier
-                .padding(vertical = 10.dp)
-                .border(
-                    border = BorderStroke(
-                        1.dp, appColors.material.primary
-                    ), shape = RoundedCornerShape(15.dp)
-                )
-                .padding(10.dp)
-                .clickable {
-                    picker.show(
-                        activity.supportFragmentManager, "tag"
+            Text(
+                text = text.value,
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .border(
+                        border = BorderStroke(
+                            1.dp,
+                            appColors.material.primary,
+                        ),
+                        shape = RoundedCornerShape(15.dp),
                     )
-                })
+                    .padding(10.dp)
+                    .clickable {
+                        picker.show(
+                            activity.supportFragmentManager,
+                            "tag",
+                        )
+                    },
+            )
         }
     }
 }
@@ -131,7 +141,8 @@ private fun DaySelector(selectedDays: SnapshotStateList<Day>) {
             content = {
                 repeat(selectedDays.size) { index ->
                     val selectedState = mutableStateOf(selectedDays[index].isSelected)
-                    FilterChip(modifier = Modifier.padding(horizontal = 2.dp),
+                    FilterChip(
+                        modifier = Modifier.padding(horizontal = 2.dp),
                         selected = selectedState.value,
                         onClick = {
                             selectedDays[index].isSelected = !selectedState.value
@@ -139,9 +150,10 @@ private fun DaySelector(selectedDays: SnapshotStateList<Day>) {
                         },
                         label = {
                             Text(
-                                text = selectedDays[index].description
+                                text = selectedDays[index].description,
                             )
-                        })
+                        },
+                    )
                 }
             },
         )
@@ -152,5 +164,5 @@ data class Day(
     val name: String,
     var isSelected: Boolean = false,
     val description: String,
-    var id: Int
+    var id: Int,
 )

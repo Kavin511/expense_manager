@@ -1,21 +1,18 @@
-package com.devstudio.core_data.repository
+package com.devstudio.data.repository
 
 import com.devstudio.expensemanager.db.dao.CategoryDao
 import com.devstudio.expensemanager.db.models.Category
 import kotlinx.coroutines.flow.Flow
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface CategoryRepository {
     fun insertCategory(category: Category)
-    fun getCategoriesFlow(): Flow<List<Category>>
     fun findCategoryById(id: String): Category?
     fun deleteCategory(category: Category)
     fun updateCategory(category: Category)
     fun getCategoriesStream(type: String): Flow<List<Category>>
     fun getAllCategories(): Flow<List<Category>>
-    fun getCategories(type: String): List<Category>
 }
 
 @Singleton
@@ -41,15 +38,7 @@ class CategoryRepositoryImpl @Inject constructor(private val categoryDao: Catego
         return categoryDao.getAllCategories()
     }
 
-    override fun getCategoriesFlow(): Flow<List<Category>> {
-        return categoryDao.getCategoriesFlow()
-    }
-
     override fun findCategoryById(id: String): Category? {
         return categoryDao.findCategoryById(id)
-    }
-
-    override fun getCategories(type: String): List<Category> {
-        return categoryDao.getCategories(type)
     }
 }

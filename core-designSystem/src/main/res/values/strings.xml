@@ -10,6 +10,7 @@
     <string name="first_fragment_label">fi</string>
     <string name="second_fragment_label">second</string>
     <string name="expense">Expense</string>
+    <string name="investment">Investment</string>
     <string name="income">Income</string>
     <string name="save_transaction">Save Transaction</string>
     <string name="update_transaction">Update Transaction</string>
