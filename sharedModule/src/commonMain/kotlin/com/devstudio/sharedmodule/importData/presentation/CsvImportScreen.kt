@@ -138,9 +138,19 @@ private fun FieldMappingScreen(
                         val investmentMeta = MetaInformation(INVESTMENT, "")
                         it.additionalInfo = mutableListOf()
                         it.additionalInfo?.addAll(arrayOf(incomeMeta, expenseMeta, investmentMeta))
-                        AdditionalMappingInfoRow(TransactionMode.INCOME, incomeMeta)
-                        AdditionalMappingInfoRow(TransactionMode.EXPENSE, expenseMeta)
-                        AdditionalMappingInfoRow(TransactionMode.INVESTMENT, investmentMeta)
+                        AdditionalMappingInfoRow(
+                            INCOME, incomeMeta, "e.g., 'income', 'in', '+' for income transactions"
+                        )
+                        AdditionalMappingInfoRow(
+                            EXPENSE,
+                            expenseMeta,
+                            "e.g., 'expense', 'ex', '-' for expense transactions"
+                        )
+                        AdditionalMappingInfoRow(
+                            INVESTMENT,
+                            investmentMeta,
+                            "e.g., 'investment', 'inv' for investment transactions"
+                        )
                     }
                 }
             }
@@ -166,22 +176,24 @@ private fun FieldMappingScreen(
 fun transactionField(): List<TransactionField> {
     return listOf(
         TransactionField(
-            "Amount", "The amount of the transaction", type = TransactionFieldType.Amount
-        ),TransactionField(
+            "Amount", "Select the amount of expense or income", type = TransactionFieldType.Amount
+        ), TransactionField(
             "Mode",
-            "Type of transaction to identify if the transaction is an expense, income, or investment",
+            "Choose the column that shows if it's expense, income, or invested (For numbers: negative = expense, positive = income)",
             type = TransactionModeField
         ),
-        TransactionField("Date", "The date of the transaction", type = TransactionFieldType.DATE),
+        TransactionField("Date", "When the transaction happened", type = TransactionFieldType.DATE),
         TransactionField(
-            "Category", "The category of the transaction", type = TransactionFieldType.Category
-        ),
+            "Category (Optional)",
+            "What the transaction was for (e.g., Food, Shopping, Salary)",
+            type = TransactionFieldType.Category
+        ).apply { mappingStatus.value = MappingStatus.Mapped(-1) },
         TransactionField(
-            "Note", "Additional notes about the transaction", type = TransactionFieldType.Note
+            "Note", "Any extra details about the transaction", type = TransactionFieldType.Note
         ),
         TransactionField(
             "Book Name (Optional)",
-            "The name of the account where the transaction has to be recorded",
+            "Which account to record this in (e.g., Cash, Bank)",
             type = TransactionFieldType.BookName,
         ).apply { mappingStatus.value = MappingStatus.Mapped(-1) }
     )

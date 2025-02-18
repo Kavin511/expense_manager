@@ -17,8 +17,12 @@ fun parseTransactionType(
     return tryParse {
         val cleanedValue = value.trim()
         if (metaInfo != null) {
-            val metaInformation = metaInfo.firstOrNull {
-                it.value.isNotEmpty() && it.value.equals(value, ignoreCase = true)
+            val metaInformation = metaInfo.firstOrNull { information ->
+                val isInformationApplicable =
+                    information.value.isNotEmpty() && information.value.split(",").any {
+                        value.contains(it, ignoreCase = true)
+                    }
+                isInformationApplicable
             }
             val transactionMode = metaInformation?.type as? TransactionMode
             if (transactionMode != null) {
@@ -30,8 +34,8 @@ fun parseTransactionType(
             cleanedValue.contains("expense", ignoreCase = true) -> EXPENSE
             cleanedValue.contains("transfer", ignoreCase = true) -> INVESTMENT
             cleanedValue.contains("investment", ignoreCase = true) -> INVESTMENT
-            cleanedValue.toDoubleOrNull()?.let { it > 0 } == true -> INCOME
-            cleanedValue.toDoubleOrNull()?.let { it < 0 } == true -> EXPENSE
+            (cleanedValue.toDoubleOrNull() ?: 0.0) > 0.0 -> INCOME
+            (cleanedValue.toDoubleOrNull() ?: 0.0) <= 0.0 -> EXPENSE
             else -> null
         }
     }

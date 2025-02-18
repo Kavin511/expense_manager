@@ -114,7 +114,11 @@ fun FieldMappingItem(
 }
 
 @Composable
-fun AdditionalMappingInfoRow(transactionMode: TransactionMode, metaData: MetaInformation) {
+fun AdditionalMappingInfoRow(
+    transactionMode: TransactionMode,
+    metaData: MetaInformation,
+    placeholder: String
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth(getWidthRatio()).padding(8.dp),
@@ -132,7 +136,7 @@ fun AdditionalMappingInfoRow(transactionMode: TransactionMode, metaData: MetaInf
                 metaData.value = it
             },
             label = { Text(label) },
-            placeholder = { Text("Enter keywords to identify transaction modes") },
+            placeholder = { Text(placeholder) },
             keyboardOptions = KeyboardOptions(
                 imeAction = Next, capitalization = Sentences
             ),

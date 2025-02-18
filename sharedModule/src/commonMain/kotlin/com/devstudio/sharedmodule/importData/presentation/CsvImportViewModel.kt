@@ -174,8 +174,8 @@ class CsvImportViewModel : ViewModel() {
         transactionMode: String,
         bookId: Long
     ): String {
-        val categoryName = it.values[transactionFieldIndex.categoryIdIndex]
         val categoryDao = ApplicationModule.config.factory.getRoomInstance().categoryDao()
+        val categoryName = it.values.getOrNull(transactionFieldIndex.categoryIdIndex) ?: "Other"
         val category = categoryDao.getCategoryByName(categoryName)
         return if (category == null) {
             val constructedCategory = Category(name = categoryName, categoryType = transactionMode, bookId = bookId)
