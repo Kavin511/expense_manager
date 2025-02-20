@@ -1,12 +1,10 @@
 package com.devstudio.data.repository
 
 import androidx.annotation.WorkerThread
-import com.devstudio.expensemanager.db.dao.TransactionDao
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.ApplicationModule
+import com.devstudio.database.models.Transaction
 import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INCOME
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
+import com.devstudio.utils.utils.TransactionMode
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 import javax.inject.Inject
@@ -16,7 +14,8 @@ interface TransactionsRepository {
     fun allTransactionsStream(bookId: Long): Flow<List<Transaction>>
     suspend fun findTransactionById(id: Long): Transaction?
     suspend fun deleteTransactions(transaction: Transaction)
-    suspend fun upsertTransaction(transaction: Transaction)
+    suspend fun upsertTransaction(transaction: Transaction): Boolean
+    suspend fun insertTransactions(transaction: List<Transaction>): Int
     suspend fun updateTransaction(oldTransactionObject: Transaction)
     fun filterTransactionFromDateRange(
         dateRange: Pair<Long, Long>,
@@ -32,24 +31,25 @@ interface TransactionsRepository {
 
 @Singleton
 class TransactionsRepositoryImpl @Inject constructor(
-    private val transactionDao: TransactionDao,
     val userDataRepository: UserDataRepository,
 ) : TransactionsRepository {
+    val db = ApplicationModule.config.factory.getRoomInstance()
+    private val transactionDao = db.transactionsDao()
     override fun getTotalAssets(): Double {
         return transactionDao.getTotalAssets(
-            EXPENSE,
+            TransactionMode.EXPENSE.title,
             shouldUseBookId = false,
         ) + transactionDao.getTotalAssets(
-            INCOME,
+            TransactionMode.INCOME.title,
             shouldUseBookId = false,
-        ) + transactionDao.getTotalAssets(INVESTMENT, shouldUseBookId = false)
+        ) + transactionDao.getTotalAssets(TransactionMode.INVESTMENT.title, shouldUseBookId = false)
     }
 
     override fun getTransactionsForCurrentMonth(selectedBookId: Long): Flow<List<Transaction>> {
         return transactionDao.getCurrentMonthTransaction(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
-                Calendar.getInstance(),
+                Calendar.getInstance().timeInMillis,
             ).toString(),
             shouldUseBookId = true,
             selectedBookId,
@@ -64,7 +64,7 @@ class TransactionsRepositoryImpl @Inject constructor(
         return transactionDao.getCurrentMonthTransactionCount(
             formatCurrentMonth(),
             DateFormatter.getCurrentYear(
-                Calendar.getInstance(),
+                Calendar.getInstance().timeInMillis,
             ).toString(),
         )
     }
@@ -74,12 +74,12 @@ class TransactionsRepositoryImpl @Inject constructor(
     }
 
     private fun formatCurrentMonth() = (
-        "0" + (
-            DateFormatter.getCurrentMonth(
-                Calendar.getInstance(),
-            ) + 1
-            ).toString()
-        ).takeLast(2)
+            "0" + (
+                    DateFormatter.getCurrentMonth(
+                        Calendar.getInstance().timeInMillis,
+                    ) + 1
+                    ).toString()
+            ).takeLast(2)
 
     override fun allTransactionsStream(bookId: Long): Flow<List<Transaction>> {
         return transactionDao.getAllTransactionsStream(shouldUseBookId = true, bookId = bookId)
@@ -94,8 +94,21 @@ class TransactionsRepositoryImpl @Inject constructor(
     }
 
     @WorkerThread
-    override suspend fun upsertTransaction(transaction: Transaction) {
-        transactionDao.upsertTransaction(transaction)
+    override suspend fun upsertTransaction(transaction: Transaction): Boolean {
+        try {
+            transactionDao.upsertTransaction(transaction)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    override suspend fun insertTransactions(transaction: List<Transaction>): Int {
+        try {
+            return transactionDao.insertTransactions(transaction).size
+        } catch (e: Exception) {
+            return 0
+        }
     }
 
     override suspend fun updateTransaction(oldTransactionObject: Transaction) {

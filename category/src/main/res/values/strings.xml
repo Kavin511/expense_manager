@@ -2,4 +2,6 @@
 <resources>
     <string name="add_category">Add category</string>
     <string name="title_category">category</string>
+    <string name="category_once_deleted_can_t_be_recovered_transactions_for_the_corresponding_category_won_t_be_deleted">Category once deleted can\'t be recovered, transactions for the corresponding category won\'t be deleted</string>
+    <string name="delete_category">Delete category?</string>
 </resources>

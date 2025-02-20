@@ -23,7 +23,7 @@
         app:endIconDrawable="@drawable/ic_backspace"
         app:endIconMode="custom">
 
-        <com.devstudioworks.ui.components.CustomEditText
+        <com.devstudio.transactions.uicomponents.CustomEditText
             android:id="@+id/amount_text"
             android:layout_width="match_parent"
             android:gravity="center_vertical"

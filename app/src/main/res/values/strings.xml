@@ -2,4 +2,6 @@
     <string name="transaction">Transaction</string>
     <string name="category">Category</string>
     <string name="profile">Profile</string>
+    <string name="app_name">Express wallet</string>
+    <string name="add_transaction">Add transaction</string>
 </resources>

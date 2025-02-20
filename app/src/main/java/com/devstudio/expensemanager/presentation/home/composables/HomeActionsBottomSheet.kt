@@ -1,0 +1,251 @@
+import HomeActions.BACKUP
+import HomeActions.IMPORT_CSV
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Backup
+import androidx.compose.material.icons.rounded.Upload
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.devstudio.data.repository.TransactionDataBackupWorker.Companion.getFileFolderToStoreTransactions
+import com.devstudio.designSystem.components.BottomSheet
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
+import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.OPEN
+import com.devstudio.model.models.BackupStatus
+import com.devstudio.model.models.OnEvent
+import com.devstudio.model.models.Status.SUCCESS
+import com.devstudio.transactions.models.BottomSheetEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeActionsBottomSheet(
+    snackBarHostState: SnackbarHostState,
+    onEvent: OnEvent,
+) {
+    val context = LocalContext.current
+    var readPermissionGranted = false
+    var writePermissionGranted = false
+    val permissionList = mutableListOf<String>()
+    val homeActionsViewModel = hiltViewModel<HomeActionsViewModel>()
+
+    val activityResultLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { permissions ->
+        permissions.entries.forEach { it ->
+            val permissionName = it.key
+            val isGranted = it.value
+            if (isGranted) {
+                if (permissionName == WRITE_EXTERNAL_STORAGE) {
+                    writePermissionGranted = true
+                }
+                if (permissionName == READ_EXTERNAL_STORAGE) {
+                    readPermissionGranted = true
+                }
+                if (readPermissionGranted && writePermissionGranted) {
+                    backUpTransactions(homeActionsViewModel, snackBarHostState, context)
+                }
+            }
+        }
+        if (permissions.entries.any { !it.value }) {
+            Toast.makeText(
+                context,
+                "Permissions required to start backup",
+                Toast.LENGTH_SHORT,
+            ).show()
+            val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri: Uri = Uri.fromParts("package", context.packageName, null)
+            intent.data = uri
+            context.startActivity(intent)
+        }
+    }
+
+    fun isSdk29Up() = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
+
+    fun isSdk33Up() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
+    fun isReadPermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
+        context,
+        READ_EXTERNAL_STORAGE,
+    ) == PERMISSION_GRANTED || isSdk33Up()
+
+    fun isWritePermissionRequired(context: Context) = ContextCompat.checkSelfPermission(
+        context,
+        WRITE_EXTERNAL_STORAGE,
+    ) == PERMISSION_GRANTED || isSdk29Up()
+
+    fun checkPermissionToStartBackup(context: Context): Boolean {
+        readPermissionGranted = isReadPermissionRequired(context)
+        writePermissionGranted = isWritePermissionRequired(context)
+        if (!writePermissionGranted) {
+            permissionList.add(WRITE_EXTERNAL_STORAGE)
+        }
+        if (!readPermissionGranted) {
+            permissionList.add(READ_EXTERNAL_STORAGE)
+        }
+        return if (permissionList.isNotEmpty()) {
+            activityResultLauncher.launch(permissionList.toTypedArray())
+            false
+        } else {
+            true
+        }
+    }
+    BottomSheet(
+        onDismissRequest = {
+            onEvent.invoke(BottomSheetEvent(false, ""))
+        },
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
+        ) {
+            RowWithImage(RowWithImageData(IMPORT_CSV.getActionName(), Icons.Rounded.Upload),
+                onClick = {
+                    onEvent.invoke(BottomSheetEvent(false, IMPORT_CSV))
+                })
+            RowWithImage(RowWithImageData(BACKUP.getActionName(), Icons.Rounded.Backup), onClick = {
+                onEvent.invoke(BottomSheetEvent(false, BACKUP))
+                if (checkPermissionToStartBackup(context)) {
+                    backUpTransactions(homeActionsViewModel, snackBarHostState, context)
+                }
+            })
+        }
+    }
+}
+
+private fun backUpTransactions(
+    homeActionsViewModel: HomeActionsViewModel,
+    snackBarHostState: SnackbarHostState,
+    context: Context,
+) {
+    homeActionsViewModel.exportTransactions(true) {
+        if (it.status == SUCCESS) {
+            showBackUpResultAlert(it, snackBarHostState, context)
+        } else {
+            Toast.makeText(
+                context,
+                it.message,
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
+}
+
+private fun showBackUpResultAlert(
+    backStatus: BackupStatus,
+    snackBarHostState: SnackbarHostState,
+    context: Context,
+) {
+    CoroutineScope(Dispatchers.Main).launch {
+        val snackBarResult = snackBarHostState.showSnackbar(
+            actionLabel = OPEN,
+            duration = SnackbarDuration.Short,
+            message = backStatus.message,
+            withDismissAction = true,
+        )
+        when (snackBarResult) {
+            SnackbarResult.Dismissed -> {
+            }
+
+            SnackbarResult.ActionPerformed -> {
+                openFile(context)
+            }
+        }
+    }
+}
+
+fun openFile(context: Context) {
+    val file = getFileFolderToStoreTransactions(context)
+    val filePath = File(file, "transaction.csv")
+    val uri = FileProvider.getUriForFile(
+        context, context.applicationContext.packageName + ".provider", filePath
+    )
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, type ?: context.contentResolver.getType(uri))
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    if (!filePath.exists()) {
+        Log.e("FolderError", "Folder does not exist: ${filePath.absolutePath}")
+        return
+    }
+    try {
+        context.startActivity(Intent.createChooser(intent, "Open Folder"))
+    } catch (e: ActivityNotFoundException) {
+        Log.e("IntentError", "No application found to open this folder.")
+    }
+}
+
+data class RowWithImageData(val text: String, val iconResource: ImageVector)
+
+@Composable
+fun RowWithImage(data: RowWithImageData, onClick: () -> Unit) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
+            .padding(
+                vertical = 12.dp,
+                horizontal = 16.dp,
+            ),
+    ) {
+        val (selectedFilterTextView) = createRefs()
+        Row(
+            modifier = Modifier.constrainAs(selectedFilterTextView) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+            },
+        ) {
+            val icon = data.iconResource
+            Icon(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .width(20.dp)
+                    .align(Alignment.CenterVertically),
+                imageVector = icon,
+                contentDescription = null,
+            )
+            Text(
+                text = data.text,
+                fontSize = 16.sp,
+            )
+        }
+    }
+}

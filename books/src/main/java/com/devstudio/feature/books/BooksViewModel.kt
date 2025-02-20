@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.data.repository.BooksRepository
 import com.devstudio.data.repository.UserDataRepository
-import com.devstudio.expensemanager.db.models.Books
+import com.devstudio.database.models.Books
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

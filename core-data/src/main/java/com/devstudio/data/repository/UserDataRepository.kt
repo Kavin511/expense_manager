@@ -25,7 +25,7 @@ interface UserDataRepository {
 class UserDataRepositoryImpl @Inject constructor(val userDataSource: DataSourceModule) :
     UserDataRepository {
     override val userData: Flow<UserPreferencesData>
-        get() = userDataSource.userData
+        get() = userDataSource.userData()
 
     override suspend fun updateSelectedBookId(id: Long) = userDataSource.updateSelectedBookId(id)
 

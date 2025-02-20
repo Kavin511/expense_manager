@@ -1,0 +1,1100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.5.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.5.2)" variant="all" version="8.5.2">
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.constraintlayout.compose.lint.ConstraintLayoutComposeIssueRegistry`) which requires a newer API level. That means that the custom lint checks are intended for a newer lint version; please upgrade.">
+        <location
+            file="$GRADLE_USER_HOME/caches/8.9/transforms/48c9f2883cf178ebabe80d9d77ed05ea/transformed/constraintlayout-compose-release/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ScopedStorage"
+        message="WRITE_EXTERNAL_STORAGE no longer provides write access when targeting Android 11+, even when using `requestLegacyExternalStorage`"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="8"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.library than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.library than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.library than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.tools.build:gradle than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.tools.build:gradle than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.tools.build:gradle than 8.5.2 is available: 8.8.1"
+        errorLine1="androidGradlePlugin = &quot;8.5.2&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="2"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.animation:animation-android than 1.7.7 is available: 1.7.8"
+        errorLine1="animation = &quot;1.7.7&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.animation:animation-android than 1.7.7 is available: 1.7.8"
+        errorLine1="animation = &quot;1.7.7&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.animation:animation-android than 1.7.7 is available: 1.7.8"
+        errorLine1="animation = &quot;1.7.7&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.animation:animation-core-android than 1.7.7 is available: 1.7.8"
+        errorLine1="animation = &quot;1.7.7&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.animation:animation-core-android than 1.7.7 is available: 1.7.8"
+        errorLine1="animation = &quot;1.7.7&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.animation:animation-core-android than 1.7.7 is available: 1.7.8"
+        errorLine1="animation = &quot;1.7.7&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-bom than 33.6.0 is available: 33.9.0"
+        errorLine1="firebaseBom = &quot;33.6.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-bom than 33.6.0 is available: 33.9.0"
+        errorLine1="firebaseBom = &quot;33.6.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-bom than 33.6.0 is available: 33.9.0"
+        errorLine1="firebaseBom = &quot;33.6.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics-gradle than 2.9.9 is available: 3.0.3"
+        errorLine1="firebaseCrashlyticsGradle = &quot;2.9.9&quot;"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="7"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics-gradle than 2.9.9 is available: 3.0.3"
+        errorLine1="firebaseCrashlyticsGradle = &quot;2.9.9&quot;"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="7"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics-gradle than 2.9.9 is available: 3.0.3"
+        errorLine1="firebaseCrashlyticsGradle = &quot;2.9.9&quot;"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="7"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.foundation:foundation-android than 1.7.5 is available: 1.7.8"
+        errorLine1="foundation = &quot;1.7.5&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="8"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.foundation:foundation-android than 1.7.5 is available: 1.7.8"
+        errorLine1="foundation = &quot;1.7.5&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="8"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.foundation:foundation-android than 1.7.5 is available: 1.7.8"
+        errorLine1="foundation = &quot;1.7.5&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="8"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.jvm than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.jvm than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.jvm than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.1.0"
+        errorLine1="kotlin = &quot;2.0.21&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.7.0-alpha11 is available: 2.7.0-beta01"
+        errorLine1="room = &quot;2.7.0-alpha11&quot;"
+        errorLine2="       ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="25"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics than 19.2.1 is available: 19.4.0"
+        errorLine1="firebaseCrashlytics = &quot;19.2.1&quot;"
+        errorLine2="                      ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="28"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics than 19.2.1 is available: 19.4.0"
+        errorLine1="firebaseCrashlytics = &quot;19.2.1&quot;"
+        errorLine2="                      ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="28"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-crashlytics than 19.2.1 is available: 19.4.0"
+        errorLine1="firebaseCrashlytics = &quot;19.2.1&quot;"
+        errorLine2="                      ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="28"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-analytics than 22.1.2 is available: 22.2.0"
+        errorLine1="firebaseAnalytics = &quot;22.1.2&quot;"
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="29"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-analytics than 22.1.2 is available: 22.2.0"
+        errorLine1="firebaseAnalytics = &quot;22.1.2&quot;"
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="29"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-analytics than 22.1.2 is available: 22.2.0"
+        errorLine1="firebaseAnalytics = &quot;22.1.2&quot;"
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="29"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material-icons-core than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material-icons-core than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material-icons-core than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.8"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="Upgrade `androidx.compose.foundation` for keyboard and mouse support"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="Upgrade `androidx.compose.foundation` for keyboard and mouse support"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="Upgrade `androidx.compose.foundation` for keyboard and mouse support"
+        errorLine1="compose = &quot;1.7.5&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="30"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.10.0"
+        errorLine1="activityCompose = &quot;1.9.3&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="32"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.10.0"
+        errorLine1="activityCompose = &quot;1.9.3&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="32"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.9.3 is available: 1.10.0"
+        errorLine1="activityCompose = &quot;1.9.3&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="32"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.runtime:runtime-livedata than 1.7.5 is available: 1.7.8"
+        errorLine1="composeLivedata = &quot;1.7.5&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="33"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.runtime:runtime-livedata than 1.7.5 is available: 1.7.8"
+        errorLine1="composeLivedata = &quot;1.7.5&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="33"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.runtime:runtime-livedata than 1.7.5 is available: 1.7.8"
+        errorLine1="composeLivedata = &quot;1.7.5&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="33"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-test-junit4 than 1.7.5 is available: 1.7.8"
+        errorLine1="androidxComposeUiTestJunit4 = &quot;1.7.5&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="39"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-test-junit4 than 1.7.5 is available: 1.7.8"
+        errorLine1="androidxComposeUiTestJunit4 = &quot;1.7.5&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="39"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-test-junit4 than 1.7.5 is available: 1.7.8"
+        errorLine1="androidxComposeUiTestJunit4 = &quot;1.7.5&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="39"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-auth than 21.2.0 is available: 21.3.0"
+        errorLine1="playServicesAuth=&quot;21.2.0&quot;"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="43"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-auth than 21.2.0 is available: 21.3.0"
+        errorLine1="playServicesAuth=&quot;21.2.0&quot;"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="43"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-auth than 21.2.0 is available: 21.3.0"
+        errorLine1="playServicesAuth=&quot;21.2.0&quot;"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="43"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.0.21-1.0.27 is available: 2.1.0-1.0.29"
+        errorLine1="ksp = &quot;2.0.21-1.0.27&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="45"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.0.21-1.0.27 is available: 2.1.0-1.0.29"
+        errorLine1="ksp = &quot;2.0.21-1.0.27&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="45"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.0.21-1.0.27 is available: 2.1.0-1.0.29"
+        errorLine1="ksp = &quot;2.0.21-1.0.27&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="45"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.0.21-1.0.27 is available: 2.1.0-1.0.29"
+        errorLine1="ksp = &quot;2.0.21-1.0.27&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="45"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.0.21-1.0.27 is available: 2.1.0-1.0.29"
+        errorLine1="ksp = &quot;2.0.21-1.0.27&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="45"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp than 2.0.21-1.0.27 is available: 2.1.0-1.0.29"
+        errorLine1="ksp = &quot;2.0.21-1.0.27&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="45"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.1.2"
+        errorLine1="datastoreCoreAndroidVersion = &quot;1.1.1&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="46"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.1.2"
+        errorLine1="datastoreCoreAndroidVersion = &quot;1.1.1&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="46"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.datastore:datastore-preferences than 1.1.1 is available: 1.1.2"
+        errorLine1="datastoreCoreAndroidVersion = &quot;1.1.1&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="46"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-graphics-android than 1.7.5 is available: 1.7.8"
+        errorLine1="uiGraphicsAndroid = &quot;1.7.5&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="50"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-graphics-android than 1.7.5 is available: 1.7.8"
+        errorLine1="uiGraphicsAndroid = &quot;1.7.5&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="50"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-graphics-android than 1.7.5 is available: 1.7.8"
+        errorLine1="uiGraphicsAndroid = &quot;1.7.5&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="50"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-tooling-preview-android than 1.7.6 is available: 1.7.8"
+        errorLine1="uiToolingPreviewAndroid = &quot;1.7.6&quot;"
+        errorLine2="                          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="55"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-tooling-preview-android than 1.7.6 is available: 1.7.8"
+        errorLine1="uiToolingPreviewAndroid = &quot;1.7.6&quot;"
+        errorLine2="                          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="55"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.ui:ui-tooling-preview-android than 1.7.6 is available: 1.7.8"
+        errorLine1="uiToolingPreviewAndroid = &quot;1.7.6&quot;"
+        errorLine2="                          ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="55"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.core:core-ktx but with different version"
+        errorLine1="core_ktx = { module = &quot;androidx.core:core-ktx&quot;, version.ref = &quot;coreKtx&quot; }"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="82"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.core:core-ktx but with different version"
+        errorLine1="core_ktx = { module = &quot;androidx.core:core-ktx&quot;, version.ref = &quot;coreKtx&quot; }"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="82"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.core:core-ktx but with different version"
+        errorLine1="core_ktx = { module = &quot;androidx.core:core-ktx&quot;, version.ref = &quot;coreKtx&quot; }"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="82"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.core:core-ktx but with different version"
+        errorLine1="androidx_core = { module = &apos;androidx.core:core-ktx&apos;, version.ref = &apos;androidxCoreVersion&apos; }"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="99"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.core:core-ktx but with different version"
+        errorLine1="androidx_core = { module = &apos;androidx.core:core-ktx&apos;, version.ref = &apos;androidxCoreVersion&apos; }"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="99"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.core:core-ktx but with different version"
+        errorLine1="androidx_core = { module = &apos;androidx.core:core-ktx&apos;, version.ref = &apos;androidxCoreVersion&apos; }"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/expense_manager/gradle/libs.versions.toml"
+            line="99"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.menu.bottom_nav_menu` appears to be unused"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/menu/bottom_nav_menu.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+</issues>

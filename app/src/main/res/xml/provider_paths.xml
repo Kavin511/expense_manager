@@ -15,4 +15,7 @@
     <files-path
         name="files"
         path="." />
+    <external-files-path
+        name="backups"
+        path="Backups/" />
 </paths>

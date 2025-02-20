@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 
@@ -25,7 +26,7 @@ fun TransactionFilterBottomSheet(
     event: (FilterItem?) -> Unit,
 ) {
     val transactionViewModel = hiltViewModel<TransactionViewModel>()
-    ModalBottomSheet(onDismissRequest = {
+    BottomSheet(onDismissRequest = {
         event.invoke(null)
     }, sheetState = filterBottomSheetState) {
         Column(

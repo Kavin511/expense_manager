@@ -24,9 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.devstudio.category.R
 import com.devstudio.category.listeners.CategoryCallback
-import com.devstudio.core.designsystem.R
-import com.devstudio.expensemanager.db.models.Category
+import com.devstudio.database.models.Category
+import com.devstudio.designSystem.DEFAULT_CARD_CORNER_RADIUS
 import com.devstudio.utils.utils.AppConstants.Companion.supportedTransactionTypes
 
 @Composable
@@ -43,7 +44,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
     Dialog(onDismissRequest = {
         categoryCallback::onDismiss.invoke()
     }) {
-        Card(shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius))) {
+        Card(shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS)) {
             Column(
                 modifier = Modifier
                     .padding(16.dp),
@@ -97,7 +98,7 @@ fun CreateCategoryDialog(context: Context, category: Category, categoryCallback:
                         .fillMaxWidth()
                         .padding(8.dp)
                         .align(Alignment.CenterHorizontally),
-                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.default_radius)),
+                    shape = RoundedCornerShape(DEFAULT_CARD_CORNER_RADIUS),
                 ) {
                     Text(text = if (category.name.isNotBlank()) "Update" else "Add")
                 }
