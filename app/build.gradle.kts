@@ -107,3 +107,6 @@ dependencies {
 dependencyGuard {
 	configuration("releaseRuntimeClasspath")
 }
+tasks.named("spotlessKotlin") {
+    dependsOn(tasks.named("dependencyGuard"))
+}
