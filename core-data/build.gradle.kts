@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     id("dagger.hilt.android.plugin")
-    id("com.google.firebase.crashlytics")
 }
 
 android {
