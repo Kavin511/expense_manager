@@ -7,6 +7,9 @@ plugins {
 }
 
 android {
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 	namespace ="com.devstudio.core.data"
     compileSdk = 35
     buildToolsVersion = "34.0.0"

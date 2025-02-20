@@ -50,9 +50,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:mimeType="text/comma_separated_values/csv" />
-                <data
-                    android:host="expensemanager"
-                    android:scheme="android:app" />
+                <data android:scheme="android:app"/>
+                <data android:host="expensemanager"/>
 
             </intent-filter>
         </activity>
