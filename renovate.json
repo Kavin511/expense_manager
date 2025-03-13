@@ -3,7 +3,7 @@
   "extends": [
     "config:base"
   ],
-  "branchName": "Development",
+  "branchName": "renovate/{package}",
   "automerge": true,
   "schedule": ["after:success"]
 }

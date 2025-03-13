@@ -1,13 +1,14 @@
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.generateProxyIrModuleWith
 
 plugins {
 	alias(libs.plugins.android.application)
 	id("org.jetbrains.kotlin.android")
 	alias(libs.plugins.ksp)
-	id("com.google.gms.google-services")
-	id("com.google.firebase.crashlytics")
 	id("dagger.hilt.android.plugin")
 	alias(libs.plugins.compose.compiler)
 	alias(libs.plugins.dependencyGuard)
+	id("com.google.gms.google-services")
+	id("com.google.firebase.crashlytics")
 }
 
 android {

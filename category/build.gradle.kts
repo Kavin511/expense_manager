@@ -11,7 +11,7 @@ android {
         baseline = file("lint-baseline.xml")
     }
     namespace = "com.devstudio.category"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
