@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.data.datastore.orDefault
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.models.Transaction
 import com.devstudio.transactions.acivity.TransactionActivity
 import com.devstudio.transactions.composables.transacionDashboard.showDateRangePicker
 import com.devstudio.transactions.models.DateSelectionStatus
@@ -26,6 +26,7 @@ import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.Serializable
 import java.util.Calendar
 
 @Composable

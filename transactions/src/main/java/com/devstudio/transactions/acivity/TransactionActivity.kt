@@ -9,30 +9,51 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.devstudio.data.repository.BooksRepositoryImpl
-import com.devstudio.expensemanager.db.models.Category
-import com.devstudio.expensemanager.db.models.Transaction
-import com.devstudio.expensemanager.db.models.TransactionMode
+import com.devstudio.database.models.Category
+import com.devstudio.database.models.Transaction
+import com.devstudio.utils.utils.TransactionMode
 import com.devstudio.transactions.R
 import com.devstudio.transactions.databinding.ActivityTransactionBinding
 import com.devstudio.transactions.uicomponents.TransactionKeyboard
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formulas.TransactionInputFormula
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
-import com.devstudioworks.ui.components.MaterialAlert
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.io.Serializable
 import java.util.Calendar
 import javax.inject.Inject
+const val MappedTransaction = "MappedTransaction"
+data class TransactionUiModel(
+    var id: Long,
+    var bookId: Long,
+    var note: String,
+    var amount: Double,
+    var categoryId: String,
+    var transactionMode: String,
+    var transactionDate: String,
+    var paymentStatus: String
+) : Serializable {
 
+    constructor(transaction: Transaction) : this(
+        id = transaction.id,
+        bookId = transaction.bookId,
+        note = transaction.note,
+        amount = transaction.amount,
+        categoryId = transaction.categoryId,
+        transactionMode = transaction.transactionMode,
+        transactionDate = transaction.transactionDate,
+        paymentStatus = transaction.paymentStatus
+    )
+}
 @AndroidEntryPoint
 class TransactionActivity : AppCompatActivity() {
 
@@ -133,16 +154,36 @@ class TransactionActivity : AppCompatActivity() {
 
     private fun fetchAndUpdateTransactionToBeEdited() {
         lifecycleScope.launch {
-            val id = intent.getLongExtra("id", 0)
-            transactionViewModel.getAndUpdateTransactionById(id)
+            val transactionUiModel =
+                intent.getSerializableExtra(MappedTransaction) as TransactionUiModel?
+            if (transactionUiModel != null) {
+                mapToTransactionAndUpdateViewModel(transactionUiModel)
+            } else {
+                val id = intent.getLongExtra("id", 0)
+                transactionViewModel.getAndUpdateTransactionById(id)
+            }
             mapSelectedTransactionDetails()
         }
         transactionViewModel.isEditingOldTransaction.observe(this) {
             if (it) {
                 binding.keyboard.saveTransaction.text =
-                    getString(com.devstudio.core.designsystem.R.string.update_transaction)
+                    getString(R.string.update_transaction)
             }
         }
+    }
+
+    private fun mapToTransactionAndUpdateViewModel(transactionUiModel: TransactionUiModel) {
+        val transaction = Transaction(
+            id = transactionUiModel.id,
+            bookId = transactionUiModel.bookId,
+            note = transactionUiModel.note,
+            amount = transactionUiModel.amount,
+            categoryId = transactionUiModel.categoryId,
+            transactionMode = transactionUiModel.transactionMode,
+            transactionDate = transactionUiModel.transactionDate,
+            paymentStatus = transactionUiModel.paymentStatus,
+        )
+        transactionViewModel.transaction.value = transaction
     }
 
     private suspend fun mapSelectedTransactionDetails() {
@@ -152,16 +193,16 @@ class TransactionActivity : AppCompatActivity() {
                 binding.keyboard.amountText.editableText.insert(0, it.amount.toString())
                 binding.noteText.setText(it.note)
                 binding.transactionDate.text =
-                    DateFormatter.convertLongToDate(it.transactionDate.toLong())
+                    DateFormatter.convertLongToDate(it.transactionDate)
                 selectedDate = it.transactionDate
                 selectedTransactionMode = it.transactionMode
                 when (selectedTransactionMode) {
-                    EXPENSE -> {
+                    TransactionMode.EXPENSE.title -> {
                         transactionViewModel.transactionType.value = TransactionMode.EXPENSE
                         binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.DEBT.name
                         transactionViewModel.futurePaymentModeStatus.isDebit = binding.futurePayment.isChecked
                     }
-                    INVESTMENT -> {
+                    TransactionMode.INVESTMENT.title -> {
                         transactionViewModel.transactionType.value = TransactionMode.INVESTMENT
                         binding.futurePayment.isChecked = it.paymentStatus == PaymentStatus.CREDIT.name
                         transactionViewModel.futurePaymentModeStatus.isCredit = binding.futurePayment.isChecked
@@ -280,7 +321,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun initialiseTransactionDateClickListener() {
-        binding.transactionDate.text = DateFormatter.convertLongToDate(selectedDate.toLong())
+        binding.transactionDate.text = DateFormatter.convertLongToDate(selectedDate)
         binding.transactionDate.setOnClickListener {
             val calendarConstraintsBuilder = CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now())
@@ -289,7 +330,7 @@ class TransactionActivity : AppCompatActivity() {
             datePickerBuilder.setSelection(selectedDate.toLong())
             val datePicker = datePickerBuilder.build()
             datePicker.addOnPositiveButtonClickListener {
-                binding.transactionDate.text = DateFormatter.convertLongToDate(it)
+                binding.transactionDate.text = DateFormatter.convertLongToDate(it.toString())
                 selectedDate = it.toString()
             }
             datePicker.show(supportFragmentManager, "")
@@ -359,20 +400,17 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun deleteTransactionAlert() {
-        MaterialAlert(
-            context = this@TransactionActivity,
-            title = "Are you sure to delete this transaction",
-            negativeText = "No",
-            positiveText = "Delete",
-            positiveCallback = {
-                transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
-                it.dismiss()
-                this.finish()
-            },
-            negativeCallback = {
-                it.dismiss()
-            },
-        )
+        val materialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
+        materialAlertDialogBuilder.setTitle(
+            "Are you sure to delete this transaction",
+        ).setPositiveButton("Delete") { dialog, _ ->
+            transactionViewModel.deleteTransaction(transactionViewModel.transaction.value!!)
+            dialog.dismiss()
+            this.finish()
+        }.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        materialAlertDialogBuilder.show()
     }
 }
 

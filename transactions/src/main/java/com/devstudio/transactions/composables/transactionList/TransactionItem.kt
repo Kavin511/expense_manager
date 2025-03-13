@@ -31,17 +31,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.expensemanager.db.models.Transaction
+import com.devstudio.database.models.Transaction
+import com.devstudio.sharedmodule.utils.getTransactionBlockColor
 import com.devstudio.transactions.acivity.PaymentStatus
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
-import com.devstudio.utils.utils.AppConstants.Companion.EXPENSE
-import com.devstudio.utils.utils.AppConstants.Companion.INVESTMENT
-import com.devstudioworks.ui.theme.DEFAULT_CARD_CORNER_RADIUS
-import com.devstudioworks.ui.theme.DEFAULT_CARD_ELEVATION
-import com.devstudioworks.ui.theme.SECONDARY_TEXT_SIZE
-import com.devstudioworks.ui.theme.appColors
-import com.devstudioworks.ui.theme.model.AppColor
+import com.devstudio.designSystem.DEFAULT_CARD_CORNER_RADIUS
+import com.devstudio.designSystem.DEFAULT_CARD_ELEVATION
+import com.devstudio.designSystem.SECONDARY_TEXT_SIZE
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.model.AppColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(
@@ -58,19 +57,6 @@ fun TransactionItem(
         amount = 0.0,
     ),
 ) {
-    val blockColor = when (transaction.transactionMode) {
-        EXPENSE -> {
-            appColors.transactionExpenseColor
-        }
-
-        INVESTMENT -> {
-            appColors.transactionInvestmentColor
-        }
-
-        else -> {
-            appColors.transactionIncomeColor
-        }
-    }
     val context = LocalContext.current
     val transactionViewModel: TransactionViewModel = hiltViewModel()
     ElevatedCard(
@@ -98,7 +84,7 @@ fun TransactionItem(
                         .padding(8.dp)
                         .size(10.dp)
                         .clip(CircleShape)
-                        .background(color = blockColor),
+                        .background(color = getTransactionBlockColor(transaction)),
                 )
             }
             Column(
@@ -189,7 +175,7 @@ private fun TransactionDate(
     appColors: AppColor,
 ) {
     Text(
-        text = DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
+        text = DateFormatter.convertLongToDate(transaction.transactionDate),
         color = appColors.material.onPrimaryContainer,
         fontSize = SECONDARY_TEXT_SIZE,
         modifier = Modifier.padding(end = 5.dp),

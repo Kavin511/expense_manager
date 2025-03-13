@@ -25,34 +25,39 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devstudio.account.R
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.Theme.DARK
 import com.devstudio.data.model.Theme.LIGHT
-import com.devstudio.model.models.ExpressWalletAppState
 import com.devstudio.profile.viewmodels.EditableSettings
 import com.devstudio.profile.viewmodels.ProfileUiState
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudioworks.ui.components.Page
-import com.devstudioworks.ui.icons.EMAppIcons
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.designSystem.components.Screen
+import com.devstudio.designSystem.icons.EMAppIcons
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.maxScreenWidth
+import com.devstudio.model.models.ExpressWalletAppState
+import com.devstudio.model.models.OnEvent
 
 @Composable
-fun ProfileMainScreen(navController: NavHostController) {
+fun ProfileMainScreen(
+    onEvent: OnEvent,
+    navController: NavHostController = rememberNavController(),
+) {
     val profileViewModel = hiltViewModel<ProfileViewModel>()
     val profileUiState = profileViewModel.profileUiState.collectAsStateWithLifecycle()
-    Page(title = "Profile", navController = navController) {
+    Screen(title = { Text(text = "Profile") }, navController = navController) {
         Surface(
             modifier = Modifier
-                .widthIn(max = 640.dp)
-                .padding(10.dp),
+                .widthIn(max = maxScreenWidth)
         ) {
             Column {
                 when (val uiState = profileUiState.value) {
                     ProfileUiState.Loading -> Text(text = stringResource(R.string.loading))
                     is ProfileUiState.Success -> {
                         ProfileSummary(appColors, profileViewModel)
-                        PreferencesPanel(uiState.data, navController)
+                        PreferencesPanel(uiState.data, onEvent)
                     }
                 }
             }
@@ -68,7 +73,7 @@ data class Preference(
 )
 
 @Composable
-private fun PreferencesPanel(profileUiState: EditableSettings, navController: NavHostController) {
+private fun PreferencesPanel(profileUiState: EditableSettings, onEvent: OnEvent) {
     val theme = profileUiState.theme
     if (theme == Theme.SYSTEM_DEFAULT) {
         if (isSystemInDarkTheme()) {
@@ -96,7 +101,7 @@ private fun PreferencesPanel(profileUiState: EditableSettings, navController: Na
             description = "Theme preferences",
             icon = themeIcon,
         ) {
-            navController.navigate(ExpressWalletAppState.ThemeScreen.route)
+            onEvent.invoke.invoke(ExpressWalletAppState.ThemeScreen)
         },
     )
     Column {

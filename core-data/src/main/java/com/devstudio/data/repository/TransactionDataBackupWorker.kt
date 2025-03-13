@@ -1,21 +1,19 @@
 package com.devstudio.data.repository
 
 import android.content.Context
-import android.os.Environment
 import android.util.Log
-import androidx.core.os.BuildCompat
 import androidx.room.Room
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.devstudio.expensemanager.db.ExpenseManagerDataBase
+import com.devstudio.data.util.FileUtils.getBackupFolder
+import com.devstudio.database.ExpenseManagerDataBase
 import com.devstudio.model.models.BackupStatus
 import com.devstudio.model.models.Status
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_KEY
 import com.devstudio.utils.utils.AppConstants.StringConstants.BACK_UP_STATUS_MESSAGE
 import com.devstudio.utils.utils.AppConstants.StringConstants.WORK_TRIGGERING_MODE_KEY
-import com.devstudio.utils.utils.CSVWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -28,7 +26,7 @@ class TransactionDataBackupWorker(
     workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {
 
-    val db = Room.databaseBuilder(
+    private val db = Room.databaseBuilder(
         context,
         ExpenseManagerDataBase::class.java,
         "expense_manager_database",
@@ -76,7 +74,7 @@ class TransactionDataBackupWorker(
                         transaction.amount.toString(),
                         db.categoryDao().findCategoryById(transaction.categoryId)?.name
                             ?: transaction.categoryId,
-                        DateFormatter.convertLongToDate(transaction.transactionDate.toLong()),
+                        DateFormatter.convertLongToDate(transaction.transactionDate),
                         transaction.note,
                         transaction.transactionMode,
                     ),
@@ -96,33 +94,19 @@ class TransactionDataBackupWorker(
     )
 
     private fun createFileDirectoryToStoreTransaction(context: Context): CSVWriter {
-        val file = getFileToStoreTransactions(context)
+        val file = getFileFolderToStoreTransactions(context)
         file.createNewFile()
-        return CSVWriter(FileWriter(file, false))
+        return CSVWriter(FileWriter(File(file, "transaction.csv"), false))
     }
 
     companion object {
-        fun getFileToStoreTransactions(context: Context): File {
-            val backupPath = backupPath(context)
-            val folder = File(backupPath)
-            if (!folder.exists()) {
-                folder.mkdirs()
+        fun getFileFolderToStoreTransactions(context: Context): File {
+            val backupPath = getBackupFolder(context)
+            val backupFile = File(backupPath)
+            if (!backupFile.exists()) {
+                backupFile.mkdirs()
             }
-            return File(folder.absolutePath, BACK_UP_FILE_NAME)
+            return File(backupFile.absolutePath)
         }
-
-        @androidx.annotation.OptIn(BuildCompat.PrereleaseSdkCheck::class)
-        fun backupPath(context: Context): String {
-            val path = if (BuildCompat.isAtLeastT()) {
-                context.filesDir.absolutePath
-            } else {
-                Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOCUMENTS,
-                ).absolutePath
-            }
-            return "$path/${context.applicationInfo.packageName}"
-        }
-
-        const val BACK_UP_FILE_NAME = "transactions.csv"
     }
 }

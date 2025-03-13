@@ -3,7 +3,7 @@ package com.devstudio.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.data.repository.CategoryRepository
-import com.devstudio.expensemanager.db.models.Category
+import com.devstudio.database.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

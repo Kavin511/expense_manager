@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.devstudio.expensemanager.db.models.Books
-import com.devstudioworks.ui.components.InputDialog
-import com.devstudioworks.ui.components.InputEnterDialog
-import com.devstudioworks.ui.icons.EMAppIcons
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.database.models.Books
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.components.BottomSheet
+import com.devstudio.designSystem.components.InputDialog
+import com.devstudio.designSystem.components.InputEnterDialog
+import com.devstudio.designSystem.defaultVerticalPadding
+import com.devstudio.designSystem.icons.EMAppIcons
+import com.devstudio.designSystem.smallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,12 +39,12 @@ fun BooksMainScreen(
     sheetState: SheetState,
     hideBottomSheet: (Long?) -> Unit,
 ) {
-    val booksViewModel: BooksViewModel = viewModel()
+    val booksViewModel: BooksViewModel = hiltViewModel()
     val booksUiState by booksViewModel.booksUiState.collectAsState()
     var shouldShowBookCreationDialog by remember {
         mutableStateOf(false)
     }
-    ModalBottomSheet(onDismissRequest = {
+    BottomSheet(onDismissRequest = {
         hideBottomSheet.invoke(null)
     }, sheetState = sheetState) {
         when (booksUiState) {
@@ -73,7 +76,7 @@ fun BooksMainScreen(
                 }
                 Column(
                     modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                        .padding(vertical = defaultVerticalPadding, horizontal = 8.dp),
                 ) {
                     BooksHeading {
                         shouldShowBookCreationDialog = true
@@ -139,12 +142,13 @@ private fun BooksHeading(createBookCallback: () -> Unit) {
 fun BookItem(book: Books, itemSelectionCallback: (Books) -> Unit) {
     Text(
         text = book.name,
+        style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 8.dp)
             .clickable {
                 itemSelectionCallback.invoke(book)
-            },
+            }
+            .padding(vertical = defaultVerticalPadding, horizontal = 8.dp),
     )
 }
 

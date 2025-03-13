@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devstudio.data.repository.Remainder
 import com.devstudio.profile.viewmodels.ProfileViewModel
-import com.devstudioworks.ui.components.Page
-import com.devstudioworks.ui.theme.appColors
+import com.devstudio.designSystem.components.Screen
+import com.devstudio.designSystem.appColors
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
@@ -56,7 +56,7 @@ fun RemainderScreen(navController: NavHostController) {
             Day("S", false, "Saturday", 6),
         )
     }
-    Page(title = "Remainder", navController = navController, shouldNavigateUp = true, action = {
+    Screen(title = { Text(text = "Remainder") }, navController = navController, shouldNavigateUp = true, action = {
         Text(
             text = "Save",
             modifier = Modifier.clickable {

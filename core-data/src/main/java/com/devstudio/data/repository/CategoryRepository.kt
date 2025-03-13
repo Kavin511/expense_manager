@@ -1,7 +1,9 @@
 package com.devstudio.data.repository
 
-import com.devstudio.expensemanager.db.dao.CategoryDao
-import com.devstudio.expensemanager.db.models.Category
+import android.content.Context
+import com.devstudio.database.ApplicationModule
+import com.devstudio.database.models.Category
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -9,6 +11,7 @@ import javax.inject.Singleton
 interface CategoryRepository {
     fun insertCategory(category: Category)
     fun findCategoryById(id: String): Category?
+    fun getCategoryByName(name: String): Category?
     fun deleteCategory(category: Category)
     fun updateCategory(category: Category)
     fun getCategoriesStream(type: String): Flow<List<Category>>
@@ -16,8 +19,12 @@ interface CategoryRepository {
 }
 
 @Singleton
-class CategoryRepositoryImpl @Inject constructor(private val categoryDao: CategoryDao) :
+class CategoryRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
     CategoryRepository {
+
+    val db = ApplicationModule.config.factory.getRoomInstance()
+    private val categoryDao = db.categoryDao()
+
     override fun insertCategory(category: Category) {
         return categoryDao.insertCategory(category)
     }
@@ -36,6 +43,10 @@ class CategoryRepositoryImpl @Inject constructor(private val categoryDao: Catego
 
     override fun getAllCategories(): Flow<List<Category>> {
         return categoryDao.getAllCategories()
+    }
+
+    override fun getCategoryByName(name: String): Category? {
+        return categoryDao.getCategoryByName(name)
     }
 
     override fun findCategoryById(id: String): Category? {

@@ -11,23 +11,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ImportExport
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.devstudio.core.designsystem.R
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
+import com.devstudio.designSystem.appColors
+import com.devstudio.designSystem.smallPadding
 import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
-import com.devstudioworks.ui.theme.appColors
 import java.util.Calendar
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -53,8 +54,8 @@ fun TransactionSummary(transactionBook: TransactionBook) {
                 is DateRange -> {
                     val selectedDate = transactionFilterType.additionalData
                     "Summary from ${
-                        DateFormatter.convertLongToDate(selectedDate.first) + " to " + DateFormatter.convertLongToDate(
-                            selectedDate.second,
+                        DateFormatter.convertLongToDate(selectedDate.first.toString()) + " to " + DateFormatter.convertLongToDate(
+                            selectedDate.second.toString(),
                         )
                     }"
                 }
@@ -72,50 +73,50 @@ fun TransactionSummary(transactionBook: TransactionBook) {
             Text(
                 text = transactionSummaryText,
                 color = textColor,
-                style = Typography().bodyMedium,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(vertical = smallPadding),
             )
             FlowRow(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(vertical = smallPadding),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Column(horizontalAlignment = (Alignment.CenterHorizontally)) {
-                    Icon(
-                        imageVector = Icons.Rounded.ImportExport,
-                        contentDescription = "Expenses",
-                        tint = appColors.transactionExpenseColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding)),
-                    )
-                    Text(
-                        text = "Total expense ${roundOffDecimal(expense)}",
-                        color = textColor,
-                    )
-                }
-                Column(horizontalAlignment = (Alignment.CenterHorizontally)) {
-                    Icon(
-                        imageVector = Icons.Rounded.ImportExport,
-                        contentDescription = "Income",
-                        tint = appColors.transactionIncomeColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding)),
-                    )
-                    Text(
-                        text = "Total income : ${roundOffDecimal(income)}",
-                        style = Typography().bodyMedium,
-                        color = textColor,
-                    )
-                }
-                Column(horizontalAlignment = (Alignment.CenterHorizontally)) {
-                    Icon(
-                        imageVector = Icons.Rounded.ImportExport,
-                        contentDescription = "Investment",
-                        tint = appColors.transactionInvestmentColor,
-                        modifier = Modifier.padding(dimensionResource(id = R.dimen.default_padding)),
-                    )
-                    Text(
-                        text = "Total investment ${roundOffDecimal(investment)}",
-                        color = textColor,
-                    )
-                }
+                SummaryItem(
+                    value = "Total income : ${roundOffDecimal(income)}",
+                    iconTint = appColors.transactionIncomeColor,
+                    modifier = Modifier.padding(horizontal = smallPadding),
+                )
+                SummaryItem(
+                    value = "Total expense ${roundOffDecimal(expense)}",
+                    iconTint = appColors.transactionExpenseColor,
+                    modifier = Modifier.padding(horizontal = smallPadding),
+                )
+                SummaryItem(
+                    value = "Total investment ${roundOffDecimal(investment)}",
+                    iconTint = appColors.transactionInvestmentColor,
+                    modifier = Modifier.padding(horizontal = smallPadding),
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun SummaryItem(
+    modifier: Modifier,
+    value: String,
+    iconTint: Color = LocalContentColor.current
+) {
+    Column(modifier = modifier, horizontalAlignment = (Alignment.CenterHorizontally)) {
+        Icon(
+            imageVector = Icons.Rounded.ImportExport,
+            contentDescription = value,
+            tint = iconTint,
+            modifier = Modifier.padding(smallPadding),
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color = appColors.material.onTertiaryContainer,
+        )
     }
 }
