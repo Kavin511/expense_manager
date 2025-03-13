@@ -41,6 +41,9 @@ kotlin {
 }
 
 android {
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
     namespace = "com.devstudio.theme"
     compileSdk = 35
     defaultConfig {

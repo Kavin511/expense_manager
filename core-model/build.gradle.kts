@@ -4,6 +4,9 @@ plugins {
 }
 
 android {
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
     compileSdk = 35
 
     namespace = "com.devstudio.core_model"

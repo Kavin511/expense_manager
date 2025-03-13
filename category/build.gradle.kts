@@ -7,8 +7,11 @@ plugins {
 }
 
 android {
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
     namespace = "com.devstudio.category"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21

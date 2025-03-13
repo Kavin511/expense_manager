@@ -7,6 +7,9 @@ plugins {
 }
 
 android {
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 	namespace = "com.devstudio.transactions"
 	compileSdk = 35
 

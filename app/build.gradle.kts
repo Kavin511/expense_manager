@@ -11,6 +11,9 @@ plugins {
 }
 
 android {
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 	namespace = "com.devstudio.expensemanager"
     compileSdk = 35
 	buildToolsVersion = "34.0.0"
@@ -106,4 +109,7 @@ dependencies {
 
 dependencyGuard {
 	configuration("releaseRuntimeClasspath")
+}
+tasks.named("spotlessKotlin") {
+    dependsOn(tasks.named("dependencyGuard"))
 }
