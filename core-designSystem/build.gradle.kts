@@ -36,6 +36,8 @@ kotlin {
             api(compose.material3)
             api(compose.components.uiToolingPreview)
             api(compose.components.resources)
+            api(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
             implementation(libs.navigation.compose)
             api(compose.components.uiToolingPreview)
             implementation(libs.material.icons.extended)

@@ -26,13 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.devstudio.designSystem.appColors
 import com.devstudio.expensemanager.R
-import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.AccountScreen
-import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.CategoryScreen
-import com.devstudio.model.models.ExpressWalletAppState.HomeScreen.TransactionsScreen
+import com.devstudio.data.model.ExpressWalletAppState.HomeScreen.AccountScreen
+import com.devstudio.data.model.ExpressWalletAppState.HomeScreen.CategoryScreen
+import com.devstudio.data.model.ExpressWalletAppState.HomeScreen.TransactionsScreen
 
 /**
  * @Author: Kavin

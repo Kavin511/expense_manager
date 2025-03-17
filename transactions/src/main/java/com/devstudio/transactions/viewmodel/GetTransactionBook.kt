@@ -9,13 +9,15 @@ import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.dsl.module
 
-class GetTransactionBook @Inject constructor(
-    private val transactionsRepository: TransactionsRepository,
-    private val userDataRepository: UserDataRepository,
-    private val booksRepository: BooksRepository,
-) {
+class GetTransactionBook : KoinComponent {
+    private val transactionsRepository: TransactionsRepository by inject()
+    private val userDataRepository: UserDataRepository by inject()
+    private val booksRepository: BooksRepository by inject()
+
     operator fun invoke(): Flow<TransactionBook> {
         val userData = userDataRepository.userData
         return userData.distinctUntilChanged().map {

@@ -20,12 +20,10 @@ import com.devstudio.designSystem.AppMaterialTheme
 import com.devstudio.expensemanager.presentation.mainScreen.ExpressWalletNavHost
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainUiState
 import com.devstudio.expensemanager.presentation.mainScreen.viewmodel.MainViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private var uiState = mutableStateOf<MainUiState>(MainUiState.Loading)
     private val mainViewModel by viewModels<MainViewModel>()

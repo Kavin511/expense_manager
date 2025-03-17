@@ -4,14 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.data.repository.CategoryRepository
 import com.devstudio.database.models.Category
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CategoryViewModel @Inject constructor(val categoryRepository: CategoryRepository) :
-    ViewModel() {
+class CategoryViewModel(val categoryRepository: CategoryRepository) : ViewModel() {
     val categoryState = MutableStateFlow<CategoryState>(CategoryState.LOADING)
 
     fun loadCategoriesForSelectedType(type: String = "") {

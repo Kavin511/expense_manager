@@ -4,7 +4,6 @@ plugins {
 	alias(libs.plugins.android.application)
 	id("org.jetbrains.kotlin.android")
 	alias(libs.plugins.ksp)
-	id("dagger.hilt.android.plugin")
 	alias(libs.plugins.compose.compiler)
 	alias(libs.plugins.dependencyGuard)
 	id("com.google.gms.google-services")
@@ -71,7 +70,6 @@ dependencies {
 	implementation(project(":utils"))
 	implementation(project(":core-designSystem"))
 	implementation(project(":database"))
-	implementation(project(":core-model"))
 	implementation(project(":transactions"))
 	implementation(project(":category"))
 	implementation(project(":profile"))
@@ -91,6 +89,7 @@ dependencies {
 	implementation(libs.androidx.constraintlayout.compose)
 	implementation(libs.androidx.foundation.v168)
 	implementation(libs.androidx.animation)
+	implementation(libs.koin.android)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.test.junit)
@@ -101,9 +100,7 @@ dependencies {
 	implementation(libs.bundles.compose)
 	implementation(project.project(":sharedModule"))
 
-	implementation(libs.hilt.android)
-	implementation(libs.hilt.navigation.compose)
-	ksp(libs.hilt.android.compiler)
+
 	implementation(libs.androidx.work)
 	implementation(project(":core-data:model"))
 }

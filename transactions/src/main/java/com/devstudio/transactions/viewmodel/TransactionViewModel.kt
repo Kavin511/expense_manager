@@ -13,7 +13,6 @@ import com.devstudio.utils.utils.TransactionMode
 import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.models.FuturePaymentStatus
 import com.devstudio.transactions.models.TransactionUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,10 +20,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class TransactionViewModel @Inject constructor(
+class TransactionViewModel(
     private val transactionsRepository: TransactionsRepository,
     private val categoryRepository: CategoryRepository,
     getTransactionBook: GetTransactionBook,

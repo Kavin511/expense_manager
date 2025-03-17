@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryState
 import com.devstudio.category.CategoryViewModel
 import com.devstudio.utils.utils.AppConstants.Companion.ALL
@@ -28,11 +27,12 @@ import com.devstudio.utils.utils.toPascalCase
 import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.appColors
 import com.devstudio.utils.utils.TransactionMode
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryMainScreen() {
-    val categoryViewModel = hiltViewModel<CategoryViewModel>()
+    val categoryViewModel = koinViewModel<CategoryViewModel>()
     val selectedFilterType = remember {
         mutableStateOf("")
     }
@@ -78,7 +78,7 @@ fun CategoryMainScreen() {
 fun CategoryActions(
     selectedFilterType: MutableState<String>,
 ) {
-    val categoryViewModel = hiltViewModel<CategoryViewModel>()
+    val categoryViewModel = koinViewModel<CategoryViewModel>()
     LazyRow(
         modifier = Modifier
             .fillMaxWidth(),

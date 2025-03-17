@@ -39,18 +39,18 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.data.repository.TransactionDataBackupWorker.Companion.getFileFolderToStoreTransactions
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel
 import com.devstudio.expensemanager.presentation.home.viewmodel.HomeActionsViewModel.Companion.OPEN
-import com.devstudio.model.models.BackupStatus
-import com.devstudio.model.models.OnEvent
-import com.devstudio.model.models.Status.SUCCESS
+import com.devstudio.data.model.BackupStatus
+import com.devstudio.data.model.OnEvent
+import com.devstudio.data.model.Status.SUCCESS
 import com.devstudio.transactions.models.BottomSheetEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +63,7 @@ fun HomeActionsBottomSheet(
     var readPermissionGranted = false
     var writePermissionGranted = false
     val permissionList = mutableListOf<String>()
-    val homeActionsViewModel = hiltViewModel<HomeActionsViewModel>()
+    val homeActionsViewModel = koinViewModel<HomeActionsViewModel>()
 
     val activityResultLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),

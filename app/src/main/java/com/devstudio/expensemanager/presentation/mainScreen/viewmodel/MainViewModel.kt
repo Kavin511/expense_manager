@@ -4,16 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.profile.viewmodels.EditableSettings
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
+import org.koin.java.KoinJavaComponent.inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
-    userPreferencesDataStore: UserDataRepository,
-) : ViewModel() {
+class MainViewModel : ViewModel() {
+    private val userPreferencesDataStore: UserDataRepository by inject(UserDataRepository::class.java)
     val mainUiState: StateFlow<MainUiState> = userPreferencesDataStore.userData.map { userData ->
         MainUiState.Success(
             MainUiData(

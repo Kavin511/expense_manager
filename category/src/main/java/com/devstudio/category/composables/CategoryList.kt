@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryViewModel
 import com.devstudio.category.R
 import com.devstudio.category.listeners.CategoryCallback
@@ -30,6 +29,7 @@ import com.devstudio.database.models.Category
 import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.components.MaterialAlert
 import com.devstudio.designSystem.icons.EMAppIcons
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -48,7 +48,7 @@ fun CategoryList(categoryStateList: List<Category>) {
             )
         }
     } else {
-        val categoryViewModel: CategoryViewModel = hiltViewModel()
+        val categoryViewModel = koinViewModel<CategoryViewModel>()
         val context = LocalContext.current
         var shouldShowDialog by remember {
             mutableStateOf(false)

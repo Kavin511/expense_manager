@@ -14,14 +14,13 @@ import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.data.model.UserPreferencesData
 import com.devstudio.data.repository.BooksRepositoryImpl
-import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.database.models.Books
 import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 private const val USER_PREFERENCES_NAME = "user_preferences"
 
@@ -34,16 +33,15 @@ const val FILTER_TYPE = "filterType"
 const val FILTER_START_DATE = "filterStartDate"
 const val FILTER_END_DATE = "filterEndDate"
 
-
 val selectedBookId = intPreferencesKey(SELECTED_BOOK_ID)
 val themePreference = stringPreferencesKey(THEME)
 val filterType = stringPreferencesKey(FILTER_TYPE)
 val filterStartDate = stringPreferencesKey(FILTER_START_DATE)
 val filterEndDate = stringPreferencesKey(FILTER_END_DATE)
 
-
-class DataSourceModule @Inject constructor(@ApplicationContext val context: Context) {
+class DataSourceModule : KoinComponent {
     private val DEFAULT_BOOK_ID: Long = 1
+    private val context: Context by inject()
 
     suspend fun updateSelectedBookId(id: Long) {
         context.userPreferencesDataStore.edit {
@@ -69,7 +67,7 @@ class DataSourceModule @Inject constructor(@ApplicationContext val context: Cont
     }
 
     private fun insertDefaultBookIfNotPresent() {
-        val booksRepository = BooksRepositoryImpl(context, UserDataRepositoryImpl(this))
+        val booksRepository: BooksRepositoryImpl by inject()
         if (booksRepository.getBooks().isEmpty()) {
             booksRepository.insertBook(Books(DEFAULT_BOOK_ID, DEFAULT_BOOK_NAME))
         }

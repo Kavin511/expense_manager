@@ -38,6 +38,10 @@ kotlin {
             api(libs.androidx.room.runtime)
             api(libs.kotlinx.serialization.json)
             implementation(project(":utils"))
+            api(project.dependencies.platform(libs.koin.bom))
+            api(libs.insert.koin.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.compose.viewmodel)
         }
         commonTest.dependencies {
         }

@@ -4,7 +4,7 @@ import java.io.IOException
 import java.io.PrintWriter
 import java.io.Writer
 
-class CSVWriter @JvmOverloads constructor(
+class CSVWriter(
     writer: Writer?,
     separator: Char = DEFAULT_SEPARATOR,
     quotechar: Char = DEFAULT_QUOTE_CHARACTER,

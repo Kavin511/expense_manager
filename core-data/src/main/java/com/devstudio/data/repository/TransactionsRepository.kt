@@ -6,9 +6,8 @@ import com.devstudio.database.models.Transaction
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.utils.TransactionMode
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.component.KoinComponent
 import java.util.Calendar
-import javax.inject.Inject
-import javax.inject.Singleton
 
 interface TransactionsRepository {
     fun allTransactionsStream(bookId: Long): Flow<List<Transaction>>
@@ -29,10 +28,7 @@ interface TransactionsRepository {
     fun getTransactionsForCurrentMonth(selectedBookId: Long): Flow<List<Transaction>>
 }
 
-@Singleton
-class TransactionsRepositoryImpl @Inject constructor(
-    val userDataRepository: UserDataRepository,
-) : TransactionsRepository {
+class TransactionsRepositoryImpl : TransactionsRepository, KoinComponent {
     val db = ApplicationModule.config.factory.getRoomInstance()
     private val transactionDao = db.transactionsDao()
     override fun getTotalAssets(): Double {

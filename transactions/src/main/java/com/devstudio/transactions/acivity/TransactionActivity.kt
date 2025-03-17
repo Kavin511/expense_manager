@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.devstudio.data.repository.BooksRepositoryImpl
+import com.devstudio.data.repository.BooksRepository
 import com.devstudio.database.models.Category
 import com.devstudio.database.models.Transaction
 import com.devstudio.utils.utils.TransactionMode
@@ -24,13 +24,14 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.java.KoinJavaComponent.inject
 import java.io.Serializable
 import java.util.Calendar
-import javax.inject.Inject
+
 const val MappedTransaction = "MappedTransaction"
 data class TransactionUiModel(
     var id: Long,
@@ -54,11 +55,10 @@ data class TransactionUiModel(
         paymentStatus = transaction.paymentStatus
     )
 }
-@AndroidEntryPoint
 class TransactionActivity : AppCompatActivity() {
 
     private var _binding: ActivityTransactionBinding? = null
-    private val transactionViewModel by viewModels<TransactionViewModel>()
+    private val transactionViewModel by inject<TransactionViewModel>(TransactionViewModel::class.java)
     var selectedCategoryIndexList: MutableList<Int> = mutableListOf(0, 0, 0)
     private val binding
         get() = _binding!!
@@ -66,8 +66,7 @@ class TransactionActivity : AppCompatActivity() {
     private var currentTransaction: Transaction? = null
     private lateinit var selectedTransactionMode: String
 
-    @Inject
-    lateinit var booksRepositoryImpl: BooksRepositoryImpl
+    private val booksRepositoryImpl: BooksRepository by inject(BooksRepository::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

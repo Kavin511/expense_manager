@@ -5,9 +5,10 @@ import com.devstudio.database.AppContext
 import com.devstudio.database.ApplicationContainer
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.Factory
-import dagger.hilt.android.HiltAndroidApp
+import com.devstudio.expensemanager.di.commonModules
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
-@HiltAndroidApp
 class ExpenseManagerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -17,5 +18,9 @@ class ExpenseManagerApplication : Application() {
                 factory = Factory(this),
             ),
         )
+        startKoin {
+            androidContext(this@ExpenseManagerApplication)
+            modules(commonModules)
+        }
     }
 }

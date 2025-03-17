@@ -1,4 +1,4 @@
-package com.devstudio.model.models
+package com.devstudio.data.model
 
 data class BackupStatus(val status: Status, val message: String) {
     companion object {

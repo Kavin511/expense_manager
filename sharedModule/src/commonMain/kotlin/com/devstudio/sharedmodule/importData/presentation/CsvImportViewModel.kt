@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devstudio.database.AppContext
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.models.Books
 import com.devstudio.database.models.Category
@@ -31,6 +32,7 @@ import com.devstudio.sharedmodule.saveTransactions
 import com.devstudio.utils.utils.AppConstants.StringConstants.DEFAULT_BOOK_NAME
 import com.devstudio.utils.utils.TransactionMode.EXPENSE
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import kotlin.math.abs
 
 /**

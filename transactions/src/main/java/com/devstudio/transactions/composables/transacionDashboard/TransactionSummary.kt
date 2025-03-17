@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
 import com.devstudio.designSystem.appColors
@@ -29,12 +28,13 @@ import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.utils.formatters.DateFormatter
 import com.devstudio.utils.formatters.StringFormatter.roundOffDecimal
+import org.koin.compose.viewmodel.koinViewModel
 import java.util.Calendar
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TransactionSummary(transactionBook: TransactionBook) {
-    val transactionViewModel = hiltViewModel<TransactionViewModel>()
+    val transactionViewModel = koinViewModel<TransactionViewModel>()
     val (income, expense, investment) = transactionViewModel.getTransactionSummaryDetails(
         transactionBook.transactions.collectAsState(
             initial = listOf(),

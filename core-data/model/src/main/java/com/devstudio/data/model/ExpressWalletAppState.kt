@@ -1,4 +1,4 @@
-package com.devstudio.model.models
+package com.devstudio.data.model
 
 @JvmInline
 value class OnEvent(val invoke: (ExpressWalletEvent) -> Unit)

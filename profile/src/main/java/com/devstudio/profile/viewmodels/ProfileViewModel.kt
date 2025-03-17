@@ -10,29 +10,29 @@ import com.devstudio.data.repository.RemainderRepository
 import com.devstudio.data.repository.TransactionsRepository
 import com.devstudio.data.repository.UserDataRepository
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
+import org.koin.dsl.module
 
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
+class ProfileViewModel(
     private val transactionRepository: TransactionsRepository,
     private val remainderRepository: RemainderRepository,
     val userPreferencesDataStore: UserDataRepository,
-) :
-    ViewModel() {
-
-    val profileUiState: StateFlow<ProfileUiState> = userPreferencesDataStore.userData.map { userData ->
-        ProfileUiState.Success(
-            EditableSettings(
-                theme = userData.theme,
-            ),
+) : ViewModel() {
+    val profileUiState: StateFlow<ProfileUiState> =
+        userPreferencesDataStore.userData.map { userData ->
+            ProfileUiState.Success(
+                EditableSettings(
+                    theme = userData.theme,
+                ),
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = ProfileUiState.Loading
         )
-    }.stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = ProfileUiState.Loading)
 
     fun getTotalAssets(): Double {
         return transactionRepository.getTotalAssets()

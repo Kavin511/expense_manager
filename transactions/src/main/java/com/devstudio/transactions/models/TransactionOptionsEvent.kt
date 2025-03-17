@@ -1,6 +1,6 @@
 package com.devstudio.transactions.models
 
-import com.devstudio.model.models.ExpressWalletEvent
+import com.devstudio.data.model.ExpressWalletEvent
 
 class TransactionOptionsEvent(
     override var showBottomSheet: Boolean,

@@ -11,40 +11,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.category.CategoryViewModel
 import com.devstudio.category.R
 import com.devstudio.category.listeners.CategoryCallback
 import com.devstudio.database.models.Category
 import com.devstudio.designSystem.components.ExpressWalletFab
 import com.devstudio.designSystem.appColors
+import org.koin.compose.KoinContext
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun CategoryFloatingActionButton() {
-    val context = LocalContext.current
-    val categoryViewModel = hiltViewModel<CategoryViewModel>()
-    var shouldShowDialog by remember {
-        mutableStateOf(false)
-    }
-    if (shouldShowDialog) {
-        val category = Category(categoryType = "")
-        CreateCategoryDialog(
-            context,
-            category,
-            object : CategoryCallback {
-                override fun onDismiss() {
-                    shouldShowDialog = false
-                }
+    KoinContext {
+        val context = LocalContext.current
+        val categoryViewModel = koinViewModel<CategoryViewModel>()
+        var shouldShowDialog by remember {
+            mutableStateOf(false)
+        }
+        if (shouldShowDialog) {
+            val category = Category(categoryType = "")
+            CreateCategoryDialog(
+                context,
+                category,
+                object : CategoryCallback {
+                    override fun onDismiss() {
+                        shouldShowDialog = false
+                    }
 
-                override fun onAddCategory(category: Category) {
-                    shouldShowDialog = false
-                    categoryViewModel.insertCategory(category)
-                }
-            },
-        )
-    }
-    ExpressWalletFab(appColors, stringResource(R.string.add_category)) {
-        shouldShowDialog = true
+                    override fun onAddCategory(category: Category) {
+                        shouldShowDialog = false
+                        categoryViewModel.insertCategory(category)
+                    }
+                },
+            )
+        }
+        ExpressWalletFab(appColors, stringResource(R.string.add_category)) {
+            shouldShowDialog = true
+        }
     }
 }
 
