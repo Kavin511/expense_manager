@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devstudio.database.models.Books
 import com.devstudio.designSystem.appColors
@@ -32,6 +31,7 @@ import com.devstudio.designSystem.components.InputEnterDialog
 import com.devstudio.designSystem.defaultVerticalPadding
 import com.devstudio.designSystem.icons.EMAppIcons
 import com.devstudio.designSystem.smallPadding
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +39,7 @@ fun BooksMainScreen(
     sheetState: SheetState,
     hideBottomSheet: (Long?) -> Unit,
 ) {
-    val booksViewModel: BooksViewModel = hiltViewModel()
+    val booksViewModel: BooksViewModel = koinViewModel<BooksViewModel>()
     val booksUiState by booksViewModel.booksUiState.collectAsState()
     var shouldShowBookCreationDialog by remember {
         mutableStateOf(false)

@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -37,15 +36,16 @@ import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.icons.EMAppIcons
 import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.maxScreenWidth
-import com.devstudio.model.models.ExpressWalletAppState
-import com.devstudio.model.models.OnEvent
+import com.devstudio.data.model.ExpressWalletAppState
+import com.devstudio.data.model.OnEvent
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ProfileMainScreen(
     onEvent: OnEvent,
     navController: NavHostController = rememberNavController(),
 ) {
-    val profileViewModel = hiltViewModel<ProfileViewModel>()
+    val profileViewModel = koinViewModel<ProfileViewModel>()
     val profileUiState = profileViewModel.profileUiState.collectAsStateWithLifecycle()
     Screen(title = { Text(text = "Profile") }, navController = navController) {
         Surface(

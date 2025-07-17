@@ -1,19 +1,14 @@
 package com.devstudio.data.repository
 
-import android.content.Context
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.models.Books
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.koin.core.component.KoinComponent
 
-@Singleton
-class BooksRepositoryImpl @Inject constructor(
-    @ApplicationContext context: Context,
+class BooksRepositoryImpl(
     private val userDataRepository: UserDataRepository
-) : BooksRepository {
-    val db = ApplicationModule.config.factory.getRoomInstance()
+) : BooksRepository, KoinComponent {
+    private val db = ApplicationModule.config.factory.getRoomInstance()
     private val booksDao = db.booksDao()
 
     override fun getBooksFlow(): Flow<List<Books>> {

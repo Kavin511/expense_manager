@@ -5,7 +5,8 @@ import com.devstudio.data.model.Theme
 import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.data.model.UserPreferencesData
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * @Author: Kavin
@@ -22,8 +23,9 @@ interface UserDataRepository {
     suspend fun getCurrentTransactionFilter(): Flow<TransactionFilterType>
 }
 
-class UserDataRepositoryImpl @Inject constructor(val userDataSource: DataSourceModule) :
-    UserDataRepository {
+class UserDataRepositoryImpl : UserDataRepository, KoinComponent {
+    private val userDataSource: DataSourceModule by inject()
+
     override val userData: Flow<UserPreferencesData>
         get() = userDataSource.userData()
 

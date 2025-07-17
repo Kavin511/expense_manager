@@ -7,11 +7,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
@@ -29,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.data.model.TransactionFilterType
 import com.devstudio.transactions.composables.transactionList.TransactionsList
 import com.devstudio.transactions.models.DateSelectionStatus
@@ -37,8 +34,9 @@ import com.devstudio.transactions.models.TransactionOptionsEvent
 import com.devstudio.transactions.models.TransactionUiState
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.devstudio.designSystem.appColors
-import com.devstudio.model.models.OnEvent
+import com.devstudio.data.model.OnEvent
 import com.google.android.material.datepicker.MaterialDatePicker
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TransactionDashBoard(uiState: TransactionUiState.Success, onEvent: OnEvent) {
@@ -74,7 +72,7 @@ fun showDateRangePicker(
 
 @Composable
 fun TransactionOptions(filterType: TransactionFilterType, onEvent: OnEvent) {
-    val transactionViewModel = hiltViewModel<TransactionViewModel>()
+    val transactionViewModel = koinViewModel<TransactionViewModel>()
     TransactionOptionsRow(filterType, transactionViewModel, onEvent)
 }
 

@@ -15,7 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentManager
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,10 +25,10 @@ import com.devstudio.expensemanager.presentation.home.composables.HomeScreenNavH
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.BookEvent
 import com.devstudio.expensemanager.presentation.transactionMainScreen.model.HomeScreenState
 import com.devstudio.feature.books.BooksViewModel
-import com.devstudio.model.models.ExpressWalletAppState
-import com.devstudio.model.models.ExpressWalletAppState.HomeScreen
-import com.devstudio.model.models.ExpressWalletAppState.ImportCsv
-import com.devstudio.model.models.OnEvent
+import com.devstudio.data.model.ExpressWalletAppState
+import com.devstudio.data.model.ExpressWalletAppState.HomeScreen
+import com.devstudio.data.model.ExpressWalletAppState.ImportCsv
+import com.devstudio.data.model.OnEvent
 import com.devstudio.profile.BudgetScreen
 import com.devstudio.profile.ThemeSelectionScreen
 import com.devstudio.profile.composables.RemainderScreen
@@ -40,6 +39,8 @@ import com.devstudio.transactions.models.TransactionOptionsEvent
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
 fun ExpressWalletNavHost(
@@ -70,7 +71,7 @@ fun ExpressWalletNavHost(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun HomeScreen(navController: NavHostController) {
-    val transactionViewModel = hiltViewModel<TransactionViewModel>()
+    val transactionViewModel = koinViewModel<TransactionViewModel>()
     val transactionUiState by transactionViewModel.uiState.collectAsStateWithLifecycle()
     val booksBottomSheet = rememberModalBottomSheetState()
     val transactionFilterBottomSheet = rememberModalBottomSheetState()
@@ -99,7 +100,7 @@ private fun HomeScreen(navController: NavHostController) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 private fun onEvent(
     booksBottomSheet: SheetState,
@@ -108,7 +109,7 @@ private fun onEvent(
     moreOptionBottomSheet: SheetState,
     navController: NavHostController,
     homeNavController: NavHostController = rememberNavController(),
-    booksViewModel: BooksViewModel = hiltViewModel<BooksViewModel>(),
+    booksViewModel: BooksViewModel = koinViewModel<BooksViewModel>(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     fragmentManager: FragmentManager = (LocalContext.current as AppCompatActivity).supportFragmentManager,
 ) = remember {

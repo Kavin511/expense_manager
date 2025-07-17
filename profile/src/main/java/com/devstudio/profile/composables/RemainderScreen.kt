@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devstudio.data.repository.Remainder
 import com.devstudio.profile.viewmodels.ProfileViewModel
@@ -35,6 +34,7 @@ import com.devstudio.designSystem.components.Screen
 import com.devstudio.designSystem.appColors
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import org.koin.compose.viewmodel.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,7 +43,8 @@ var minute = 0
 
 @Composable
 fun RemainderScreen(navController: NavHostController) {
-    val profilerViewModel = hiltViewModel<ProfileViewModel>()
+    val profileViewModel = koinViewModel<ProfileViewModel>()
+
     val context = LocalContext.current
     val dayStateList = remember {
         mutableStateListOf(
@@ -61,7 +62,7 @@ fun RemainderScreen(navController: NavHostController) {
             text = "Save",
             modifier = Modifier.clickable {
                 val remainders = dayStateList.map { Remainder(it.id, hour, minute, isEnabled = it.isSelected) }
-                profilerViewModel.setRemainders(remainders, context)
+                profileViewModel.setRemainders(remainders, context)
 //            navController.popBackStack()
             },
         )

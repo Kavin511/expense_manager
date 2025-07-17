@@ -7,15 +7,17 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import java.util.Calendar
-import javax.inject.Inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 interface RemainderRepositoryInterface {
     fun setRemainders(remainder: List<Remainder>, context: Context)
     fun getRemainders()
 }
 
-class RemainderRepository @Inject constructor() :
-    RemainderRepositoryInterface {
+class RemainderRepository : RemainderRepositoryInterface, KoinComponent {
+    private val context: Context by inject()
+
     override fun setRemainders(remainder: List<Remainder>, context: Context) {
         remainder.forEach {
             val intent = Intent(context, RemainderReceiver::class.java)

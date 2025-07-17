@@ -2,7 +2,6 @@ plugins {
 	alias(libs.plugins.androidLibrary)
 	alias(libs.plugins.kotlin.android)
 	alias(libs.plugins.ksp)
-	id("dagger.hilt.android.plugin")
 	alias(libs.plugins.compose.compiler)
 }
 
@@ -46,15 +45,10 @@ dependencies {
 	implementation(libs.bundles.compose)
 	implementation(project(":core-designSystem"))
 	api(project(":core-data"))
-	implementation(project(":core-model"))
 	implementation(project(":database"))
 	implementation(project(":utils"))
 	implementation(libs.play.services.auth)
-	implementation(libs.hilt.android)
-	implementation(project(":core-model"))
 	implementation(project(":core-data:model"))
     implementation(project(":theme"))
-    ksp(libs.hilt.android.compiler)
-	implementation(libs.hilt.navigation.compose)
 }
 

@@ -66,8 +66,7 @@ fun CsvImportScreen(navController: NavHostController) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             val transactionField = remember { transactionField() }
-            val csvUiState = csvImportState.csvUIState
-            when (csvUiState) {
+            when (val csvUiState = csvImportState.csvUIState) {
                 CsvUIState.Idle -> {}
                 CsvUIState.SelectingFile -> {
                     CircularProgressIndicator()

@@ -8,12 +8,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import com.devstudio.data.datastore.DataSourceModule
+import com.devstudio.data.repository.TransactionsRepository
 import com.devstudio.data.repository.TransactionsRepositoryImpl
+import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.data.repository.UserDataRepositoryImpl
 import com.devstudio.database.AppContext
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.domain.useCase.csvToTransaction.ProcessFileToCsv
 import com.devstudio.sharedmodule.importData.model.CSVRow
+import org.koin.compose.koinInject
+import org.koin.java.KoinJavaComponent.inject
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -50,16 +54,14 @@ actual fun FilePicker(
 
 
 actual suspend fun saveTransactions(transactions: List<Transaction>): Result<Int> {
-    val context = AppContext.get()!!
-    val userDataRepository = UserDataRepositoryImpl(DataSourceModule(context))
-    val transactionsRepositoryImpl =
-        TransactionsRepositoryImpl(userDataRepository)
+    val transactionsRepositoryImpl by inject<TransactionsRepository>(TransactionsRepository::class.java)
+    val userDataRepository by inject<UserDataRepository>(UserDataRepository::class.java)
     val importedCount = transactionsRepositoryImpl.insertTransactions(transactions)
     transactions.firstOrNull()?.bookId?.let { userDataRepository.updateSelectedBookId(it) }
     return if (transactions.size == importedCount) {
         Result.success(importedCount)
     } else {
-        Result.failure(Throwable())
+       return Result.failure(Throwable())
     }
 }
 

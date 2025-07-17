@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.database.models.Transaction
 import com.devstudio.sharedmodule.utils.getTransactionBlockColor
 import com.devstudio.transactions.acivity.PaymentStatus
@@ -41,6 +40,7 @@ import com.devstudio.designSystem.DEFAULT_CARD_ELEVATION
 import com.devstudio.designSystem.SECONDARY_TEXT_SIZE
 import com.devstudio.designSystem.appColors
 import com.devstudio.designSystem.model.AppColor
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(
@@ -58,7 +58,7 @@ fun TransactionItem(
     ),
 ) {
     val context = LocalContext.current
-    val transactionViewModel: TransactionViewModel = hiltViewModel()
+    val transactionViewModel: TransactionViewModel = koinViewModel<TransactionViewModel>()
     ElevatedCard(
         modifier = Modifier
             .padding(vertical = DEFAULT_CARD_ELEVATION),

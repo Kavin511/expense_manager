@@ -8,24 +8,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.designSystem.components.BottomSheet
 import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 fun TransactionFilterBottomSheet(
     filterBottomSheetState: SheetState,
     event: (FilterItem?) -> Unit,
 ) {
-    val transactionViewModel = hiltViewModel<TransactionViewModel>()
+    val transactionViewModel = koinViewModel<TransactionViewModel>()
     BottomSheet(onDismissRequest = {
         event.invoke(null)
     }, sheetState = filterBottomSheetState) {

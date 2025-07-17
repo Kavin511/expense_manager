@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devstudio.data.model.Theme
 import com.devstudio.data.model.TransactionFilterType
@@ -24,10 +23,11 @@ import com.devstudio.designSystem.components.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ThemeSelectionScreen(navController: NavHostController) {
-    val profileViewModel = hiltViewModel<ProfileViewModel>()
+    val profileViewModel = koinViewModel<ProfileViewModel>()
     val theme: UserPreferencesData =
         profileViewModel.userPreferencesDataStore.userData.collectAsState(
             initial = UserPreferencesData(

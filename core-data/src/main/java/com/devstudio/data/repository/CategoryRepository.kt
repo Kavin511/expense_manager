@@ -3,10 +3,9 @@ package com.devstudio.data.repository
 import android.content.Context
 import com.devstudio.database.ApplicationModule
 import com.devstudio.database.models.Category
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 interface CategoryRepository {
     fun insertCategory(category: Category)
@@ -18,11 +17,9 @@ interface CategoryRepository {
     fun getAllCategories(): Flow<List<Category>>
 }
 
-@Singleton
-class CategoryRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
-    CategoryRepository {
-
-    val db = ApplicationModule.config.factory.getRoomInstance()
+class CategoryRepositoryImpl : CategoryRepository, KoinComponent {
+    private val context: Context by inject()
+    private val db = ApplicationModule.config.factory.getRoomInstance()
     private val categoryDao = db.categoryDao()
 
     override fun insertCategory(category: Category) {

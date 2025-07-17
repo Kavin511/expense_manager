@@ -5,15 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.devstudio.data.repository.BooksRepository
 import com.devstudio.data.repository.UserDataRepository
 import com.devstudio.database.models.Books
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class BooksViewModel @Inject constructor(
+class BooksViewModel(
     private val booksRepository: BooksRepository,
     private val userDataRepository: UserDataRepository,
 ) : ViewModel() {

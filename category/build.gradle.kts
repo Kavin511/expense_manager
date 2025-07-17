@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    id("dagger.hilt.android.plugin")
     alias(libs.plugins.compose.compiler)
 }
 
@@ -11,7 +10,7 @@ android {
         baseline = file("lint-baseline.xml")
     }
     namespace = "com.devstudio.category"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -49,10 +48,7 @@ dependencies {
     implementation(project(":database"))
     api(project(":core-data"))
     implementation(project(":utils"))
-    implementation(libs.hilt.android)
     api(project(":theme"))
-    ksp(libs.hilt.android.compiler)
-    implementation(libs.hilt.navigation.compose)
     implementation(libs.bundles.compose)
     implementation(libs.livedata)
     implementation(libs.viewmodel)

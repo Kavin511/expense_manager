@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.devstudio.data.datastore.orDefault
 import com.devstudio.data.model.TransactionFilterType.ALL
 import com.devstudio.data.model.TransactionFilterType.DateRange
@@ -26,13 +25,14 @@ import com.devstudio.transactions.models.FilterItem
 import com.devstudio.transactions.viewmodel.TransactionBook
 import com.devstudio.transactions.viewmodel.TransactionViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.koin.compose.viewmodel.koinViewModel
 import java.io.Serializable
 import java.util.Calendar
 
 @Composable
 fun TransactionsList(transactionsStream: TransactionBook) {
     val transactions = transactionsStream.transactions.collectAsState(initial = listOf()).value
-    val transactionViewModel = hiltViewModel<TransactionViewModel>()
+    val transactionViewModel = koinViewModel<TransactionViewModel>()
     when {
         transactionViewModel.isCurrentMonthHavingTransactions()
             .not() && transactions.isEmpty() && transactionViewModel.isHavingTransactions() -> {
